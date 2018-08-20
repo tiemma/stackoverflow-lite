@@ -1,0 +1,7 @@
+CREATE TABLE users(
+  id serial NOT NULL PRIMARY KEY,
+  name VARCHAR NOT NULL,
+  username VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT now()
+);
