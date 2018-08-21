@@ -1,8 +1,18 @@
+"""
+Flask app bootstrapping with api injection
+"""
+
 from flask import Flask
+from os import environ
 
-from app import config
+from app.config import config_by_name
+from app.routes import API
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
-app.config.from_object(config.Development)
+APP.config.from_object(config_by_name[environ.get("FLASK_ENV")])
 
+API.init_app(APP)
+
+if __name__ == "__main__":
+    APP.run(debug=True)

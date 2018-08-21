@@ -1,9 +1,9 @@
-from os import urandom
-
 """
 Project level flask configuration
 
 """
+
+from os import urandom
 
 POSTGRES_USER = "postgres"
 POSTGRES_PASSWORD = "password"
@@ -20,24 +20,39 @@ POSTGRES_CONFIG = {
 }
 
 
-class Config(object):
-
+class Config:
+    """
+    Config base class
+    """
     DEBUG = True
     SECRET_KEY = urandom(256)
-    DATABASE_URI = 'postgresql://%(user)s:%(password)s@%(host)s:%(port)s/%(dbname)s' % POSTGRES_CONFIG
+    DATABASE_URI = """postgresql://
+    %(user)s:%(password)s@
+    %(host)s:%(port)s/%(dbname)s""" % POSTGRES_CONFIG
+
+    CSRF_ENABLED = True
+    CSRF_SESSION_KEY = urandom(256)
 
 
 class Development(Config):
-    pass
+    """
+    Development configuration
+    """
+    THREADS_PER_PAGE = 1
 
 
 class Production(Config):
-    pass
+    """
+    Production configuration
+    """
+    DEBUG = False
+    THREADS_PER_PAGE = 8
 
+
+config_by_name = dict(
+    development=Development,
+    production=Production
+)
 
 if __name__ == "__main__":
     print(Config)
-
-
-
-

@@ -1,10 +1,13 @@
-from app.models import Model
+"""
+User Model for querying the users table
+"""
+
+from app.models.model import Model
 
 
 class User(Model):
-    def __init__(self) -> None:
-        super().__init__()
+    """
+    User class defining the users table
+    """
 
-    def select_all(self, table: str):
-        return super().select_all("users")
-
+    TABLE_NAME = "users"

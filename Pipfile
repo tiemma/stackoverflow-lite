@@ -9,6 +9,12 @@ name = "pypi"
 flask = "*"
 "psycopg2" = "*"
 "psycopg2-binary" = "*"
+flask-restplus = "*"
+pylint = "*"
+"autopep8" = "*"
+pyjwt = "*"
+flask-script = "*"
+flask-bcrypt = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.5"

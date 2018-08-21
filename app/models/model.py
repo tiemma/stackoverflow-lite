@@ -1,12 +1,28 @@
-from app.config import POSTGRES_CONFIG, Config
+"""
+Model base model defining methods inherited by all other model classes
+
+Defines CRUD operations along with neatly integrated static factory functions
+"""
+
 from psycopg2 import connect, extras, ProgrammingError
+
+from app.config import POSTGRES_CONFIG, Config
 
 
 class Model:
+    """
+    Model base class for ORM like emulation, since we couldn't use one :-(
+    """
+
+    TABLE_NAME = ""
+
     def __init__(self):
         print("Constructor was called")
         self.conn = Model.init_conn()
         self.cursor = self.conn.cursor(cursor_factory=extras.RealDictCursor)
+
+        if not self.TABLE_NAME:
+            raise NotImplementedError("Property TABLE_NAME must be defined in the inheriting class")
 
     def __del__(self):
         print("Destructor has closed all connections")
@@ -19,22 +35,23 @@ class Model:
 
         :return:
         """
+        # POSTGRES_CONFIG["async"] = True
         return connect(**POSTGRES_CONFIG)
 
     @staticmethod
-    def parse_constraints_dict_to_sql_format(constraints: dict, delimiter: str) -> list:
+    def parse_to_sql_format(constraints: dict, delimiter: str) -> list:
         """
 
-        :param constraints: 
-        :param delimiter: 
-        :return: 
+        :param constraints:
+        :param delimiter:
+        :return:
         """
-        expression = "{name}{delimiter}{value}" if delimiter == "." else "{name}{delimiter}'{value}'";
+        expression = "{name}{delimiter}{value}" if delimiter == "." \
+            else "{name}{delimiter}'{value}'"
         parsed_constraints = [expression.format(name=x,
-                                                                   delimiter=delimiter,
-                                                                   value=constraints[x]) for x in constraints]
+                                                delimiter=delimiter,
+                                                value=constraints[x]) for x in constraints]
         return parsed_constraints
-
 
     def bootstrap_tables(self):
         """
@@ -44,88 +61,105 @@ class Model:
 
         :return:
         """
-        with open("sql/tables.sql", 'r') as o:
-            self.cursor.execute("".join(o.readlines()))
+        with open("sql/tables.sql", 'r') as file:
+            self.cursor.execute("".join(file.readlines()))
 
         if not Config.DEBUG:
             print("Tables cannot be dropped in production")
             return False
 
         self.conn.commit()
+        return True
 
-    def select_all(self, table: str, fields: list):
+    def select_all(self, fields: list):
         """
 
-        :param table:
         :return:
         """
-        sql = "SELECT {fields} FROM {table}".format(table=table, fields=",".join(fields))
+        sql = "SELECT {fields} " \
+              "FROM {table}".format(table=self.TABLE_NAME,
+                                    fields=",".join(fields))
         print(sql)
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    def select_with_constraints(self, table: str, fields: list, constraints: dict):
+    def select_one(self, fields: list, constraints: dict):
         """
 
-        :param self:
-        :param table:
+        :param fields:
         :param constraints:
         :return:
         """
         if not constraints:
-            return self.select_all(table)
+            return self.select_all(fields)
 
-        sql = "SELECT {fields} FROM {table} WHERE {constraints}".format(fields=",".join(fields),
-                                                                        table=table,
-                                                                        constraints=" AND ".join(
-                                                                            Model.parse_constraints_dict_to_sql_format(constraints, "=")))
+        sql = "SELECT {fields}" \
+              " FROM {table} " \
+              "WHERE {constraints}".format(fields=",".join(fields),
+                                           table=self.TABLE_NAME,
+                                           constraints=" AND ".join(
+                                               Model.parse_to_sql_format(constraints, "=")))
         print(sql)
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    def delete_with_constraints(self, table: str, constraints: dict):
+    def delete(self, constraints: dict):
         """
 
-        :param table:
         :param constraints:
         :return:
         """
-        sql = "DELETE FROM {table} WHERE {constraints}".format(table=table,
-                                                               constraints=" AND ".join(
-                                                                   Model.parse_constraints_dict_to_sql_format(constraints, "=")))
+        sql = "DELETE FROM {table} " \
+              "WHERE {constraints}".format(table=self.TABLE_NAME,
+                                           constraints=" AND ".join(
+                                               Model.parse_to_sql_format(constraints, "=")))
         print(sql)
         self.cursor.execute(sql)
         self.conn.commit()
         return self.cursor.fetchall()
 
-    def insert_with_constraints(self, table: str, constraints: dict):
+    def insert(self, constraints: dict):
         """
 
-        :param table:
         :param constraints:
         :return:
         """
         keys = ",".join(constraints.keys())
         values = ",".join(["'{x}'".format(x=x) for x in constraints.values()])
-        sql = "INSERT INTO {table} ({keys}) VALUES ({values})".format(table=table,
-                                                                      keys=keys,
-                                                                      values=values)
+        sql = "INSERT INTO {table} ({keys})" \
+              " VALUES ({values})".format(table=self.TABLE_NAME,
+                                          keys=keys,
+                                          values=values)
         print(sql)
         self.cursor.execute(sql)
         self.conn.commit()
         return True
 
-    def update_with_constraints(self, table: str, update_fields: dict, constraints: dict):
-        sql = "UPDATE {table} SET {update_fields} WHERE {constraints}".format(table=table,
-                                                                              update_fields=",".join(Model.parse_constraints_dict_to_sql_format(update_fields, "=")),
-                                                                              constraints=" AND ".join(
-                                                                                  Model.parse_constraints_dict_to_sql_format(constraints, "=")))
+    def update(self, update_fields: dict, constraints: dict):
+        """
+
+        :param update_fields:
+        :param constraints:
+        :return:
+        """
+        sql = "UPDATE {table} " \
+              "SET {update_fields} " \
+              "WHERE {constraints}".format(table=self.TABLE_NAME,
+                                           update_fields=",".join(
+                                               Model.parse_to_sql_format(update_fields, "=")),
+                                           constraints=" AND ".join(
+                                               Model.parse_to_sql_format(constraints, "=")))
         print(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.cursor.fetchall()
+        return True
 
     def execute_raw_sql(self, sql: str):
+        """
+
+        :param sql:
+        :return:
+        """
         print(sql)
         self.cursor.execute(sql)
         self.conn.commit()
@@ -136,6 +170,14 @@ class Model:
 
 
 if __name__ == "__main__":
-    print(Model().bootstrap_tables())
-    print(Model().insert_with_constraints("users", {"username": "Bakare", "name": "Bakare Emmanuel", "password": "34s4"}))
-    print(Model().update_with_constraints("users", {"username": "Bakare", "name": "Bakare Emmanuel", "password": "34s4"}, {"id": 3, "password": "34s"}))
+    pass
+    # print(Model().bootstrap_tables())
+    # print(
+    #     Model().insert(
+    #         "users", {
+    #             "username": "Bakare", "name": "Bakare Emmanuel", "password": "34s4"}))
+    # print(
+    #     Model().update(
+    #         "users", {
+    #             "username": "Bakare", "name": "Bakare Emmanuel", "password": "34s4"}, {
+    #             "id": 3, "password": "34s"}))
