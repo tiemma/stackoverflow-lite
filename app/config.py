@@ -19,6 +19,7 @@ POSTGRES_CONFIG = {
     'port': POSTGRES_PORT,
 }
 
+
 class Config(object):
 
     DEBUG = True

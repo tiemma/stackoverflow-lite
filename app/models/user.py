@@ -1,9 +1,10 @@
-import psycopg2
+from app.models import Model
 
-class User:
+
+class User(Model):
     def __init__(self) -> None:
-        self.user = None
+        super().__init__()
 
-    @property
-    def select_all(SQL: str):
-        pass
+    def select_all(self, table: str):
+        return super().select_all("users")
+
