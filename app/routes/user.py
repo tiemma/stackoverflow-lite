@@ -4,6 +4,8 @@ API definitions for the USER
 
 from flask import json
 from flask_restplus import Namespace, Resource, fields
+from flask_restplus._http import HTTPStatus
+
 
 from app.models import USER_MODEL
 
@@ -19,13 +21,13 @@ USER = API.model('User', {
 
 @API.route("/<int:id>")
 @API.param('id', 'User id for easy identification')
-@API.response(404, 'User not found')
+@API.response(HTTPStatus.BAD_REQUEST, 'User not found')
 class User(Resource):
     """
     User resource class for defining USER related API actions
     """
 
-    @API.expect(USER)
+    # @API.marshal_list_with(USER, code=HTTPStatus.OK, skip_none=True)
     def get(self, id: int):
         """
 
@@ -34,6 +36,7 @@ class User(Resource):
         """
         response = USER_MODEL.select_one(
             ["name, username, created"], {"id": id})
-        return json.dumps(response), 200
+        print(response)
+        return json.dumps(response[0]), HTTPStatus.OK
 
 

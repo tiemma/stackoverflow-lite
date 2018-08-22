@@ -4,9 +4,11 @@ Model base model defining methods inherited by all other model classes
 Defines CRUD operations along with neatly integrated static factory functions
 """
 
+from app.logging import Logger
+from os import environ
 from psycopg2 import connect, extras, ProgrammingError
 
-from app.config import POSTGRES_CONFIG, Config
+from app.config import config_by_name
 
 
 class Model:
@@ -15,9 +17,10 @@ class Model:
     """
 
     TABLE_NAME = ""
+    logger = Logger.get_logger(__name__)
 
     def __init__(self):
-        print("Constructor was called")
+        self.logger.info("Constructor was called")
         self.conn = Model.init_conn()
         self.cursor = self.conn.cursor(cursor_factory=extras.RealDictCursor)
 
@@ -25,7 +28,7 @@ class Model:
             raise NotImplementedError("Property TABLE_NAME must be defined in the inheriting class")
 
     def __del__(self):
-        print("Destructor has closed all connections")
+        self.logger.info("Destructor has closed all connections")
         self.conn.close()
         self.cursor.close()
 
@@ -36,6 +39,7 @@ class Model:
         :return:
         """
         # POSTGRES_CONFIG["async"] = True
+        POSTGRES_CONFIG = config_by_name[environ.get("FLASK_ENV")].POSTGRES_CONFIG
         return connect(**POSTGRES_CONFIG)
 
     @staticmethod
@@ -64,8 +68,8 @@ class Model:
         with open("sql/tables.sql", 'r') as file:
             self.cursor.execute("".join(file.readlines()))
 
-        if not Config.DEBUG:
-            print("Tables cannot be dropped in production")
+        if not config_by_name[environ.get("FLASK_ENV")].DEBUG:
+            self.logger.debug("Tables cannot be dropped in production")
             return False
 
         self.conn.commit()
@@ -79,7 +83,7 @@ class Model:
         sql = "SELECT {fields} " \
               "FROM {table}".format(table=self.TABLE_NAME,
                                     fields=",".join(fields))
-        print(sql)
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
@@ -99,7 +103,7 @@ class Model:
                                            table=self.TABLE_NAME,
                                            constraints=" AND ".join(
                                                Model.parse_to_sql_format(constraints, "=")))
-        print(sql)
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
@@ -130,7 +134,7 @@ class Model:
               " VALUES ({values})".format(table=self.TABLE_NAME,
                                           keys=keys,
                                           values=values)
-        print(sql)
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
         return True
@@ -149,7 +153,7 @@ class Model:
                                                Model.parse_to_sql_format(update_fields, "=")),
                                            constraints=" AND ".join(
                                                Model.parse_to_sql_format(constraints, "=")))
-        print(sql)
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
         return True
@@ -160,12 +164,13 @@ class Model:
         :param sql:
         :return:
         """
-        print(sql)
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
         try:
             return self.cursor.fetchall()
         except ProgrammingError:
+            self.logger.error("Execution error while running SQL: \n sql", exc_info=True)
             return True
 
 

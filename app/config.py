@@ -11,13 +11,7 @@ POSTGRES_DB = "stackoverflow"
 POSTGRES_HOST = "localhost"
 POSTGRES_PORT = 5432
 
-POSTGRES_CONFIG = {
-    'user': POSTGRES_USER,
-    'password': POSTGRES_PASSWORD,
-    'dbname': POSTGRES_DB,
-    'host': POSTGRES_HOST,
-    'port': POSTGRES_PORT,
-}
+
 
 
 class Config:
@@ -26,12 +20,19 @@ class Config:
     """
     DEBUG = True
     SECRET_KEY = urandom(256)
+    POSTGRES_CONFIG = {
+        'user': POSTGRES_USER,
+        'password': POSTGRES_PASSWORD,
+        'dbname': POSTGRES_DB,
+        'host': POSTGRES_HOST,
+        'port': POSTGRES_PORT,
+    }
     DATABASE_URI = """postgresql://
     %(user)s:%(password)s@
     %(host)s:%(port)s/%(dbname)s""" % POSTGRES_CONFIG
-
     CSRF_ENABLED = True
     CSRF_SESSION_KEY = urandom(256)
+    RESTPLUS_VALIDATE = True
 
 
 class Development(Config):
