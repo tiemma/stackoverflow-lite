@@ -6,8 +6,10 @@ Defines CRUD operations along with neatly integrated static factory functions
 
 from os import environ
 from psycopg2 import connect, extras, ProgrammingError
+from typing import List, Dict
 
 from app import config, logging
+
 
 class Model:
     """
@@ -38,10 +40,12 @@ class Model:
         """
         # POSTGRES_CONFIG["async"] = True
         POSTGRES_CONFIG = config.CONFIG_BY_NAME[environ.get("FLASK_ENV")].POSTGRES_CONFIG
-        return connect(**POSTGRES_CONFIG)
+        return connect(connection_factory=extras.RealDictConnection,
+                       cursor_factory=extras.RealDictCursor,
+                       **POSTGRES_CONFIG)
 
     @staticmethod
-    def parse_to_sql_format(constraints: dict, delimiter: str) -> list:
+    def parse_to_sql_format(constraints: dict, delimiter: str) -> List:
         """
 
         :param constraints:
@@ -54,6 +58,22 @@ class Model:
                                                 delimiter=delimiter,
                                                 value=constraints[x]) for x in constraints]
         return parsed_constraints
+
+    @staticmethod
+    def convert_tuple_to_dict(obj: dict, key: str, schema: list) -> List:
+        parsed_object = list()
+        for response in obj:
+            '''
+            The response is being parsed cause the execution a join sql command
+            returns a string of a tuple for whole table results rather than a dict / tuple
+             for some weird reason.
+            Hence, I have to manually parse the response and zip it with the original schema 
+            layout placed comfortably in a list
+            '''
+            parsed_tuple = tuple(map(lambda x: x.replace('"', ""), response[key][1:-1].split(',')))
+            response[key] = dict(zip(schema, parsed_tuple))
+            parsed_object.append(response)
+        return parsed_object
 
     def bootstrap_tables(self):
         """
@@ -73,7 +93,7 @@ class Model:
         self.conn.commit()
         return True
 
-    def select_all(self, fields: list):
+    def select_all(self, fields: list) -> List[Dict]:
         """
 
         :return:
@@ -85,7 +105,7 @@ class Model:
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    def select_one(self, fields: list, constraints: dict):
+    def select_all_with_constraints(self, fields: list, constraints: dict) -> List[Dict]:
         """
 
         :param fields:
@@ -105,7 +125,10 @@ class Model:
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    def delete(self, constraints: dict):
+    def select_one(self, fields: list, constraints: dict) -> Dict:
+        return self.select_all_with_constraints(fields, constraints)[0]
+
+    def delete(self, constraints: dict) -> List[Dict]:
         """
 
         :param constraints:
@@ -118,9 +141,9 @@ class Model:
         print(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.cursor.fetchall()
+        return self.select_all_with_constraints(["id"], constraints)
 
-    def insert(self, constraints: dict):
+    def insert(self, constraints: dict) -> List[Dict]:
         """
 
         :param constraints:
@@ -135,9 +158,9 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.select_one(["id"], constraints)
+        return self.select_all_with_constraints(["id"], constraints)
 
-    def update(self, update_fields: dict, constraints: dict):
+    def update(self, update_fields: dict, constraints: dict) -> List[Dict]:
         """
 
         :param update_fields:
@@ -154,9 +177,9 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return True
+        return self.select_all_with_constraints(["id"], constraints)
 
-    def execute_raw_sql(self, sql: str):
+    def execute_raw_sql(self, sql: str) -> List[Dict]:
         """
 
         :param sql:
@@ -169,7 +192,6 @@ class Model:
             return self.cursor.fetchall()
         except ProgrammingError:
             self.logger.error("Execution error while running SQL: \n sql", exc_info=True)
-            return True
 
 
 if __name__ == "__main__":

@@ -19,7 +19,8 @@ CREATE TABLE questions(
   created TIMESTAMP NOT NULL DEFAULT now(),
   edited TIMESTAMP NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  PRIMARY KEY(id, user_id)
+  PRIMARY KEY(id, user_id),
+  UNIQUE (user_id, headline)
 );
 
 CREATE TABLE answers(
@@ -34,11 +35,12 @@ CREATE TABLE answers(
   votes INT NOT NULL DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
-  PRIMARY KEY(id, user_id, question_id)
+  PRIMARY KEY(id, user_id, question_id),
+  UNIQUE (user_id, question_id)
 );
+
 
 -- CREATE RULE questions_edited AS ON UPDATE TO questions DO
 --   UPDATE questions SET edited = now() WHERE id = OLD.id AND edited = null;
 
-CREATE RULE questions_deleted AS ON DELETE TO questions
-    DO DELETE FROM answers  WHERE question_id = OLD.id;
+CREATE RULE questions_deleted AS ON DELETE TO questions DO DELETE FROM answers  WHERE question_id = OLD.id;

@@ -5,7 +5,6 @@ API definitions for the USER
 from flask import json
 from flask_restplus import Namespace, Resource, fields
 from flask_restplus._http import HTTPStatus
-from sys import exc_info
 
 from app.logging import Logger
 from app.models import USER_MODEL
@@ -40,6 +39,6 @@ class User(Resource):
             ["name, username, created"], {"id": id})
         self.logger.debug(response)
         try:
-            return json.dumps(response[0]), HTTPStatus.OK
+            return json.dumps(response), HTTPStatus.OK
         except IndexError as e:
             return "{}".format(e), 404
