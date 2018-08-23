@@ -15,6 +15,7 @@ pylint = "*"
 pyjwt = "*"
 flask-script = "*"
 flask-bcrypt = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.5"
