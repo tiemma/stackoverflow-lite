@@ -4,12 +4,10 @@ Model base model defining methods inherited by all other model classes
 Defines CRUD operations along with neatly integrated static factory functions
 """
 
-from app.logging import Logger
 from os import environ
 from psycopg2 import connect, extras, ProgrammingError
 
-from app.config import config_by_name
-
+from app import config, logging
 
 class Model:
     """
@@ -17,7 +15,7 @@ class Model:
     """
 
     TABLE_NAME = ""
-    logger = Logger.get_logger(__name__)
+    logger = logging.Logger.get_logger(__name__)
 
     def __init__(self):
         self.logger.info("Constructor was called")
@@ -39,7 +37,7 @@ class Model:
         :return:
         """
         # POSTGRES_CONFIG["async"] = True
-        POSTGRES_CONFIG = config_by_name[environ.get("FLASK_ENV")].POSTGRES_CONFIG
+        POSTGRES_CONFIG = config.CONFIG_BY_NAME[environ.get("FLASK_ENV")].POSTGRES_CONFIG
         return connect(**POSTGRES_CONFIG)
 
     @staticmethod
@@ -68,7 +66,7 @@ class Model:
         with open("sql/tables.sql", 'r') as file:
             self.cursor.execute("".join(file.readlines()))
 
-        if not config_by_name[environ.get("FLASK_ENV")].DEBUG:
+        if not config.CONFIG_BY_NAME[environ.get("FLASK_ENV")].DEBUG:
             self.logger.debug("Tables cannot be dropped in production")
             return False
 
@@ -137,7 +135,7 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return True
+        return self.select_one(["id"], constraints)
 
     def update(self, update_fields: dict, constraints: dict):
         """

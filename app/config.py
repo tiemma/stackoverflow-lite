@@ -12,8 +12,6 @@ POSTGRES_HOST = "localhost"
 POSTGRES_PORT = 5432
 
 
-
-
 class Config:
     """
     Config base class
@@ -32,7 +30,7 @@ class Config:
     %(host)s:%(port)s/%(dbname)s""" % POSTGRES_CONFIG
     CSRF_ENABLED = True
     CSRF_SESSION_KEY = urandom(256)
-    RESTPLUS_VALIDATE = True
+    # RESTPLUS_VALIDATE = True
 
 
 class Development(Config):
@@ -50,7 +48,7 @@ class Production(Config):
     THREADS_PER_PAGE = 8
 
 
-config_by_name = dict(
+CONFIG_BY_NAME = dict(
     development=Development,
     production=Production
 )

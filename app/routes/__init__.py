@@ -4,8 +4,8 @@ Bootstrapping point for declaring all the routes defined
 
 from flask_restplus import Api
 
-from app.routes.user import API as USER_API
-from app.routes.auth import Register, Login, Logout
+from app.routes.user import USER_NS
+from app.routes.auth import AUTH_NS
 
 API = Api(title="Stack Overflow Lite",
           description="""
@@ -15,5 +15,5 @@ API = Api(title="Stack Overflow Lite",
           prefix="/api/v1",
           version="1.0")
 
-API.add_namespace(USER_API, path="/users")
-API.add_namespace(USER_API, path="/users")
+API.add_namespace(USER_NS, path="/users")
+API.add_namespace(AUTH_NS, path="/auth")

@@ -2,15 +2,14 @@
 Flask app bootstrapping with api injection
 """
 
-from flask import Flask
 from os import environ
+from flask import Flask
 
-from app.config import config_by_name
+from app.config import CONFIG_BY_NAME
 from app.routes import API
 
 APP = Flask(__name__)
-
-APP.config.from_object(config_by_name[environ.get("FLASK_ENV")])
+APP.config.from_object(CONFIG_BY_NAME[environ.get("FLASK_ENV")])
 
 API.init_app(APP)
 
