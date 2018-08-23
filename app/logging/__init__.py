@@ -1,5 +1,5 @@
 """
-Implmentation for logging services
+Implementation for logging services
 
 """
 

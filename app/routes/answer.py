@@ -70,3 +70,12 @@ class Answer(Resource):
         except Exception as err:
             LOGGER.error(err)
             return {"message": "Unknown error occurred"}, 500
+
+@ANSWER_NS.route("/<int:id>/answers")
+@ANSWER_NS.param('id', 'Question id for easy identification')
+@ANSWER_NS.response(HTTPStatus.NOT_FOUND, 'Answer not found')
+@ANSWER_NS.response(HTTPStatus.OK, 'Answer was found')
+class AnswerWithId(Resource):
+    """
+    Answer resource class for defining ANSWER related API actions
+    """
