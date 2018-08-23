@@ -5,8 +5,8 @@ Defines CRUD operations along with neatly integrated static factory functions
 """
 
 from os import environ
-from psycopg2 import connect, extras, ProgrammingError
 from typing import List, Dict
+from psycopg2 import connect, extras, ProgrammingError
 
 from app import config, logging
 
@@ -61,14 +61,20 @@ class Model:
 
     @staticmethod
     def convert_tuple_to_dict(obj: dict, key: str, schema: list) -> List:
+        """
+
+        :param obj:
+        :param key:
+        :param schema:
+        :return:
+        """
         parsed_object = list()
         for response in obj:
             '''
-            The response is being parsed cause the execution a join sql command
+            The response is being parsed cause the execution of a join sql command
             returns a string of a tuple for whole table results rather than a dict / tuple
-             for some weird reason.
-            Hence, I have to manually parse the response and zip it with the original schema 
-            layout placed comfortably in a list
+             for some weird reason. Hence, I have to manually parse the response 
+             and zip it with the original schema layout placed comfortably in a list
             '''
             parsed_tuple = tuple(map(lambda x: x.replace('"', ""), response[key][1:-1].split(',')))
             response[key] = dict(zip(schema, parsed_tuple))
@@ -126,6 +132,12 @@ class Model:
         return self.cursor.fetchall()
 
     def select_one(self, fields: list, constraints: dict) -> Dict:
+        """
+
+        :param fields:
+        :param constraints:
+        :return:
+        """
         return self.select_all_with_constraints(fields, constraints)[0]
 
     def delete(self, constraints: dict) -> List[Dict]:

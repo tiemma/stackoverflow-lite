@@ -14,18 +14,19 @@ AUTH_NS = Namespace("auth", description="Authentication related operations")
 
 LOGIN = AUTH_NS.model('Auth', {
     'username': fields.String(required=True, description='The users pet name'),
-    'password': fields.String(description='User password sent on signup and login')
+    'password': fields.String(required=True, description='User password sent on signup and login')
 })
 
 REGISTER = AUTH_NS.model('User', {
     'name': fields.String(required=True, description='The users name'),
     'username': fields.String(required=True, description='The users pet name'),
-    'password': fields.String(description='User password sent on signup and login')
+    'password': fields.String(required=True, description='User password sent on signup and login')
 })
 
 
 @AUTH_NS.route("/login")
-@AUTH_NS.response(HTTPStatus.NOT_FOUND, "User not found and authentication request rejected")
+@AUTH_NS.response(HTTPStatus.NOT_FOUND,
+                  "User not found and authentication request rejected")
 class Login(Resource):
     """
     Login controller resource
@@ -44,7 +45,8 @@ class Login(Resource):
 
 
 @AUTH_NS.route("/logout")
-@AUTH_NS.response(HTTPStatus.NOT_FOUND, "User not found and logout request rejected")
+@AUTH_NS.response(HTTPStatus.NOT_FOUND,
+                  "User not found and logout request rejected")
 class Logout(Resource):
     """
     Login controller resource
@@ -62,9 +64,12 @@ class Logout(Resource):
 
 
 @AUTH_NS.route("/register")
-@AUTH_NS.response(HTTPStatus.NOT_FOUND, "Server down while processing registration")
-@AUTH_NS.response(HTTPStatus.CONFLICT, "User details are already existent")
-@AUTH_NS.response(HTTPStatus.CREATED, "User details have been successfully registered in the database")
+@AUTH_NS.response(HTTPStatus.NOT_FOUND,
+                  "Server down while processing registration")
+@AUTH_NS.response(HTTPStatus.CONFLICT,
+                  "User details are already existent")
+@AUTH_NS.response(HTTPStatus.CREATED,
+                  "User details have been successfully registered in the database")
 class Register(Resource):
     """
     Login controller resource
@@ -85,9 +90,9 @@ class Register(Resource):
         :return:
         """
         payload = request.json
-        self.logger.debug("Payload variables: {}".format(payload))
+        self.logger.debug("Payload variables: %s", payload)
         try:
-            return {"message": "User was registered successfully", "data": USER_MODEL.insert(payload)}, 201
+            return {"message": "User was registered successfully",
+                    "data": USER_MODEL.insert(payload)}, 201
         except IntegrityError:
             return {"message": "User is already registered"}, 409
-

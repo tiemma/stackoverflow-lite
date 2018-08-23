@@ -39,6 +39,7 @@ class User(Resource):
             ["name, username, created"], {"id": id})
         self.logger.debug(response)
         try:
-            return json.dumps(response), HTTPStatus.OK
-        except IndexError as e:
-            return "{}".format(e), 404
+            return dict({"message": "User was successfully retrieved", "data": json.dumps(response)}), HTTPStatus.OK
+        except IndexError as err:
+            self.logger.error(err)
+            return {"message": "User not found"}, 404

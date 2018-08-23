@@ -6,7 +6,8 @@ from flask_restplus import Api
 
 from app.routes.user import USER_NS
 from app.routes.auth import AUTH_NS
-from app.routes.question import QUESTION_NS, ANSWER_NS
+from app.routes.question import QUESTION_NS
+from app.routes.answer import ANSWER_NS
 
 API = Api(title="Stack Overflow Lite",
           description="""
