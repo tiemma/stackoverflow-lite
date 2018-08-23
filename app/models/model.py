@@ -68,6 +68,7 @@ class Model:
         :param schema:
         :return:
         """
+        logging.getLogger(__name__).debug("Converting string to tuple and zipping")
         parsed_object = list()
         for response in obj:
             '''
@@ -150,7 +151,7 @@ class Model:
               "WHERE {constraints}".format(table=self.TABLE_NAME,
                                            constraints=" AND ".join(
                                                Model.parse_to_sql_format(constraints, "=")))
-        print(sql)
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
         return self.select_all_with_constraints(["id"], constraints)

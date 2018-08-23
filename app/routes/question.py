@@ -31,7 +31,7 @@ class QuestionWithId(Resource):
     Question resource class for defining QUESTION related API actions
     """
 
-    def get(self, id):
+    def get(self, id: int):
         """
 
         :param id:
@@ -72,7 +72,7 @@ class QuestionWithId(Resource):
             LOGGER.error(err)
             return {"message": "Unknown error occurred"}, 500
 
-    def delete(self, id):
+    def delete(self, id: int):
         """
 
         :param id:

@@ -20,7 +20,7 @@ CREATE TABLE questions(
   edited TIMESTAMP NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   PRIMARY KEY(id, user_id),
-  UNIQUE (user_id, headline)
+  UNIQUE (user_id, headline) --A user cannot post a question with the same headline
 );
 
 CREATE TABLE answers(
@@ -36,11 +36,12 @@ CREATE TABLE answers(
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
   PRIMARY KEY(id, user_id, question_id),
-  UNIQUE (user_id, question_id)
+  UNIQUE (user_id, question_id) --A user can't make two answers for a question
 );
 
 
 -- CREATE RULE questions_edited AS ON UPDATE TO questions DO
 --   UPDATE questions SET edited = now() WHERE id = OLD.id AND edited = null;
 
+-- This enables efficient management of user data without any special fixes
 CREATE RULE questions_deleted AS ON DELETE TO questions DO DELETE FROM answers  WHERE question_id = OLD.id;

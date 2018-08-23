@@ -30,7 +30,7 @@ class Config:
     %(host)s:%(port)s/%(dbname)s""" % POSTGRES_CONFIG
     CSRF_ENABLED = True
     CSRF_SESSION_KEY = urandom(256)
-    # RESTPLUS_VALIDATE = True
+    RESTPLUS_VALIDATE = True
 
 
 class Development(Config):
