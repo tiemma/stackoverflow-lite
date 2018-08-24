@@ -4,6 +4,7 @@ the table.sql file and creates the tables
 """
 
 from os import environ
+from pytest import fixture
 
 from app.app import CONFIG_BY_NAME
 from app.models.model import Model
@@ -36,6 +37,7 @@ def test_not_implemented_error():
         assert isinstance(err, NotImplementedError)
 
 
+@fixture(scope='session')
 def test_bootstrap_tables():
     """
     Creates the tables and It should only run in development
@@ -77,9 +79,7 @@ def test_select_all():
     :return: 
     """
     response = TEST_MODEL.select_all(["*"])[0]
-    assert sorted([response[k] == USER_PAYLOAD[k]
-                   for k in response
-                   if k in USER_PAYLOAD])[0]
+    assert set(response).issuperset(USER_PAYLOAD)
 
 
 def test_select_all_with_constraints():
@@ -88,9 +88,7 @@ def test_select_all_with_constraints():
     :return:
     """
     response = TEST_MODEL.select_all_with_constraints(USER_PAYLOAD.keys(), {"id": 1})[0]
-    assert sorted([response[k] == USER_PAYLOAD[k]
-                   for k in response
-                   if k in USER_PAYLOAD])[0]
+    assert set(response).issuperset(USER_PAYLOAD)
 
 
 def test_update_user():
@@ -100,9 +98,8 @@ def test_update_user():
     """
     NEW_USER_PAYLOAD = dict(USER_PAYLOAD)
     NEW_USER_PAYLOAD["name"] = "New Name"
-    response = TEST_MODEL.update(NEW_USER_PAYLOAD, USER_PAYLOAD)
-    print(response)
-    assert (response[0]["id"] == 1)
+    response = TEST_MODEL.update(NEW_USER_PAYLOAD, USER_PAYLOAD)[0]
+    assert (response["id"] == 1)
 
 
 def test_execute_raw_sql():
@@ -113,9 +110,7 @@ def test_execute_raw_sql():
     NEW_USER_PAYLOAD = dict(USER_PAYLOAD)
     NEW_USER_PAYLOAD["name"] = "New Name"
     response = TEST_MODEL.execute_raw_sql("SELECT * FROM USERS")[0]
-    assert sorted([response[k] == NEW_USER_PAYLOAD[k]
-                   for k in response
-                   if k in NEW_USER_PAYLOAD])[0]
+    assert set(response).issuperset(NEW_USER_PAYLOAD)
 
 
 def test_delete_user():
