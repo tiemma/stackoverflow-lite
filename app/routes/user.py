@@ -6,6 +6,7 @@ from flask import json
 from flask_restplus import Namespace, Resource, fields
 from flask_restplus._http import HTTPStatus
 
+from app.controller import handle_error_message, NoResponseError
 from app.logging import Logger
 from app.models import USER_MODEL
 
@@ -35,12 +36,16 @@ class User(Resource):
         :param id:
         :return:
         """
-        response = USER_MODEL.select_one(
-            ["name, username, created"], {"id": id})
-        self.logger.debug(response)
         try:
-            return dict({"message": "User was successfully retrieved",
-                         "data": json.dumps(response)}), HTTPStatus.OK
+            response = USER_MODEL.select_one(
+                ["name, username, created"], {"id": id})
+            self.logger.debug(response)
+
+            if not response:
+                return handle_error_message(NoResponseError)
         except IndexError as err:
-            self.logger.error(err)
-            return {"message": "User not found"}, 404
+            return handle_error_message(err)
+
+        return {"message": "User was successfully retrieved",
+                         "data": json.dumps(response)}, HTTPStatus.OK
+

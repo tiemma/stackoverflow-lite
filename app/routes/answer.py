@@ -6,7 +6,7 @@ from flask import json, request
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
 
-from app.controller import handle_error_message
+from app.controller import handle_error_message, NoResponseError
 from app.logging import Logger
 from app.models import ANSWER_MODEL
 
@@ -48,7 +48,7 @@ class Answer(Resource):
             LOGGER.debug(response)
 
             if not response[0]['answer']:
-                return handle_error_message(IndexError)
+                return handle_error_message(NoResponseError)
 
             return json.dumps(response), HTTPStatus.OK
         except Exception as err:
@@ -97,7 +97,12 @@ class AnswerWithId(Resource):
         payload["id"] = answer_id
         try:
             updating_data = {"accepted": True}
+            response = ANSWER_MODEL.update(updating_data, payload, ["question_id"])
+
+            if not response:
+                return handle_error_message(NoResponseError)
+
             return {"message": "Answer has been accepted successfully",
-                    "data": ANSWER_MODEL.update(updating_data, payload)}, 200
+                    "data": response}, HTTPStatus.OK
         except Exception as err:
             return handle_error_message(err)

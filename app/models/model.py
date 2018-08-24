@@ -181,11 +181,12 @@ class Model:
         self.conn.commit()
         return self.select_all_with_constraints(["id"], constraints)
 
-    def update(self, update_fields: dict, constraints: dict) -> List[Dict]:
+    def update(self, update_fields: dict, constraints: dict, query_fields: list = []) -> List[Dict]:
         """
 
         :param update_fields:
         :param constraints:
+        :param query_fields:
         :return:
         """
         sql = "UPDATE {table} " \
@@ -198,7 +199,10 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.select_all_with_constraints(["id"], update_fields)
+        query_fields.append("id")
+        for key in query_fields:
+            update_fields[key] = constraints[key]
+        return self.select_all_with_constraints(query_fields, update_fields)
 
     def execute_raw_sql(self, sql: str) -> List[Dict]:
         """

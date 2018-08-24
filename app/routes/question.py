@@ -6,9 +6,9 @@ from flask import json, request
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
 
+from app.controller import handle_error_message, NoResponseError
 from app.logging import Logger
 from app.models import QUESTION_MODEL
-from app.controller import handle_error_message
 
 QUESTION_NS = Namespace("questions",
                         description="Questions related operations")
@@ -114,7 +114,7 @@ class Question(Resource):
             LOGGER.debug(json.dumps(response))
 
             if not response:
-                return handle_error_message(IndexError)
+                return handle_error_message(NoResponseError)
 
             return {"message": "All questions recovered successfully",
                     "data": json.dumps(response)}, HTTPStatus.OK
