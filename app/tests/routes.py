@@ -116,9 +116,11 @@ def test_get_question_and_answer(test_client):
     :return:
     """
     response = test_client.get(PREFIX+'/questions/1', headers=HEADERS)
-    data = json.loads(response.data)["question"]
+    data = json.loads(response.data)
     assert response.status_code == HTTPStatus.OK
-    assert set(data).issuperset(QUESTION_PAYLOAD)
+    assert "questions" in data
+    assert "user_name" in data["questions"]
+    assert "user_username" in data["questions"]
 
 
 def test_get_non_existent_question(test_client):
