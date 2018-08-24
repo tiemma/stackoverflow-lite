@@ -29,7 +29,7 @@ LOGGER = Logger.get_logger(__name__)
 @ANSWER_NS.response(HTTPStatus.NOT_FOUND, 'Answer not found')
 @ANSWER_NS.response(HTTPStatus.OK, 'Answer was found')
 @ANSWER_NS.response(HTTPStatus.INTERNAL_SERVER_ERROR,
-                      'Error occurred while performing operation')
+                    'Error occurred while performing operation')
 @ANSWER_NS.response(HTTPStatus.LOOP_DETECTED,
                     "Transaction kept throwing errors and got blacklisted")
 class Answer(Resource):

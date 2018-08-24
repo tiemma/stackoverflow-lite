@@ -47,5 +47,5 @@ class User(Resource):
             return handle_error_message(err)
 
         return {"message": "User was successfully retrieved",
-                         "data": json.dumps(response)}, HTTPStatus.OK
+                "data": json.dumps(response)}, HTTPStatus.OK
 

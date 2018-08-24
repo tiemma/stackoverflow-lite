@@ -45,37 +45,37 @@ class QuestionWithId(Resource):
         :param id:
         :return:
         """
-        try:
-            payload = {"question_id": id}
+        payload = {"question_id": id}
 
-            from app.models.model import Model
+        from app.models.model import Model
 
-            answers_schema = ["id", "user_id", "question_id",
-                              "headline", "description", "created",
-                              "edited", "accepted", "votes"]
+        answers_schema = ["id", "user_id", "question_id",
+                          "headline", "description", "created",
+                          "edited", "accepted", "votes"]
 
-            question_schema = ["id", "user_id", "headline",
-                               "description", "votes", "created", "edited"]
+        question_schema = ["id", "user_id", "headline",
+                           "description", "votes", "created", "edited"]
 
-            answers_with_users = Model.convert_tuple_to_dict(
-                QUESTION_MODEL.fetch_user_answers_from_question(payload),
-                "answer",
-                answers_schema)
+        answers_with_users = Model.convert_tuple_to_dict(
+            QUESTION_MODEL.fetch_user_answers_from_question(payload),
+            "answer",
+            answers_schema)
 
-            user_with_question = Model.convert_tuple_to_dict(
-                QUESTION_MODEL.fetch_user_and_question(payload),
-                "question",
-                question_schema)
+        user_with_question = Model.convert_tuple_to_dict(
+            QUESTION_MODEL.fetch_user_and_question(payload),
+            "question",
+            question_schema)
 
-            response = dict()
-            response["answers"] = answers_with_users
-            response["questions"] = user_with_question
+        if not user_with_question[0]["question"]:
+            return handle_error_message(NoResponseError)
 
-            LOGGER.debug(response)
+        response = dict()
+        response["answers"] = answers_with_users
+        response["questions"] = user_with_question
 
-            return response, HTTPStatus.OK
-        except Exception as err:
-            return handle_error_message(err)
+        LOGGER.debug(response)
+
+        return response, HTTPStatus.OK
 
     def delete(self, id: int):
         """
@@ -130,6 +130,7 @@ class Question(Resource):
         payload = request.json
         try:
             response = QUESTION_MODEL.insert(payload)[0]
-            return {"message": "Question created successfully", "data": response}, HTTPStatus.CREATED
+            return {"message": "Question created successfully",
+                    "data": response}, HTTPStatus.CREATED
         except Exception as err:
             return handle_error_message(err)

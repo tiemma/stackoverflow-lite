@@ -68,19 +68,18 @@ class Model:
         :param schema:
         :return:
         """
-        Logger = logging.getLogger(__name__)
-        Logger.debug("Converting string to tuple and zipping")
+        logger = logging.getLogger(__name__)
+        logger.debug("Converting string to tuple and zipping")
         parsed_object = list()
         for response in obj:
-            '''
-            The response is being parsed cause the execution of a join sql command
+            '''The response is being parsed cause the execution of a join sql command
             returns a string of a tuple for whole table results rather than a dict / tuple
              for some weird reason. Hence, I have to manually parse the response 
              and zip it with the original schema layout placed comfortably in a list
             '''
             parsed_tuple = tuple(map(lambda x: x.replace('"', ""), response[key][1:-1].split(',')))
             response[key] = dict(zip(schema, parsed_tuple)) if schema else parsed_tuple
-            Logger.debug("Parsed tuple: %s", parsed_tuple)
+            logger.debug("Parsed tuple: %s", parsed_tuple)
             parsed_object.append(response)
         return parsed_object
 
@@ -181,7 +180,7 @@ class Model:
         self.conn.commit()
         return self.select_all_with_constraints(["id"], constraints)
 
-    def update(self, update_fields: dict, constraints: dict, query_fields: list = []) -> List[Dict]:
+    def update(self, update_fields: dict, constraints: dict, query_fields: list) -> List[Dict]:
         """
 
         :param update_fields:

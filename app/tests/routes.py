@@ -23,9 +23,13 @@ ANSWER_PAYLOAD = {
     "description": "string"
 }
 
+
 @fixture(scope='module')
 def test_client():
+    """
 
+    :return:
+    """
     test_bootstrap_tables()
     flask_app = create_app()
 
@@ -44,10 +48,19 @@ def test_client():
 
 @fixture(scope='module')
 def init_user_db():
+    """
+
+    :return:
+    """
     test_insert_user()
 
 
 def test_swagger_endpoint(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.get("/")
     assert response.status_code == HTTPStatus.OK
     assert b"swagger" in response.data
@@ -55,6 +68,12 @@ def test_swagger_endpoint(test_client):
 
 
 def test_post_question(test_client, init_user_db):
+    """
+
+    :param test_client:
+    :param init_user_db:
+    :return:
+    """
     response = test_client.post(PREFIX+'/questions/',
                                 data=json.dumps(QUESTION_PAYLOAD),
                                 headers=HEADERS)
@@ -63,6 +82,11 @@ def test_post_question(test_client, init_user_db):
 
 
 def test_get_non_existent_user(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.get(PREFIX+'/users/6',
                                headers=HEADERS)
     data = json.loads(response.data)
@@ -71,6 +95,11 @@ def test_get_non_existent_user(test_client):
 
 
 def test_get_questions(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.get(PREFIX+'/questions/',
                                headers=HEADERS)
     data = json.loads(json.loads(response.data)['data'])[0]
@@ -81,6 +110,11 @@ def test_get_questions(test_client):
 
 
 def test_get_non_existent_answer(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.get(PREFIX+'/questions/1/answers',
                                headers=HEADERS)
     data = json.loads(response.data)
@@ -89,6 +123,11 @@ def test_get_non_existent_answer(test_client):
 
 
 def test_post_answer(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.post(PREFIX+'/questions/1/answers',
                                 data=json.dumps(ANSWER_PAYLOAD),
                                 headers=HEADERS)
@@ -98,6 +137,11 @@ def test_post_answer(test_client):
 
 
 def test_accept_answer(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.put(PREFIX+'/questions/1/answers/1',
                                data=json.dumps(ANSWER_PAYLOAD),
                                headers=HEADERS)
@@ -107,6 +151,11 @@ def test_accept_answer(test_client):
 
 
 def test_accept_answer_in_non_existent_question(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
     response = test_client.put(PREFIX+'/questions/6/answers/1',
                                data=json.dumps(ANSWER_PAYLOAD),
                                headers=HEADERS)

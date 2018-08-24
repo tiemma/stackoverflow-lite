@@ -4,7 +4,6 @@ the table.sql file and creates the tables
 """
 
 from os import environ
-from pytest import fixture
 
 from app.app import CONFIG_BY_NAME
 from app.models.model import Model
@@ -95,9 +94,9 @@ def test_update_user():
 
     :return:
     """
-    NEW_USER_PAYLOAD = dict(USER_PAYLOAD)
-    NEW_USER_PAYLOAD["name"] = "New Name"
-    response = TEST_MODEL.update(NEW_USER_PAYLOAD, USER_PAYLOAD)[0]
+    new_user_payload = dict(USER_PAYLOAD)
+    new_user_payload["name"] = "New Name"
+    response = TEST_MODEL.update(new_user_payload, USER_PAYLOAD)[0]
     assert (response["id"] == 1)
 
 
@@ -106,10 +105,10 @@ def test_execute_raw_sql():
 
     :return:
     """
-    NEW_USER_PAYLOAD = dict(USER_PAYLOAD)
-    NEW_USER_PAYLOAD["name"] = "New Name"
+    new_user_payload = dict(USER_PAYLOAD)
+    new_user_payload["name"] = "New Name"
     response = TEST_MODEL.execute_raw_sql("SELECT * FROM USERS")[0]
-    assert set(response).issuperset(NEW_USER_PAYLOAD)
+    assert set(response).issuperset(new_user_payload)
 
 
 def test_delete_user():

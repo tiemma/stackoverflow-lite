@@ -34,7 +34,9 @@ class Question(Model):
         :param constraints:
         :return:
         """
-        sql = '''SELECT distinct questions as question, users.name AS user_name, users.username AS user_username FROM questions
+        sql = '''SELECT distinct questions as question, 
+        users.name AS user_name, 
+        users.username AS user_username FROM questions
                 INNER JOIN users ON questions.user_id = users.id
                 WHERE questions.id = {question_id}'''.format(**constraints)
         return super().execute_raw_sql(sql)
@@ -45,7 +47,9 @@ class Question(Model):
         :param constraints:
         :return:
         """
-        sql = '''SELECT questions, users.name AS user_name, users.username AS user_username FROM questions
+        sql = '''SELECT questions, 
+         users.name AS user_name,
+         users.username AS user_username FROM questions
                     INNER JOIN users ON questions.user_id = {user_id}'''.format(**constraints)
         return super().execute_raw_sql(sql)
 
