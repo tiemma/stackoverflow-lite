@@ -61,4 +61,7 @@ CREATE TABLE comments(
 --   UPDATE questions SET edited = now() WHERE id = OLD.id AND edited = null;
 
 -- This enables efficient management of user data without any special fixes
-CREATE RULE questions_deleted AS ON DELETE TO questions DO DELETE FROM answers  WHERE question_id = OLD.id;
+CREATE  OR REPLACE RULE questions_deleted
+AS ON DELETE TO questions DO
+(DELETE FROM answers  WHERE question_id = OLD.id ;
+DELETE FROM comments WHERE question_id = OLD.id);

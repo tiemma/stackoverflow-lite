@@ -72,7 +72,7 @@ class QuestionWithId(Resource):
                                                          "question",
                                                          question_schema)
 
-        response["question"] = user_with_question[0]['question']
+        response["questions"] = user_with_question[0]
 
         if answers_data[0]["answer"]:
             answers_with_users = Model.convert_tuple_to_dict(answers_data,

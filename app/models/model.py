@@ -77,8 +77,8 @@ class Model:
              for some weird reason. Hence, I have to manually parse the response 
              and zip it with the original schema layout placed comfortably in a list
             '''
-            print(response)
-            print(type(response))
+            if not response[key]:
+                continue
             parsed_tuple = tuple(map(lambda x: x.replace('"', ""), response[key][1:-1].split(',')))
             response[key] = dict(zip(schema, parsed_tuple)) if schema else parsed_tuple
             logger.debug("Parsed tuple: %s", parsed_tuple)
