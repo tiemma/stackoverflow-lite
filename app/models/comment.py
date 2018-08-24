@@ -10,4 +10,4 @@ class Comment(Answer):
     Answer class for the answers table
     """
 
-    TABLE_NAME = "answers"
+    TABLE_NAME = "comments"

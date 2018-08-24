@@ -8,6 +8,7 @@ from app.routes.user import USER_NS
 from app.routes.auth import AUTH_NS
 from app.routes.question import QUESTION_NS
 from app.routes.answer import ANSWER_NS
+from app.routes.comment import COMMENT_NS
 
 API = Api(title="Stack Overflow Lite",
           description="""
@@ -21,3 +22,4 @@ API.add_namespace(USER_NS, path="/users")
 API.add_namespace(AUTH_NS, path="/auth")
 API.add_namespace(QUESTION_NS, path="/questions")
 API.add_namespace(ANSWER_NS, path="/questions")
+API.add_namespace(COMMENT_NS, path="/questions")
