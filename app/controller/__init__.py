@@ -23,6 +23,9 @@ def handle_error_message(error: Exception):
     except InternalError as err:
         LOGGER.error(err)
         return {"message": "Transaction has been blacklisted, try again later"}, 508
+    except IndexError as err:
+        LOGGER.error(err)
+        return {"message": "Details not found"}, 404
     except Exception as err:
         LOGGER.error(err)
     return {"message": "Unknown error occurred"}, 500

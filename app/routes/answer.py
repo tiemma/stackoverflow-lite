@@ -44,8 +44,11 @@ class Answer(Resource):
         :return:
         """
         try:
-            response = ANSWER_MODEL.fetch_all_user_questions({"question_id": id})
+            response = ANSWER_MODEL.fetch_user_answers_from_question({"question_id": id})
             LOGGER.debug(response)
+
+            if not response[0]['answer']:
+                return handle_error_message(IndexError)
 
             return json.dumps(response), HTTPStatus.OK
         except Exception as err:
@@ -61,7 +64,7 @@ class Answer(Resource):
         payload["question_id"] = id
         try:
             response = ANSWER_MODEL.insert(payload)[0]
-            return {"message": "Answer created successfully", "data": response}
+            return {"message": "Answer created successfully", "data": response}, HTTPStatus.CREATED
         except Exception as err:
             return handle_error_message(err)
 

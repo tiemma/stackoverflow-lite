@@ -37,7 +37,6 @@ def test_not_implemented_error():
         assert isinstance(err, NotImplementedError)
 
 
-@fixture(scope='session')
 def test_bootstrap_tables():
     """
     Creates the tables and It should only run in development

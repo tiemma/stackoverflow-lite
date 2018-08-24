@@ -77,13 +77,6 @@ class Register(Resource):
     """
     logger = Logger.get_logger(__name__)
 
-    def get(self):
-        """
-
-        :return:
-        """
-        return {}, HTTPStatus.OK
-
     @AUTH_NS.expect(REGISTER, validate=True)
     def post(self):
         """

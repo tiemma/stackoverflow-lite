@@ -85,7 +85,7 @@ class QuestionWithId(Resource):
         """
         try:
             if not QUESTION_MODEL.delete({"id": id}):
-                return {"message": "Question deleted successfully"}, 200
+                return {"message": "Question deleted successfully"}, HTTPStatus.OK
         except Exception as err:
             return handle_error_message(err)
 
@@ -111,7 +111,10 @@ class Question(Resource):
         """
         try:
             response = QUESTION_MODEL.select_all(["*"])
-            LOGGER.debug(response)
+            LOGGER.debug(json.dumps(response))
+
+            if not response:
+                return handle_error_message(IndexError)
 
             return {"message": "All questions recovered successfully",
                     "data": json.dumps(response)}, HTTPStatus.OK
@@ -127,6 +130,6 @@ class Question(Resource):
         payload = request.json
         try:
             response = QUESTION_MODEL.insert(payload)[0]
-            return {"message": "Question created successfully", "data": response}
+            return {"message": "Question created successfully", "data": response}, HTTPStatus.CREATED
         except Exception as err:
             return handle_error_message(err)

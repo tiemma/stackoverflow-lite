@@ -68,7 +68,8 @@ class Model:
         :param schema:
         :return:
         """
-        logging.getLogger(__name__).debug("Converting string to tuple and zipping")
+        Logger = logging.getLogger(__name__)
+        Logger.debug("Converting string to tuple and zipping")
         parsed_object = list()
         for response in obj:
             '''
@@ -78,7 +79,8 @@ class Model:
              and zip it with the original schema layout placed comfortably in a list
             '''
             parsed_tuple = tuple(map(lambda x: x.replace('"', ""), response[key][1:-1].split(',')))
-            response[key] = dict(zip(schema, parsed_tuple))
+            response[key] = dict(zip(schema, parsed_tuple)) if schema else parsed_tuple
+            Logger.debug("Parsed tuple: %s", parsed_tuple)
             parsed_object.append(response)
         return parsed_object
 
