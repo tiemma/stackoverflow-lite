@@ -26,9 +26,14 @@ LOGGER = Logger.get_logger(__name__)
 
 
 @QUESTION_NS.route("/<int:id>")
-@QUESTION_NS.param('id', 'Question id for easy identification')
-@QUESTION_NS.response(HTTPStatus.NOT_FOUND, 'Question not found')
-@QUESTION_NS.response(HTTPStatus.OK, 'Question was found')
+@QUESTION_NS.param('id',
+                   'Question id for easy identification')
+@QUESTION_NS.response(HTTPStatus.NOT_FOUND,
+                      'Question not found')
+@QUESTION_NS.response(HTTPStatus.OK,
+                      'Question was found')
+@QUESTION_NS.response(HTTPStatus.LOOP_DETECTED,
+                      "Transaction kept throwing errors and got blacklisted")
 class QuestionWithId(Resource):
     """
     Question resource class for defining QUESTION related API actions
@@ -92,6 +97,8 @@ class QuestionWithId(Resource):
                       'Question was found')
 @QUESTION_NS.response(HTTPStatus.INTERNAL_SERVER_ERROR,
                       'Error occurred while performing operation')
+@QUESTION_NS.response(HTTPStatus.LOOP_DETECTED,
+                      "Transaction kept throwing errors and got blacklisted")
 class Question(Resource):
     """
     Question resource class for defining QUESTION related API actions
