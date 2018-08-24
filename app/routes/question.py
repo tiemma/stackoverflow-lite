@@ -8,7 +8,7 @@ from flask_restplus._http import HTTPStatus
 
 from app.controller import handle_error_message, NoResponseError
 from app.logging import Logger
-from app.models import QUESTION_MODEL
+from app.models import QUESTION_MODEL, ANSWER_MODEL
 
 QUESTION_NS = Namespace("questions",
                         description="Questions related operations")
@@ -56,13 +56,12 @@ class QuestionWithId(Resource):
         question_schema = ["id", "user_id", "headline",
                            "description", "votes", "created", "edited"]
 
+        comment_schema = ["id", "user_id", "question_id", "answer_id",
+                          "comment", "votes", "created", "edited"]
+
         answers_data = QUESTION_MODEL.fetch_user_answers_from_question(payload)
 
         questions_data = QUESTION_MODEL.fetch_user_and_question(payload)
-
-        print(questions_data)
-
-        print(answers_data)
 
         response = dict()
 
@@ -70,8 +69,8 @@ class QuestionWithId(Resource):
             return handle_error_message(NoResponseError)
 
         user_with_question = Model.convert_tuple_to_dict(questions_data,
-            "question",
-            question_schema)
+                                                         "question",
+                                                         question_schema)
 
         response["question"] = user_with_question[0]['question']
 
@@ -79,7 +78,17 @@ class QuestionWithId(Resource):
             answers_with_users = Model.convert_tuple_to_dict(answers_data,
                                                              "answer",
                                                              answers_schema)
-            response["answers"] = answers_with_users
+            answers_with_comments = list()
+            for answer in answers_with_users:
+                comments_data = ANSWER_MODEL.fetch_user_comments_from_answer({"answer_id": answer["answer"]["id"]})
+                comments_with_users = Model.convert_tuple_to_dict(comments_data,
+                                                                  "comment",
+                                                                  comment_schema)
+                answer["comments"] = comments_with_users
+
+                answers_with_comments.append(answer)
+
+            response["answers"] = answers_with_comments
 
         LOGGER.debug(response)
 

@@ -20,12 +20,13 @@ class Question(Model):
         :param constraints:
         :return:
         """
-        sql = '''SELECT distinct answers AS answer, 
-        users.name AS user_name, 
+        sql = '''SELECT  answers as answer ,
+        users.name AS user_name,
         users.username AS user_username FROM questions
         LEFT OUTER JOIN answers ON answers.question_id = questions.id
         LEFT OUTER JOIN users ON answers.user_id = users.id
-        WHERE questions.id = {question_id} ORDER BY questions.created'''.format(**constraints)
+        WHERE questions.id = {question_id}
+        GROUP BY (answers, user_name, user_username, answers.created) ORDER BY answers.created ASC'''.format(**constraints)
         return super().execute_raw_sql(sql)
 
     def fetch_user_and_question(self, constraints: dict) -> List[Dict]:
@@ -37,8 +38,8 @@ class Question(Model):
         sql = '''SELECT distinct questions as question, 
         users.name AS user_name, 
         users.username AS user_username FROM questions
-                INNER JOIN users ON questions.user_id = users.id
-                WHERE questions.id = {question_id} ORDER BY questions.created'''.format(**constraints)
+        INNER JOIN users ON questions.user_id = users.id
+        WHERE questions.id = {question_id} '''.format(**constraints)
         return super().execute_raw_sql(sql)
 
     def fetch_all_user_questions(self, constraints: dict) -> List[Dict]:
@@ -50,7 +51,7 @@ class Question(Model):
         sql = '''SELECT questions, 
          users.name AS user_name,
          users.username AS user_username FROM questions
-                    INNER JOIN users ON questions.user_id = {user_id} ORDER BY questions.created'''.format(**constraints)
+         INNER JOIN users ON questions.user_id = {user_id}'''.format(**constraints)
         return super().execute_raw_sql(sql)
 
 

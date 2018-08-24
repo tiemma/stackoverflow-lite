@@ -16,7 +16,6 @@ COMMENT_POST_FIELDS = {
     'user_id': fields.Integer(required=True, description='The users id'),
     'question_id': fields.Integer(required=True, description='The questions id'),
     'answer_id': fields.Integer(required=True, description='The answers id'),
-    'headline': fields.String(required=True, description='The headline of the question asked'),
     'comment': fields.String(required=True, description='Content of the comment')
 }
 
@@ -62,7 +61,8 @@ class Comment(Resource):
         :return:
         """
         payload = request.json
-        payload["question_id"] = id
+        payload["question_id"] = question_id
+        payload["answer_id"] = answer_id
         try:
             response = COMMENT_MODEL.insert(payload)[0]
             return {"message": "Comment created successfully", "data": response}, HTTPStatus.CREATED
@@ -100,12 +100,12 @@ class CommentWithId(Resource):
         payload["id"] = answer_id
         try:
             updating_data = {"accepted": True}
-            response = COMMENT_MODEL.update(updating_data, payload, ["question_id"])
+            response = COMMENT_MODEL.update(updating_data, payload, ["question_id, answer_id"])
 
             if not response:
                 return handle_error_message(NoResponseError)
 
-            return {"message": "Comment has been accepted successfully",
+            return {"message": "Comment has been updated successfully",
                     "data": response}, HTTPStatus.OK
         except Exception as err:
             return handle_error_message(err)
