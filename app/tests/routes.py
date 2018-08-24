@@ -109,6 +109,28 @@ def test_get_questions(test_client):
     assert data["user_id"] == 1
 
 
+def test_get_question_and_answer(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
+    response = test_client.get(PREFIX+'/questions/1', headers=HEADERS)
+    data = json.loads(response.data)["question"]
+    assert response.status_code == HTTPStatus.OK
+    assert set(data).issuperset(QUESTION_PAYLOAD)
+
+
+def test_get_non_existent_question(test_client):
+    """
+
+    :param test_client:
+    :return:
+    """
+    response = test_client.get(PREFIX+'/questions/6', headers=HEADERS)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
 def test_get_non_existent_answer(test_client):
     """
 

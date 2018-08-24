@@ -56,22 +56,30 @@ class QuestionWithId(Resource):
         question_schema = ["id", "user_id", "headline",
                            "description", "votes", "created", "edited"]
 
-        answers_with_users = Model.convert_tuple_to_dict(
-            QUESTION_MODEL.fetch_user_answers_from_question(payload),
-            "answer",
-            answers_schema)
+        answers_data = QUESTION_MODEL.fetch_user_answers_from_question(payload)
 
-        user_with_question = Model.convert_tuple_to_dict(
-            QUESTION_MODEL.fetch_user_and_question(payload),
+        questions_data = QUESTION_MODEL.fetch_user_and_question(payload)
+
+        print(questions_data)
+
+        print(answers_data)
+
+        response = dict()
+
+        if not questions_data:
+            return handle_error_message(NoResponseError)
+
+        user_with_question = Model.convert_tuple_to_dict(questions_data,
             "question",
             question_schema)
 
-        if not user_with_question[0]["question"]:
-            return handle_error_message(NoResponseError)
+        response["question"] = user_with_question[0]['question']
 
-        response = dict()
-        response["answers"] = answers_with_users
-        response["questions"] = user_with_question
+        if answers_data[0]["answer"]:
+            answers_with_users = Model.convert_tuple_to_dict(answers_data,
+                                                             "answer",
+                                                             answers_schema)
+            response["answers"] = answers_with_users
 
         LOGGER.debug(response)
 
