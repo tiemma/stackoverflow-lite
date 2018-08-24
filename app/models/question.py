@@ -25,7 +25,7 @@ class Question(Model):
         users.username AS user_username FROM questions
         LEFT OUTER JOIN answers ON answers.question_id = questions.id
         LEFT OUTER JOIN users ON answers.user_id = users.id
-        WHERE questions.id = {question_id}'''.format(**constraints)
+        WHERE questions.id = {question_id} ORDER BY questions.created'''.format(**constraints)
         return super().execute_raw_sql(sql)
 
     def fetch_user_and_question(self, constraints: dict) -> List[Dict]:
@@ -38,7 +38,7 @@ class Question(Model):
         users.name AS user_name, 
         users.username AS user_username FROM questions
                 INNER JOIN users ON questions.user_id = users.id
-                WHERE questions.id = {question_id}'''.format(**constraints)
+                WHERE questions.id = {question_id} ORDER BY questions.created'''.format(**constraints)
         return super().execute_raw_sql(sql)
 
     def fetch_all_user_questions(self, constraints: dict) -> List[Dict]:
@@ -50,7 +50,7 @@ class Question(Model):
         sql = '''SELECT questions, 
          users.name AS user_name,
          users.username AS user_username FROM questions
-                    INNER JOIN users ON questions.user_id = {user_id}'''.format(**constraints)
+                    INNER JOIN users ON questions.user_id = {user_id} ORDER BY questions.created'''.format(**constraints)
         return super().execute_raw_sql(sql)
 
 
