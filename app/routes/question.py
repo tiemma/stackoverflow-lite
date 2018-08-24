@@ -5,16 +5,19 @@ Questions namespace definitions for question related actions [Fetch / Submit]
 from flask import json, request
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
-from psycopg2 import IntegrityError, InternalError
 
 from app.logging import Logger
 from app.models import QUESTION_MODEL
+from app.controller import handle_error_message
 
-QUESTION_NS = Namespace("questions", description="Questions related operations")
+QUESTION_NS = Namespace("questions",
+                        description="Questions related operations")
 
 POST_FIELDS = {
-    'user_id': fields.Integer(required=True, description='The users id'),
-    'headline': fields.String(required=True, description='The headline for the question being asked'),
+    'user_id': fields.Integer(required=True,
+                              description='The users id'),
+    'headline': fields.String(required=True,
+                              description='The headline for the question being asked'),
     'description': fields.String(description='Description of the question being asked')
 }
 POST_MODEL = QUESTION_NS.model('Questions', POST_FIELDS)
@@ -66,11 +69,8 @@ class QuestionWithId(Resource):
             LOGGER.debug(response)
 
             return response, HTTPStatus.OK
-        except IndexError as err:
-            return {"message": str(err)}, 404
         except Exception as err:
-            LOGGER.error(err)
-            return {"message": "Unknown error occurred"}, 500
+            return handle_error_message(err)
 
     def delete(self, id: int):
         """
@@ -81,9 +81,8 @@ class QuestionWithId(Resource):
         try:
             if not QUESTION_MODEL.delete({"id": id}):
                 return {"message": "Question deleted successfully"}, 200
-        except IntegrityError as err:
-            LOGGER.error(err)
-            return {"message": "Internal server error occurred"}, 500
+        except Exception as err:
+            return handle_error_message(err)
 
 
 @QUESTION_NS.route("/")
@@ -108,13 +107,9 @@ class Question(Resource):
             LOGGER.debug(response)
 
             return {"message": "All questions recovered successfully",
-                    "data": json.dumps(response)}, \
-                   HTTPStatus.OK
-        except IndexError as err:
-            return {"message": str(err)}, 404
+                    "data": json.dumps(response)}, HTTPStatus.OK
         except Exception as err:
-            LOGGER.error(err)
-            return {"message": "Unknown error occurred"}, 500
+            return handle_error_message(err)
 
     @QUESTION_NS.expect(POST_MODEL, validate=True)
     def post(self):
@@ -126,12 +121,5 @@ class Question(Resource):
         try:
             response = QUESTION_MODEL.insert(payload)[0]
             return {"message": "Question created successfully", "data": response}
-        except IntegrityError as err:
-            LOGGER.error(err)
-            return {"message": "Internal server error occurred"}, 500
-        except InternalError as err:
-            LOGGER.error(err)
-            return {"message": "Transaction has been blacklisted, try again later"}, 500
         except Exception as err:
-            LOGGER.error(err)
-            return {"message": "Unknown error occurred"}, 500
+            return handle_error_message(err)

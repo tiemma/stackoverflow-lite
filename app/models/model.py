@@ -28,7 +28,7 @@ class Model:
             raise NotImplementedError("Property TABLE_NAME must be defined in the inheriting class")
 
     def __del__(self):
-        self.logger.info("Destructor has closed all connections")
+        # self.logger.info("Destructor has closed all connections")
         self.conn.close()
         self.cursor.close()
 
@@ -90,7 +90,13 @@ class Model:
 
         :return:
         """
-        with open("sql/tables.sql", 'r') as file:
+        from inspect import getframeinfo, currentframe
+        from os.path import dirname, abspath
+
+        filename = getframeinfo(currentframe()).filename
+        path = dirname(abspath(filename))
+
+        with open("{}/sql/tables.sql".format(path), 'r') as file:
             self.cursor.execute("".join(file.readlines()))
 
         if not config.CONFIG_BY_NAME[environ.get("FLASK_ENV")].DEBUG:
@@ -190,7 +196,7 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.select_all_with_constraints(["id"], constraints)
+        return self.select_all_with_constraints(["id"], update_fields)
 
     def execute_raw_sql(self, sql: str) -> List[Dict]:
         """
