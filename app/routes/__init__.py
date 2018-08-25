@@ -18,8 +18,12 @@ API = Api(title="Stack Overflow Lite",
           prefix="/api/v1",
           version="1.0")
 
-API.add_namespace(USER_NS, path="/users")
-API.add_namespace(AUTH_NS, path="/auth")
-API.add_namespace(QUESTION_NS, path="/questions")
-API.add_namespace(ANSWER_NS, path="/questions")
-API.add_namespace(COMMENT_NS, path="/questions")
+
+def create_api():
+    API.add_namespace(USER_NS, path="/users")
+    API.add_namespace(AUTH_NS, path="/auth")
+    API.add_namespace(QUESTION_NS, path="/questions")
+    API.add_namespace(ANSWER_NS, path="/questions")
+    API.add_namespace(COMMENT_NS, path="/questions")
+
+    return API

@@ -2,7 +2,7 @@
 Tests for the routes library
 """
 
-from flask import json
+from flask import json, jsonify
 from flask_restplus._http import HTTPStatus
 from pytest import fixture
 

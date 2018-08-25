@@ -2,16 +2,35 @@
 Flask app bootstrapping with api injection
 """
 
-from os import environ
 from flask import Flask
+from os import environ
 
 from app.config import CONFIG_BY_NAME
-from app.routes import API
+from app.routes import create_api
 
 APP = Flask(__name__)
-APP.config.from_object(CONFIG_BY_NAME[environ.get("FLASK_ENV")])
 
-API.init_app(APP)
+
+def create_app():
+    """
+
+    :return:
+    """
+
+    APP.config.from_object(CONFIG_BY_NAME[environ.get("FLASK_ENV")])
+
+    create_api().init_app(APP)
+
+    return APP
+
+
+@APP.before_first_request
+def init_db():
+    pass
+
 
 if __name__ == "__main__":
-    APP.run(debug=True)
+    create_app().run(debug=True)
+
+
+

@@ -55,6 +55,7 @@ class Answer(Resource):
             return handle_error_message(err)
 
     @ANSWER_NS.expect(ANSWER_POST_MODEL, validate=True)
+    @jwt_required
     def post(self, id: int):
         """
 

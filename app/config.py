@@ -31,6 +31,10 @@ class Config:
     CSRF_ENABLED = True
     CSRF_SESSION_KEY = urandom(256)
     RESTPLUS_VALIDATE = True
+    JWT_SECRET_KEY = urandom(256)
+    JWT_BLACKLIST_ENABLED = True
+    JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']
+    JWT_ERROR_MESSAGE_KEY = "message"
 
 
 class Development(Config):

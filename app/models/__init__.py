@@ -13,6 +13,7 @@ QUESTION_MODEL = Question()
 ANSWER_MODEL = Answer()
 COMMENT_MODEL = Comment()
 
+
 __all__ = (
     "USER_MODEL",
     "ANSWER_MODEL",

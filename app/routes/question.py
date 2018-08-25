@@ -3,8 +3,10 @@ Questions namespace definitions for question related actions [Fetch / Submit]
 """
 
 from flask import json, request
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_raw_jwt
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
+
 
 from app.controller import handle_error_message, NoResponseError
 from app.logging import Logger
@@ -94,6 +96,7 @@ class QuestionWithId(Resource):
 
         return response, HTTPStatus.OK
 
+    @jwt_required
     def delete(self, id: int):
         """
 
@@ -139,6 +142,7 @@ class Question(Resource):
             return handle_error_message(err)
 
     @QUESTION_NS.expect(POST_MODEL, validate=True)
+    @jwt_required
     def post(self):
         """
 

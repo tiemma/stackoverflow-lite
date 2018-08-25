@@ -3,6 +3,7 @@ AUTH_NS definitions for authentication [Login / Signup]
 """
 
 from flask import request
+from flask_jwt_extended import jwt_required
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
 from psycopg2 import IntegrityError
@@ -78,6 +79,7 @@ class Register(Resource):
     logger = Logger.get_logger(__name__)
 
     @AUTH_NS.expect(REGISTER, validate=True)
+    @jwt_required
     def post(self):
         """
 
@@ -86,8 +88,12 @@ class Register(Resource):
         payload = request.json
         self.logger.debug("Payload variables: %s", payload)
         try:
+            data = USER_MODEL.insert(payload)
+
             return {"message": "User was registered successfully",
-                    "data": USER_MODEL.insert(payload)}, 201
+                    "data": data,
+                    **USER_MODEL.create_jwt_tokens(data)
+                    }, 201
         except IntegrityError:
             return {"message": "User is already registered"}, 409
         except Exception as err:

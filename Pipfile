@@ -16,6 +16,8 @@ pyjwt = "*"
 flask-script = "*"
 flask-bcrypt = "*"
 pytest = "*"
+passlib = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.5"
