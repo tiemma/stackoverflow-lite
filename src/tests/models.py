@@ -5,8 +5,8 @@ the table.sql file and creates the tables
 
 from os import environ
 
-from app.app import CONFIG_BY_NAME
-from app.models.model import Model
+from src.app import CONFIG_BY_NAME
+from src.models.model import Model
 
 
 class Test(Model):

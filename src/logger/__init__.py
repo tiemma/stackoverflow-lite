@@ -1,5 +1,5 @@
 """
-Implementation for logging services
+Implementation for logger services
 
 """
 
@@ -7,12 +7,12 @@ from logging import handlers, Formatter, StreamHandler, getLogger, DEBUG
 import sys
 
 FORMATTER = Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "/home/blank/PycharmProjects/stackoveflow-lite-api/app/logging/App.log"
+LOG_FILE = "/home/blank/PycharmProjects/stackoveflow-lite-api/src/logger/App.log"
 
 
 class Logger:
     """
-    Logging class for implementing logging functions
+    Logging class for implementing logger functions
     """
     @staticmethod
     def get_console_handler():

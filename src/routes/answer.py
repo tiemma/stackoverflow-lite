@@ -6,9 +6,9 @@ from flask import json, request
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
 
-from app.controller import handle_error_message, NoResponseError
-from app.logging import Logger
-from app.models import ANSWER_MODEL
+from src.controller import handle_error_message, NoResponseError
+from src.logger import Logger
+from src.models import ANSWER_MODEL
 
 ANSWER_NS = Namespace("answers", description="Answers related operations")
 

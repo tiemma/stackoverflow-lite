@@ -2,12 +2,12 @@
 Answer model for querying the answers table
 """
 
-from app.models.question import Question
+from src.models.answer import Answer
 
 
-class Answer(Question):
+class Comment(Answer):
     """
     Answer class for the answers table
     """
 
-    TABLE_NAME = "answers"
+    TABLE_NAME = "comments"

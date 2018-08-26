@@ -6,8 +6,8 @@ from flask import json
 from flask_restplus._http import HTTPStatus
 from pytest import fixture
 
-from app import create_app
-from app.tests.models import test_bootstrap_tables, test_insert_user
+from src.app import app as flask_app
+from src.tests.models import test_bootstrap_tables, test_insert_user
 
 PREFIX = "/api/v1"
 HEADERS = {"Content-Type": "application/json", "accept": "application/json"}
@@ -31,7 +31,6 @@ def test_client():
     :return:
     """
     test_bootstrap_tables()
-    flask_app = create_app()
 
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.
@@ -116,9 +115,11 @@ def test_get_question_and_answer(test_client):
     :return:
     """
     response = test_client.get(PREFIX+'/questions/1', headers=HEADERS)
-    data = json.loads(response.data)["question"]
+    data = json.loads(response.data)
     assert response.status_code == HTTPStatus.OK
-    assert set(data).issuperset(QUESTION_PAYLOAD)
+    assert "questions" in data
+    assert "user_name" in data["questions"]
+    assert "user_username" in data["questions"]
 
 
 def test_get_non_existent_question(test_client):

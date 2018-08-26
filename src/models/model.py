@@ -8,7 +8,7 @@ from os import environ
 from typing import List, Dict
 from psycopg2 import connect, extras, ProgrammingError
 
-from app import config, logging
+from src import config, logger as logging
 
 
 class Model:
@@ -17,7 +17,7 @@ class Model:
     """
 
     TABLE_NAME = ""
-    logger = logging.Logger.get_logger(__name__)
+    logger = logging.getLogger(__name__)
 
     def __init__(self):
         self.logger.info("Constructor was called")
@@ -77,6 +77,8 @@ class Model:
              for some weird reason. Hence, I have to manually parse the response 
              and zip it with the original schema layout placed comfortably in a list
             '''
+            if not response[key]:
+                continue
             parsed_tuple = tuple(map(lambda x: x.replace('"', ""), response[key][1:-1].split(',')))
             response[key] = dict(zip(schema, parsed_tuple)) if schema else parsed_tuple
             logger.debug("Parsed tuple: %s", parsed_tuple)
@@ -163,7 +165,7 @@ class Model:
         self.conn.commit()
         return self.select_all_with_constraints(["id"], constraints)
 
-    def insert(self, constraints: dict) -> List[Dict]:
+    def insert(self, constraints: dict, additional_fields = []) -> List[Dict]:
         """
 
         :param constraints:
@@ -178,9 +180,10 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.select_all_with_constraints(["id"], constraints)
+        additional_fields.append("id")
+        return self.select_all_with_constraints(additional_fields, constraints)
 
-    def update(self, update_fields: dict, constraints: dict, query_fields: list) -> List[Dict]:
+    def update(self, update_fields: dict, constraints: dict, query_fields: list = []) -> List[Dict]:
         """
 
         :param update_fields:
@@ -200,7 +203,8 @@ class Model:
         self.conn.commit()
         query_fields.append("id")
         for key in query_fields:
-            update_fields[key] = constraints[key]
+            if key != "id":
+                update_fields[key] = constraints[key]
         return self.select_all_with_constraints(query_fields, update_fields)
 
     def execute_raw_sql(self, sql: str) -> List[Dict]:

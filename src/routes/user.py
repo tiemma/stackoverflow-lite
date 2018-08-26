@@ -3,12 +3,13 @@ API definitions for the USER
 """
 
 from flask import json
+from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from flask_restplus import Namespace, Resource, fields
 from flask_restplus._http import HTTPStatus
 
-from app.controller import handle_error_message, NoResponseError
-from app.logging import Logger
-from app.models import USER_MODEL
+from src.controller import handle_error_message, NoResponseError
+from src.logger import Logger
+from src.models import USER_MODEL
 
 USER_NS = Namespace("users", "User related operations")
 

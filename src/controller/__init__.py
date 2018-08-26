@@ -4,8 +4,8 @@ Controller init defining minor functions
 
 from psycopg2 import IntegrityError, InternalError
 
-from app.logging import Logger
-from app.controller.errors import NoResponseError
+from src.logger import Logger
+from src.controller.errors import NoResponseError
 
 LOGGER = Logger.get_logger(__name__)
 
