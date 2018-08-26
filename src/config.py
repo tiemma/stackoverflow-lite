@@ -49,7 +49,7 @@ class Testing(Config):
     Development configuration
     """
     THREADS_PER_PAGE = 1
-    POSTGRES_HOST = "35.231.139.37"
+    POSTGRES_PASSWORD = ""
     POSTGRES_CONFIG = {
         'user': POSTGRES_USER,
         'password': POSTGRES_PASSWORD,
