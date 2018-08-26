@@ -20,7 +20,10 @@ addons:
 install: 
   - pip install pipenv
   - pipenv install --dev --three
+  - pipenv install python-coveralls
 script:
   - pipenv run -- py.test src/tests -s -v 
 after_script:
   - pipenv run -- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+after_success:
+  - pipenv run -- coveralls 
