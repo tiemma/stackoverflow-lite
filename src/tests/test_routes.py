@@ -7,7 +7,7 @@ from flask_restplus._http import HTTPStatus
 from pytest import fixture
 
 from src.app import app as flask_app
-from src.tests.models import test_bootstrap_tables, test_insert_user
+from src.tests.test_models import test_bootstrap_tables, test_insert_user
 
 PREFIX = "/api/v1"
 HEADERS = {"Content-Type": "application/json", "accept": "application/json"}
