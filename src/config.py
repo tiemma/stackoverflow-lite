@@ -44,6 +44,21 @@ class Development(Config):
     THREADS_PER_PAGE = 1
 
 
+class Testing(Config):
+    """
+    Development configuration
+    """
+    THREADS_PER_PAGE = 1
+    POSTGRES_HOST = "35.231.139.37"
+    POSTGRES_CONFIG = {
+        'user': POSTGRES_USER,
+        'password': POSTGRES_PASSWORD,
+        'dbname': POSTGRES_DB,
+        'host': POSTGRES_HOST,
+        'port': POSTGRES_PORT,
+    }
+
+
 class Production(Config):
     """
     Production configuration
@@ -54,7 +69,8 @@ class Production(Config):
 
 CONFIG_BY_NAME = dict(
     development=Development,
-    production=Production
+    production=Production,
+    testing=Testing
 )
 
 if __name__ == "__main__":
