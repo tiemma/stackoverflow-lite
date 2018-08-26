@@ -8,7 +8,7 @@ from os import environ
 from typing import List, Dict
 from psycopg2 import connect, extras, ProgrammingError
 
-from src import config, logger
+from src import config, logger as logging
 
 
 class Model:
@@ -17,7 +17,7 @@ class Model:
     """
 
     TABLE_NAME = ""
-    logger = logger.Logger.get_logger(__name__)
+    logger = logging.getLogger(__name__)
 
     def __init__(self):
         self.logger.info("Constructor was called")
@@ -68,7 +68,7 @@ class Model:
         :param schema:
         :return:
         """
-        logger = logger.getLogger(__name__)
+        logger = logging.getLogger(__name__)
         logger.debug("Converting string to tuple and zipping")
         parsed_object = list()
         for response in obj:
@@ -165,7 +165,7 @@ class Model:
         self.conn.commit()
         return self.select_all_with_constraints(["id"], constraints)
 
-    def insert(self, constraints: dict) -> List[Dict]:
+    def insert(self, constraints: dict, additional_fields = []) -> List[Dict]:
         """
 
         :param constraints:
@@ -180,7 +180,8 @@ class Model:
         self.logger.debug(sql)
         self.cursor.execute(sql)
         self.conn.commit()
-        return self.select_all_with_constraints(["id"], constraints)
+        additional_fields.append("id")
+        return self.select_all_with_constraints(additional_fields, constraints)
 
     def update(self, update_fields: dict, constraints: dict, query_fields: list = []) -> List[Dict]:
         """

@@ -2,11 +2,11 @@
 Tests for the routes library
 """
 
-from flask import json, jsonify
+from flask import json
 from flask_restplus._http import HTTPStatus
 from pytest import fixture
 
-from src import create_app
+from src.app import app as flask_app
 from src.tests.models import test_bootstrap_tables, test_insert_user
 
 PREFIX = "/api/v1"
@@ -31,7 +31,6 @@ def test_client():
     :return:
     """
     test_bootstrap_tables()
-    flask_app = create_app()
 
     # Flask provides a way to test your application by exposing the Werkzeug test Client
     # and handling the context locals for you.

@@ -79,7 +79,6 @@ class Register(Resource):
     logger = Logger.get_logger(__name__)
 
     @AUTH_NS.expect(REGISTER, validate=True)
-    @jwt_required
     def post(self):
         """
 
@@ -88,11 +87,12 @@ class Register(Resource):
         payload = request.json
         self.logger.debug("Payload variables: %s", payload)
         try:
-            data = USER_MODEL.insert(payload)
-
+            data = USER_MODEL.insert(payload, ["username"])
+            print(data)
+            tokens = USER_MODEL.create_jwt_tokens(data[0])
             return {"message": "User was registered successfully",
                     "data": data,
-                    **USER_MODEL.create_jwt_tokens(data)
+                    "tokens": tokens
                     }, 201
         except IntegrityError:
             return {"message": "User is already registered"}, 409

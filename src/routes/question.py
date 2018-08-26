@@ -96,7 +96,6 @@ class QuestionWithId(Resource):
 
         return response, HTTPStatus.OK
 
-    @jwt_required
     def delete(self, id: int):
         """
 
@@ -142,7 +141,6 @@ class Question(Resource):
             return handle_error_message(err)
 
     @QUESTION_NS.expect(POST_MODEL, validate=True)
-    @jwt_required
     def post(self):
         """
 

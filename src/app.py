@@ -4,6 +4,7 @@ Flask src bootstrapping with api injection
 
 
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from os import environ
 
 from src.config import CONFIG_BY_NAME
@@ -23,6 +24,8 @@ def create_app():
     app.config.from_object(CONFIG_BY_NAME[environ.get("FLASK_ENV")])
 
     api.init_app(app)
+
+    JWTManager().init_app(app)
 
     return app
 

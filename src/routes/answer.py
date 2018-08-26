@@ -3,7 +3,6 @@ Answers namespace definitions for answer related actions [Fetch / Submit]
 """
 
 from flask import json, request
-from flask_jwt_extended import jwt_required
 from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
 
@@ -56,7 +55,6 @@ class Answer(Resource):
             return handle_error_message(err)
 
     @ANSWER_NS.expect(ANSWER_POST_MODEL, validate=True)
-    @jwt_required
     def post(self, id: int):
         """
 
