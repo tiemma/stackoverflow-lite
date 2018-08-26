@@ -4,10 +4,12 @@ Implementation for logger services
 """
 
 from logging import handlers, Formatter, StreamHandler, getLogger, DEBUG
+
+from os import getcwd
 import sys
 
 FORMATTER = Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "/home/blank/PycharmProjects/stackoveflow-lite-api/src/logger/App.log"
+LOG_FILE = "{current_working_dir}/src/logger/App.log".format(current_working_dir=getcwd())
 
 
 class Logger:
