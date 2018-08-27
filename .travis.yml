@@ -23,7 +23,7 @@ install:
   - pipenv install python-coveralls
 script:
   - pipenv run -- py.test --cov-config .coveragerc --cov=src src/tests -s -v 
-after_script:
-  - pipenv run -- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success:
   - pipenv run -- coveralls 
+after_script:
+  - pipenv run -- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
