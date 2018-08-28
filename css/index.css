@@ -1,0 +1,23 @@
+:root{
+    --content-padding: 20%;
+}
+
+body{
+    background-color: #eee;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+body *{
+    transition: all 0.2s cubic-bezier(.25,.8,.25,1);
+}
+
+section#content{
+    display: none;
+    width: 60%;
+    padding-left: var(--content-padding);
+    padding-right: var(--content-padding);
+}
+
+.separator{
+    border: 1px solid black;
+}
