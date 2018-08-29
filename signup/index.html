@@ -14,12 +14,12 @@
 
         <div class="input-field half-width">
             <label for="password">Password</label>
-            <input type="text" name="password" id="password" class="only-bt-bdr margin-1">
+            <input type="password" name="password" id="password" class="only-bt-bdr margin-1">
         </div>
 
         <div class="input-field half-width ">
             <label for="password-confirm" class="center-text">Confirm Password</label>
-            <input type="text" name="password-confirm" id="password-confirm" class="only-bt-bdr margin-1">
+            <input type="password" name="password-confirm" id="password-confirm" class="only-bt-bdr margin-1">
         </div>
 
         <div class="input-field">
@@ -28,19 +28,21 @@
     </div>
 
     <div  class="shadow-depth-1 mg-t-1 mg-bt-1 padding-1 center-text login-body">
-        <div class="input-field half-width">
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username" class="only-bt-bdr margin-1">
-        </div>
+        <form action="post">
+            <div class="input-field half-width">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" class="only-bt-bdr margin-1">
+            </div>
 
-        <div class="input-field half-width">
-            <label for="password">Password</label>
-            <input type="text" name="password" id="password" class="only-bt-bdr margin-1">
-        </div>
+            <div class="input-field half-width">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" class="only-bt-bdr margin-1">
+            </div>
 
-        <div class="input-field">
-            <input type="submit" value="Login" class="padding-1 full-width" />
-        </div>
+            <div class="input-field">
+                <input type="submit" value="Login" class="padding-1 full-width" />
+            </div>
+        </form>
     </div>
 
     <div id="auth-header" class="center-vertical">

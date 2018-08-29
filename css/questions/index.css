@@ -1,0 +1,55 @@
+/*.headline h1::before{*/
+    /*content: "🏀";*/
+/*}*/
+
+.headline h1{
+    font-size: 3rem;
+}
+
+.details code:before{
+    content: "➡️"
+}
+
+.details code{
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.footer-details{
+    float: right;
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-details div{
+    padding-right: 1rem;
+}
+
+.footer-details .votes::before{
+    content: "👍🏼 "
+}
+
+.footer-details .accepted::before{
+    content: "✅"
+}
+
+.headline{
+    position: relative;
+}
+
+#questions{
+    column-count: 3;
+    column-gap: 1rem;
+}
+
+.questions{
+    display: inline-block;
+    width: 99%;
+}
+
+.questions:hover{
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    cursor: pointer;
+    position: relative;
+}
+

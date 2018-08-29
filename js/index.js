@@ -10,6 +10,14 @@ loadLogin = () => {
     }
 };
 
+loadDashboard = () => {
+    fetch("./templates").
+    then(response => response.text()).
+    then((response) => {
+        document.querySelector("section#content").innerHTML = response;
+    });
+};
+
 
 //Close loader once page loads
 window.onload = () => {
@@ -18,6 +26,7 @@ window.onload = () => {
         document.querySelector("section#content").style.display = "block";
     }, 1000);
 
-    loadLogin();
+    loadDashboard();
+    // loadLogin();
 };
 

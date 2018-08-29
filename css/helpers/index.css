@@ -84,3 +84,14 @@
 .transparent{
     background-color: transparent;
 }
+
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; margin: 0;}
+    to { opacity: 1; margin: 1rem;}
+}
+@keyframes fadeIn {
+    from { opacity: 0; margin: 0;}
+    to { opacity: 1; margin: 1rem;}
+}
+
