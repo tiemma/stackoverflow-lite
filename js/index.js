@@ -4,7 +4,6 @@ loadLogin = () => {
         then(response => response.text()).
         then((response) => {
             document.querySelector("section#content").innerHTML = response;
-            setTimeout(createEventListeners, 2000);
             console.log("Login page loaded completely");
         });
     }
@@ -18,15 +17,25 @@ loadDashboard = () => {
     });
 };
 
+createEventListeners = () => {
+    Array.from(document.querySelectorAll(".read-more")).forEach(function(question) {
+        question.addEventListener('click', showOrHideOtherQuestions, false);
+    });
+    document.querySelector("#register-button").addEventListener("click", () => {toggleAuth("register")}, false);
+    document.querySelector("#login-button").addEventListener("click", toggleAuth, false);
+    console.log("Auth functions loaded");
+};
 
 //Close loader once page loads
 window.onload = () => {
     setTimeout(() => {
         document.querySelector("section#loader").style.display = "none";
         document.querySelector("section#content").style.display = "block";
-    }, 1000);
+        createEventListeners();
+    }, 2000);
 
     loadDashboard();
     // loadLogin();
 };
+
 

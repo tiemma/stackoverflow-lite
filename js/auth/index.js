@@ -22,9 +22,5 @@ toggleAuth = (id) => {
 
 };
 
-createEventListeners = () => {
-    document.querySelector("#register-button").addEventListener("click", () => {toggleAuth("register")}, false);
-    document.querySelector("#login-button").addEventListener("click", toggleAuth, false);
-    console.log("Auth functions loaded");
-};
+
 
