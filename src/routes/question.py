@@ -12,6 +12,17 @@ from src.controller import handle_error_message, NoResponseError
 from src.logger import Logger
 from src.models import QUESTION_MODEL, ANSWER_MODEL
 
+answers_schema = ["id", "user_id", "question_id",
+                  "headline", "description", "created",
+                  "edited", "accepted", "votes"]
+
+question_schema = ["id", "user_id", "headline",
+                   "description", "votes", "created", "edited"]
+
+comment_schema = ["id", "user_id", "question_id", "answer_id",
+                  "comment", "votes", "created", "edited"]
+
+
 QUESTION_NS = Namespace("questions",
                         description="Questions related operations")
 
@@ -49,18 +60,6 @@ class QuestionWithId(Resource):
         """
         payload = {"question_id": id}
 
-        from src.models.model import Model
-
-        answers_schema = ["id", "user_id", "question_id",
-                          "headline", "description", "created",
-                          "edited", "accepted", "votes"]
-
-        question_schema = ["id", "user_id", "headline",
-                           "description", "votes", "created", "edited"]
-
-        comment_schema = ["id", "user_id", "question_id", "answer_id",
-                          "comment", "votes", "created", "edited"]
-
         answers_data = QUESTION_MODEL.fetch_user_answers_from_question(payload)
 
         questions_data = QUESTION_MODEL.fetch_user_and_question(payload)
@@ -70,20 +69,20 @@ class QuestionWithId(Resource):
         if not questions_data:
             return handle_error_message(NoResponseError)
 
-        user_with_question = Model.convert_tuple_to_dict(questions_data,
+        user_with_question = QUESTION_MODEL.convert_tuple_to_dict(questions_data,
                                                          "question",
                                                          question_schema)
 
         response["questions"] = user_with_question[0]
 
         if answers_data[0]["answer"]:
-            answers_with_users = Model.convert_tuple_to_dict(answers_data,
+            answers_with_users = QUESTION_MODEL.convert_tuple_to_dict(answers_data,
                                                              "answer",
                                                              answers_schema)
             answers_with_comments = list()
             for answer in answers_with_users:
                 comments_data = ANSWER_MODEL.fetch_user_comments_from_answer({"answer_id": answer["answer"]["id"]})
-                comments_with_users = Model.convert_tuple_to_dict(comments_data,
+                comments_with_users = QUESTION_MODEL.convert_tuple_to_dict(comments_data,
                                                                   "comment",
                                                                   comment_schema)
                 answer["comments"] = comments_with_users

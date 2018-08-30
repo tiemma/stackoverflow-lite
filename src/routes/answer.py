@@ -3,12 +3,13 @@ Answers namespace definitions for answer related actions [Fetch / Submit]
 """
 
 from flask import json, request
-from flask_restplus import Resource, fields, Namespace
+from flask_restplus import Resource, fields, Namespace, cors
 from flask_restplus._http import HTTPStatus
 
 from src.controller import handle_error_message, NoResponseError
 from src.logger import Logger
 from src.models import ANSWER_MODEL
+from src.routes.question import answers_schema
 
 ANSWER_NS = Namespace("answers", description="Answers related operations")
 
@@ -37,6 +38,7 @@ class Answer(Resource):
     Answer resource class for defining ANSWER related API actions
     """
 
+    @cors.crossdomain(origin='*')
     def get(self, id: int):
         """
 
@@ -45,12 +47,16 @@ class Answer(Resource):
         """
         try:
             response = ANSWER_MODEL.fetch_user_answers_from_question({"question_id": id})
-            LOGGER.debug(response)
+            parsed_answer = ANSWER_MODEL.convert_tuple_to_dict(response,
+                                                             "answer",
+                                                             answers_schema)
+            LOGGER.debug(parsed_answer)
 
-            if not response[0]['answer']:
+            if not parsed_answer[0]['answer']:
                 return handle_error_message(NoResponseError)
-
-            return json.dumps(response), HTTPStatus.OK
+            for i in range(len(parsed_answer)):
+                parsed_answer[i]["answer"]["description"] = parsed_answer[i]["answer"]["description"].replace("~>", ",")
+            return parsed_answer, HTTPStatus.OK
         except Exception as err:
             return handle_error_message(err)
 
@@ -62,6 +68,7 @@ class Answer(Resource):
         """
         payload = request.json
         payload["question_id"] = id
+        payload["description"] = payload["description"].replace(",", "~>")
         try:
             response = ANSWER_MODEL.insert(payload)[0]
             return {"message": "Answer created successfully", "data": response}, HTTPStatus.CREATED

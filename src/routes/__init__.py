@@ -10,6 +10,7 @@ from src.routes.question import QUESTION_NS
 from src.routes.answer import ANSWER_NS
 from src.routes.comment import COMMENT_NS
 
+
 api = Api(title="Stack Overflow Lite",
           description="""
           This is where the rest endpoints for the application is defined.
