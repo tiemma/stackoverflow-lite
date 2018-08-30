@@ -3,7 +3,7 @@ Answers namespace definitions for answer related actions [Fetch / Submit]
 """
 
 from flask import json, request
-from flask_restplus import Resource, fields, Namespace, cors
+from flask_restplus import Resource, fields, Namespace
 from flask_restplus._http import HTTPStatus
 
 from src.controller import handle_error_message, NoResponseError
@@ -38,7 +38,6 @@ class Answer(Resource):
     Answer resource class for defining ANSWER related API actions
     """
 
-    @cors.crossdomain(origin='*')
     def get(self, id: int):
         """
 
@@ -56,7 +55,8 @@ class Answer(Resource):
                 return handle_error_message(NoResponseError)
             for i in range(len(parsed_answer)):
                 parsed_answer[i]["answer"]["description"] = parsed_answer[i]["answer"]["description"].replace("~>", ",")
-            return parsed_answer, HTTPStatus.OK
+
+            return str(parsed_answer), HTTPStatus.OK
         except Exception as err:
             return handle_error_message(err)
 

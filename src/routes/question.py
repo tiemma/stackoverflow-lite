@@ -51,7 +51,7 @@ class QuestionWithId(Resource):
     """
     Question resource class for defining QUESTION related API actions
     """
-
+    @cors.crossdomain(origin='*')
     def get(self, id: int):
         """
 
