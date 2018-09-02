@@ -4,11 +4,11 @@ import logger from 'debug';
 import Config from '../config';
 import { NullError, SQLExecError } from '../errors/error';
 
-class Model {
+export default class Model {
   constructor(table) {
     this.table = table;
     this.pool = Model.initConn();
-    this.debug = logger('stackoverflow-api-node:models/model.js');
+    this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
     if (!table) {
       throw new NullError('Table name must be defined');
     }
@@ -27,6 +27,7 @@ class Model {
       this.pool.query(sql)
         .then((res) => {
           this.debug(`execSQL - Client response after executing SQL: ${res.rows}`);
+          this.debug(sql);
           resolve(res);
         })
         .catch(err => setImmediate(() => { reject(new SQLExecError(`execSQL - An error occurred: ${err}`)); }));
@@ -84,9 +85,8 @@ class Model {
     const sql = `INSERT INTO ${this.table} (${Object.keys(constraints).join(',')}) VALUES(${Object.values(constraints).map(x => `'${x}'`).join(',')})`;
     this.debug(sql);
     const self = this;
-    this.execSQL(sql).then((resp) => {
-      func(resp);
-      self.selectOne(fields, constraints);
+    this.execSQL(sql).then(() => {
+      self.selectOne(fields, constraints, func);
     });
   }
 
@@ -95,8 +95,7 @@ class Model {
     const sql = `UPDATE ${this.table} SET  ${Model.parseToSQLFormat(updateFields)} WHERE ${Model.parseToSQLFormat(constraints, ',')}`;
     this.debug(sql);
     const self = this;
-    this.execSQL(sql).then((resp) => {
-      func(resp);
+    this.execSQL(sql).then(() => {
       self.selectOne(fields, updateFields, func);
     });
   }
@@ -110,6 +109,5 @@ class Model {
   }
 }
 
-// new Model('users').update({ name: 'Bakare Emmanuel', username: 'Tiemma', password: 'blank' }, { name: 'Bakare b' }, ['name'], Model.handleResponse);
-
-export default { Model };
+// new Model('users').update({ name: 'Bakare Emmanuel', username: 'Tiemma', password: 'blank' },
+// { name: 'Bakare b' }, ['name'], Model.handleResponse);
