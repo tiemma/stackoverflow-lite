@@ -1,7 +1,10 @@
 
 import logger from 'debug';
 import Model from './model';
-import { zip,parseStringArray, answerSchema, questionSchema } from './helpers';
+import {
+  zip, parseStringArray, answerSchema, questionSchema,
+} from './helpers';
+import { SQLExecError } from '../errors/error';
 
 export default class Question extends Model {
   constructor() {
@@ -9,7 +12,7 @@ export default class Question extends Model {
     this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
   }
 
-  fetchAnswersFromQuestion(questionId, func) {
+  fetchAnswersFromQuestion(questionId) {
     const sql = `SELECT  answers as answer ,
         users.name AS user_name,
         users.username AS user_username FROM questions
@@ -18,43 +21,52 @@ export default class Question extends Model {
         WHERE questions.id = ${questionId}
         GROUP BY (answers, user_name, user_username, answers.created) ORDER BY answers.created ASC`;
 
-    this.execSQL(sql).then((resp) => {
-      const response = resp.rows.map((answers) => {
-        answers.comment = zip(parseStringArray(answers.comment), answerSchema);
-        return answers;
-      });
-      this.debug(response);
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then((resp) => {
+        const response = resp.rows.map((answers) => {
+          answers.answer = zip(parseStringArray(answers.answer), answerSchema);
+          return answers;
+        });
+        resolve(response);
+      })
+        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchAnswersFromQuestion - An error occurred: ${err}`)); }));
     });
   }
 
-  fetchUserAndTheirQuestion(questionId, func) {
+  fetchUserAndTheirQuestion(questionId) {
     const sql = `SELECT distinct questions as question, 
         users.name AS user_name, 
         users.username AS user_username FROM questions
         INNER JOIN users ON questions.user_id = users.id
         WHERE questions.id = ${questionId}`;
-    this.execSQL(sql).then((resp) => {
-      const response = resp.rows.map((questions) => {
-        questions.question = zip(parseStringArray(questions.question), questionSchema);
-        return questions;
-      });
-      this.debug(response);
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then((resp) => {
+        const response = resp.rows.map((questions) => {
+          questions.question = zip(parseStringArray(questions.question), questionSchema);
+          return questions;
+        });
+        resolve(response);
+      })
+        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchUserAndTheirQuestion - An error occurred: ${err}`)); }));
     });
   }
 
-  fetchAllUserQuestions(userId, func) {
+  fetchAllUserQuestions(userId) {
     const sql = `SELECT questions AS question, 
          users.name AS user_name,
          users.username AS user_username FROM questions
          INNER JOIN users ON questions.user_id = ${userId}`;
-    this.execSQL(sql).then((resp) => {
-      const response = resp.rows.map((questions) => {
-        questions.question = zip(parseStringArray(questions.question), questionSchema);
-        return questions;
-      });
-      this.debug(response);
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then((resp) => {
+        const response = resp.rows.map((questions) => {
+          questions.question = zip(parseStringArray(questions.question), questionSchema);
+          return questions;
+        });
+        resolve(response);
+      })
+        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchAllUserQuestions - An error occurred: ${err}`)); }));
     });
   }
 }
 
-// new Question().fetchAllUserQuestions(1, Question.handleResponse);
+// new Question().fetchUserAndTheirQuestion(1).then(resp => console.log(resp));

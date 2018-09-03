@@ -1,6 +1,7 @@
 import logger from 'debug';
 import { parseStringArray, zip, commentSchema } from './helpers';
 import Model from './model';
+import { SQLExecError } from '../errors/error';
 
 export default class Answer extends Model {
   constructor() {
@@ -8,7 +9,7 @@ export default class Answer extends Model {
     this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
   }
 
-  fetchCommentsWithAnswers(answerId, func) {
+  fetchCommentsWithAnswers(answerId) {
     const sql = `SELECT  comments as comment,
         users.name AS user_name,
         users.username AS user_username FROM answers
@@ -17,14 +18,17 @@ export default class Answer extends Model {
         WHERE answers.id = ${answerId}
         GROUP BY (user_name, user_username, comments.created, comments.votes, comments) 
         ORDER BY comments.created ASC, comments.votes DESC`;
-    this.execSQL(sql).then((resp) => {
-      const response = resp.rows.map((comments) => {
-        comments.comment = zip(parseStringArray(comments.comment), commentSchema);
-        return comments;
-      });
-      this.debug(response);
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then((resp) => {
+        const response = resp.rows.map((comments) => {
+          comments.comment = zip(parseStringArray(comments.comment), commentSchema);
+          return comments;
+        });
+        resolve(response);
+      })
+        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchCommentsWithAnswers - An error occurred: ${err}`)); }));
     });
   }
 }
 
-new Answer().fetchCommentsWithAnswers(1, Model.handleResponse);
+// new Answer().fetchCommentsWithAnswers(1).then(resp => console.log(resp));

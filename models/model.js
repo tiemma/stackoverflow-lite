@@ -39,7 +39,7 @@ export default class Model {
      * Sets up the tables up in the database
      */
     const tableSQL = readFileSync('models/sql/tables.sql', 'utf8');
-    return this.execSQL(tableSQL, this.debug);
+    return this.execSQL(tableSQL);
   }
 
   static initConn() {
@@ -50,53 +50,61 @@ export default class Model {
     // return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
   }
 
-  selectAll(fields, func) {
+  selectAll(fields) {
     this.debug(`selectAll - Selecting all fields in ${this.table}`);
     const sql = `SELECT ${fields.join(',')} from ${this.table}`;
-    return this.execSQL(sql).then(resp => func(resp));
+    return new Promise((resolve) => {
+      this.execSQL(sql).then(resp => resolve(resp));
+    });
   }
 
-  selectWithConstraints(fields, constraints, func) {
+  selectWithConstraints(fields, constraints) {
     this.debug(`selectWithConstraints - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     if (!constraints) {
-      this.selectAll(fields).then(resp => func(resp));
+      return this.selectAll(fields);
     }
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     this.debug(sql);
-    this.execSQL(sql).then(resp => func(resp));
+    return new Promise(resolve => this.execSQL(sql).then(resp => resolve(resp)));
   }
 
-  selectOne(fields, constraints, func) {
+  selectOne(fields, constraints) {
     this.debug(`selectOne - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')} LIMIT 1`;
     this.debug(sql);
-    this.execSQL(sql).then(resp => func(resp));
+    return new Promise(resolve => this.execSQL(sql).then(resp => resolve(resp)));
   }
 
-  delete(constraints, func) {
+  delete(constraints) {
     this.debug(`delete - Deleting fields from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `DELETE FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     this.debug(sql);
-    this.execSQL(sql).then(resp => func(resp));
+    return new Promise(resolve => this.execSQL(sql).then(resp => resolve(resp)));
   }
 
-  insert(constraints, fields, func) {
+  insert(constraints, fields) {
     this.debug(`insert - Inserting into table ${this.table} with constraints ${constraints.toString()} and returning fields ${fields}`);
     const sql = `INSERT INTO ${this.table} (${Object.keys(constraints).join(',')}) VALUES(${Object.values(constraints).map(x => `'${x}'`).join(',')})`;
     this.debug(sql);
     const self = this;
-    this.execSQL(sql).then(() => {
-      self.selectOne(fields, constraints, func);
-    });
+    return new Promise(resolve => this.execSQL(sql).then(() => {
+      this.execSQL(sql).then(() => {
+        self.selectOne(fields, constraints).then(resp => resolve(resp));
+      });
+    }));
   }
 
-  update(updateFields, constraints, fields, func) {
+  update(updateFields, constraints, fields) {
     this.debug(`update - Inserting into table ${this.table} with constraints ${constraints.toString()} and returning fields ${fields}`);
     const sql = `UPDATE ${this.table} SET  ${Model.parseToSQLFormat(updateFields)} WHERE ${Model.parseToSQLFormat(constraints, ',')}`;
     this.debug(sql);
     const self = this;
-    this.execSQL(sql).then(() => {
-      self.selectOne(fields, updateFields, func);
+    return new Promise((resolve) => {
+      this.execSQL(sql).then(() => {
+        this.execSQL(sql).then(() => {
+          self.selectOne(fields, updateFields).then(resp => resolve(resp));
+        });
+      });
     });
   }
 
