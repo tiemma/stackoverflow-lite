@@ -7,7 +7,10 @@ const zip = (values, schema) => {
   return obj;
 };
 
-const parseStringArray = obj => obj.replace('(', '').replace(')', '').split(',').map(String);
+const parseStringArray = (obj) => {
+  if (!obj) return [];
+  return obj.replace('(', '').replace(')', '').split(',').map(String);
+};
 
 const answerSchema = ['id', 'user_id', 'question_id',
   'headline', 'description', 'created',
