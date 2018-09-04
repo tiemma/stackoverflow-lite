@@ -19,4 +19,11 @@ class SQLExecError extends Error {
   }
 }
 
-export { NullError, NotImplementedError, SQLExecError };
+class InternalServerError extends Error {
+  constructor(...args) {
+    super(...args);
+    Error.captureStackTrace(this, NullError);
+  }
+}
+
+export { NullError, NotImplementedError, SQLExecError, InternalServerError };

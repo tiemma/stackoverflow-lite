@@ -1,11 +1,14 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import { initialise, compile, json } from 'swagger-spec-express';
+import {
+  initialise, compile, json, common,
+} from 'swagger-spec-express';
 import { serve, setup } from 'swagger-ui-express';
 import { config } from 'dotenv';
 import packageJson from './package.json';
 import Question from './routes/questions';
+import Auth from './routes/auth';
 
 
 const app = express();
@@ -14,6 +17,25 @@ const options = {
   version: packageJson.version,
   explorer: true,
 };
+common.parameters.addBody({
+  name: 'registration',
+  description: 'Schema of the data for users to be registered',
+  required: true,
+  schema: {
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+      },
+      username: {
+        type: 'string',
+      },
+      password: {
+        type: 'string',
+      },
+    },
+  },
+});
 
 // Load .env file into current process scope
 config();
@@ -34,7 +56,29 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/v1/questions/:id', Question.getQuestionWithAnswersAndComments)
+const URL_PREFIX = '/api/v1';
+
+app.post(`${URL_PREFIX}/auth/register`, Auth.register)
+  .describe({
+    tags: ['Auth'],
+    consumes: ['application/json'],
+    produces: ['application/json'],
+    common: {
+      parameters: {
+        body: ['registration'],
+      },
+    },
+    responses: {
+      201: {
+        description: 'Created user and returned a valid json response with the user token and registration details',
+      },
+      500: {
+        description: 'Internal server error occurred',
+      },
+    },
+  });
+
+app.get(`${URL_PREFIX}/questions/:id`, Question.getQuestionWithAnswersAndComments)
   .describe({
     tags: ['Questions'],
     responses: {
@@ -47,14 +91,14 @@ app.get('/api/v1/questions/:id', Question.getQuestionWithAnswersAndComments)
     },
   });
 
-app.get('/api/v1/questions', Question.getQuestions).describe({
-    tags: ['Questions'],
+app.get(`${URL_PREFIX}/questions`, Question.getQuestions).describe({
+  tags: ['Questions'],
   responses: {
     200: {
       description: 'Returns a valid json response',
     },
     404: {
-      description: 'Questions have been found',
+      description: 'No question was found',
     },
   },
 });

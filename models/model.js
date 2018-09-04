@@ -88,9 +88,7 @@ export default class Model {
     this.debug(sql);
     const self = this;
     return new Promise(resolve => this.execSQL(sql).then(() => {
-      this.execSQL(sql).then(() => {
-        self.selectOne(fields, constraints).then(resp => resolve(resp));
-      });
+      self.selectOne(fields, constraints).then(resp => resolve(resp));
     }));
   }
 

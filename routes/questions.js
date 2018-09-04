@@ -8,7 +8,7 @@ export default class Question {
   static getQuestions(req, res) {
     return new QuestionModel().selectAll(['*']).then((resp) => {
       const data = {};
-      data.data = resp.rows;
+      data.questions = resp.rows;
       res.send(data);
     });
   }
