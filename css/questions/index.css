@@ -1,13 +1,26 @@
 /*.headline h1::before{*/
-    /*content: "🏀";*/
+/*content: '🏀';*/
 /*}*/
+
+/*========MISCELLANEOUS=========*/
+.headline{
+    position: relative;
+}
 
 .headline h1{
     font-size: 3rem;
 }
 
+
+/*=========ANSWER INPUT=========*/
+#answer-input{
+    width: 100%;
+}
+
+
+/*===================DETAILS================*/
 .details code:before{
-    content: "➡️"
+    content: '➡️'
 }
 
 .details code{
@@ -16,33 +29,28 @@
 }
 
 .footer-details{
-    float: right;
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 .footer-details div{
     padding-right: 1rem;
+    font-size: 0.8rem;
 }
 
 .footer-details .votes::before{
-    content: "👍🏼 "
+    content: '👍🏼 '
 }
 
 .footer-details .accepted::before{
-    content: "✅"
+    content: '✅'
 }
 
-.questions div.read-more::before{
-    content: "💬 ";
-}
 
-.headline{
-    position: relative;
-}
-
+/*===============QUESTIONS================*/
 #questions{
-    column-count: 3;
+    column-count: 2;
     column-gap: 1rem;
 }
 
@@ -53,16 +61,43 @@
 
 .questions:hover{
     box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-    cursor: pointer;
     position: relative;
+    transform:scale(1.05);
+    z-index: 1;
+    /*animation: fadeIn .5s;*/
 }
+
+.questions:not(:hover){
+    /*-webkit-animation: fadeOut .5s;*/
+    /*-o-animation: fadeOut .5s;*/
+    /*animation: fadeOut .5s;*/
+    transform:scale(1);
+}
+
+.questions div.read-more{
+    float: left;
+    cursor: pointer;
+}
+
+.questions div.read-more::before{
+    content: '💬 ';
+}
+
+
+
+/*===============SHOW QUESTIONS================*/
 
 body.show-question{
     overflow-y: hidden;
 }
 
+body.show-question #questions .answers {
+    display: inline-block;
+}
+
+
 body.show-question div.read-more::before{
-    content: "❌ "
+    content: '❌ '
 }
 
 body.show-question #questions{
@@ -72,9 +107,95 @@ body.show-question #questions{
 body.show-question .questions{
     display: none;
     height: 85vh;
+    overflow-y: scroll;
 }
 
 .questions.show{
     display: inline-block !important;
 }
+
+
+/*==============ANSWERS=============*/
+.answer .description{
+    /*background-color: grey;*/
+    display: flex;
+    flex-direction: row;
+    font-size: 1.2rem;
+}
+
+.answers, .answers .answer{
+    display: none;
+}
+
+/*.answers.show{*/
+    /*width: 100%;*/
+    /*display: inline-block;*/
+/*}*/
+section.answer-loader{
+    position: relative;
+    z-index: 3;
+}
+
+.answers.show section.answer-loader{
+    display: none;
+}
+
+.answers.show .answer{
+    display: inline-block;
+}
+
+.answer .description .votes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.answer .description .up::before{
+    content: '🔺'
+}
+
+.answer .description .down::before{
+    content: '🔻'
+}
+
+
+.answer .description .text{
+    line-height: 1.5;
+}
+
+.answer .description .text::before{
+    content: '📣';
+}
+
+.answers .headline{
+    font-size: 1.5rem;
+}
+
+.answer-details{
+    flex-direction: column;
+}
+
+.answer:hover{
+    background-color: grey;
+    color: white;
+}
+
+.answer:not(hover){
+    animation: fadeOut .5s;
+}
+
+.answer-details code{
+    font-weight: bolder;
+}
+
+.votes .up:hover, .votes .down:hover{
+    transform: scale(1.1);
+}
+
+.votes .up:not(:hover), .votes .down:not(:hover){
+    transform: scale(1.1);
+}
+
+
+
 

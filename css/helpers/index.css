@@ -24,6 +24,11 @@
     padding-top: 1rem;
 }
 
+
+.pd-l-1{
+    padding-left: 1rem;
+}
+
 .pd-bt-1{
     padding-bottom: 1rem;
 }
@@ -40,6 +45,16 @@
 .mg-l-1{
     margin-left: 1rem;
 }
+
+.mg-l-3{
+    margin-left: 3rem;
+}
+
+.mg-l-4{
+    margin-left: 4rem;
+}
+
+
 
 .mg-t-1{
     margin-top: 1rem;
@@ -86,12 +101,34 @@
 }
 
 
-@-webkit-keyframes fadeIn {
-    from { opacity: 0; margin: 0;}
-    to { opacity: 1; margin: 1rem;}
+.flex-end{
+    display: flex;
+    justify-content: end;
 }
+
+.right{
+    float: right
+}
+
+.left{
+    float: left;
+}
+
+.separator{
+    border: 1px solid black;
+}
+
+/*======ANIMATIONS, TRANSITIONS AND TRANSFORMS========*/
 @keyframes fadeIn {
     from { opacity: 0; margin: 0;}
     to { opacity: 1; margin: 1rem;}
 }
 
+@keyframes fadeOut {
+    from { opacity: 1; margin: 1rem;}
+    to { opacity: 0; margin: 0;}
+}
+
+.tr-y-1{
+    transform: translateY(1rem);
+}

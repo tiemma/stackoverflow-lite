@@ -1,20 +1,4 @@
 
-#auth-header{
-    display: flex;
-    flex-direction: column;
-}
-
-#auth-header #active{
-    border-bottom: 1px solid #E65100;
-}
-
-#auth-header div:hover{
-    /*background-color: rgba(233, 233, 232, 0.8);*/
-    border-bottom: 1px solid #E65100;
-    /*box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
-     cursor: pointer;
-}
-
 #auth{
     margin-top: 1rem;
     border: 2px dashed #E65100;
@@ -28,14 +12,28 @@
     font-size: 2rem;
 }
 
+#auth-header{
+    display: flex;
+    flex-direction: column;
+}
+
+#auth-header #active{
+    border-bottom: 1px solid #E65100;
+}
+
+#auth-header div:hover{
+    /*background-color: rgba(233, 233, 232, 0.8);*/
+    border-bottom: 1px solid #E65100;
+    /*box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);*/
+    cursor: pointer;
+}
+
 #auth input[type=submit]{
     background-color: #E65100;
     color: white;
 }
 
-label{
-    color: grey;
-}
+
 
 .login-body, .register-body{
     position: relative;
