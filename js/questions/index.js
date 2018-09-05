@@ -33,10 +33,10 @@ createAnswers = (e) => {
 };
 
 
-showOrHideOtherQuestions = (e) => {
-    var bodyNode = document.querySelector('body');
+showOrHideOtherQuestions = (e, reload) => {
+    let bodyNode = document.querySelector('body');
 
-    if(bodyNode.classList.contains('show-question')){
+    if(bodyNode.classList.contains('show-question') && !reload){
         bodyNode.classList.remove('show-question');
         e.target.innerHTML = 'Show Answers';
         e.target.closest('.questions').classList.remove('show');
@@ -46,16 +46,16 @@ showOrHideOtherQuestions = (e) => {
     bodyNode.classList.add('show-question');
     e.target.closest('.questions').classList.add('show');
     e.target.innerHTML = 'Close';
-    fetchAnswers(e);
+    fetchAnswers(e, reload);
 };
 
 
-fetchAnswers = (e) => {
-    answersNode = e.target.closest('.questions').querySelector('.answers');
+fetchAnswers = (e, reload) => {
+    let answersNode = e.target.closest('.questions').querySelector('.answers');
     getDataWithoutBody(`${API_URL}/questions/` + e.target.dataset.questionid, 'GET')
         .then(response => response.json())
         .then((response) => {
-            if (!answersNode.classList.contains('show')) {
+            if (!answersNode.classList.contains('show') || reload) {
                 response['answers'].forEach((answer) => {
                     let headline = answer['answer']['headline'];
                     let votes = answer['answer']['votes'];
@@ -112,9 +112,14 @@ submitCreateQuestionData = (event) => {
     postData(`${API_URL}${formObject.attributes.action.nodeValue}`, formData, 'POST')
         .then(resp => resp.json())
         .then((resp) => {
-            if(resp.success === true) {
+            if (resp.success === true) {
                 document.querySelector("body").classList.remove('show-create-question');
                 document.querySelector("body").classList.remove('show-create-answer');
+                let showNode = document.querySelector(`div.read-more[data-questionid="${event.target.dataset.questionid}"]`);
+                setTimeout(() => {
+                    showNode.target = showNode;
+                    showOrHideOtherQuestions(showNode, true);
+                }, 500);
                 // location.reload(true);
             } else {
                 formObject.querySelector(".error").innerHTML = resp.error;

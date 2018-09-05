@@ -30,11 +30,6 @@ createEventListeners = () => {
     createEvents('#login-button', toggleAuth);
     createEvents('#auth input[type=submit]', submitAuthFormData);
     createEvents('#submit-question', submitCreateQuestionData);
-    createEvents('#submit-answer', (e) => {
-        submitCreateQuestionData(e);
-        document.querySelector("body")
-    });
-    createEvents('#header #create-question-button', () => {
     createEvents('#header #create-question-button', () => {
         document.querySelector("body").classList.add('show-create-question');
     });
