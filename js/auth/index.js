@@ -22,41 +22,28 @@ toggleAuth = (id) => {
 
 };
 
-toJSONString = ( form ) => {
-    var obj = {};
-    var elements = form.querySelectorAll( 'input, select, textarea' );
-    for( var i = 0; i < elements.length; ++i ) {
-        var element = elements[i];
-        var name = element.name;
-        var value = element.value;
 
-        if( name ) {
-            obj[ name ] = value;
-        }
-    }
-
-    return obj;
-};
-
-submitFormData = (event) => {
-    event.preventDefault();
-    let formObject = document.forms[`${event.target.dataset.target}-form`];
-    let formData = toJSONString(formObject);
-    val = formObject;
-    console.log(formObject);
-    if (formData.password !== formData.password_confirm){
-        console.log('Enter the same password;');
+submitAuthFormData = (event) => {
+    let formData = getFormData(event);
+    let formObject = getFormObject(event);
+    let target = event.target.dataset.target;
+    if (formData.password !== formData.password_confirm && target === 'register'){
+        formObject.querySelector(".error").innerHTML = 'Enter the same password';
         return;
     }
     delete formData['password_confirm'];
-    postData(`${url}/auth/${event.target.dataset.target}`, formData, 'POST')
+    postData(`${API_URL}/auth/${target}`, formData, 'POST')
         .then(resp => resp.json())
         .then((resp) => {
-        localStorage.setItem('token', resp.token);
-        localStorage.setItem('username', resp.user.username);
-        localStorage.setItem('username', resp.user.name);
-        localStorage.setItem('id', resp.user.id);
-        loadDashboard()
+            if(resp.token) {
+                localStorage.setItem('token', resp.token);
+                localStorage.setItem('username', resp.user.username);
+                localStorage.setItem('name', resp.user.name);
+                localStorage.setItem('id', resp.user.id);
+                loadDashboard()
+            } else {
+                formObject.querySelector(".error").innerHTML = resp.error;
+            }
     });
 };
 

@@ -1,52 +1,8 @@
 
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-};
-
-getHeaders = (url) => {
-    let requestHeaders = {
-        'Content-Type': 'application/json; charset=utf-8',
-        'X-Access-Token': localStorage.getItem("token")
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-    };
-    if(url.indexOf("auth") !== -1) {
-        delete requestHeaders['X-Access-Token'];
-    }
-    return requestHeaders;
-};
-
-getDataWithoutBody = (url = ``, method=``) => {
-    // Default options are marked with *
-
-    return fetch(url, {
-        mmethod: method, // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, cors, *same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, same-origin, *omit
-        headers: getHeaders(url),
-        redirect: 'follow', // manual, *follow, error
-        referrer: 'no-referrer', // no-referrer, *client
-    });
-};
-
-postData = (url = ``, data = {}, method=``) => {
-    // Default options are marked with *
-    return fetch(url, {
-        method: method, // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, cors, *same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, same-origin, *omit
-        headers: getHeaders(url),
-        redirect: 'follow', // manual, *follow, error
-        referrer: 'no-referrer', // no-referrer, *client
-        body: JSON.stringify(data), // body data type must match 'Content-Type' header
-    });
-};
 
 loadLogin = () => {
     if(localStorage.getItem('token') === null){
-        getDataWithoutBody('./signup', 'GET').
+        getDataWithoutBody('./templates/signup', 'GET').
         then(response => response.text()).
         then((response) => {
             document.querySelector('section#content').innerHTML = response;
@@ -59,17 +15,12 @@ loadLogin = () => {
 };
 
 loadDashboard = () => {
-    getDataWithoutBody('./templates', 'GET').
+    getDataWithoutBody('./templates/questions', 'GET').
     then(response => response.text()).
     then((response) => {
         document.querySelector('section#content').innerHTML = response;
         fetchQuestions();
-    });
-};
-
-createEvents = (element, func) => {
-    Array.from(document.querySelectorAll(element)).forEach(function(elem) {
-        elem.addEventListener('click', func, false);
+        createEventListeners();
     });
 };
 
@@ -77,8 +28,24 @@ createEventListeners = () => {
     createEvents('div.read-more', showOrHideOtherQuestions);
     createEvents('#register-button', () => {toggleAuth('register')});
     createEvents('#login-button', toggleAuth);
-    createEvents('input[type=submit]', submitFormData);
-    console.log('Auth functions loaded');
+    createEvents('#auth input[type=submit]', submitAuthFormData);
+    createEvents('#submit-question', submitCreateQuestionData);
+    createEvents('#submit-answer', (e) => {
+        submitCreateQuestionData(e);
+        document.querySelector("body")
+    });
+    createEvents('#header #create-question-button', () => {
+    createEvents('#header #create-question-button', () => {
+        document.querySelector("body").classList.add('show-create-question');
+    });
+    createEvents('.questions #create-question-button', () => {
+        document.querySelector("body").classList.add('show-create-question');
+    });
+    createEvents('.questions #create-answer-button', createAnswers);
+    createEvents('#close-create-button', (e) => {
+        document.querySelector("body").classList.remove(e.target.dataset.target);
+    });
+    console.log('Event listener functions loaded');
 };
 
 initPage = () => {

@@ -1,8 +1,11 @@
 <link rel='stylesheet' href='css/auth/index.css'>
 
-<div id='auth' class='bg-white shadow-depth-2'>
+<div id='auth' class='bg-white shadow-depth-2 red-dashed'>
+
+    <!-- Register form -->
     <div class='shadow-depth-1 mg-t-1 mg-bt-1 padding-1 center-text register-body'>
         <form method='post' action='auth/register' id='register-form'>
+            <code title='Error' class='error shadow-depth-2 padding-1'></code>
             <div class='input-field half-width'>
                 <label for='name'>Name</label>
                 <input type='text' name='name' id='name' class='only-bt-bdr margin-1'>
@@ -29,8 +32,10 @@
         </form>
     </div>
 
+    <!-- Login form -->
     <div  class='shadow-depth-1 mg-t-1 mg-bt-1 padding-1 center-text login-body'>
         <form action='auth/login' method='post' id='login-form'>
+            <code title='Error' class='error shadow-depth-2 padding-1'></code>
             <div class='input-field half-width'>
                 <label for='username'>Username</label>
                 <input type='text' name='username' id='username' class='only-bt-bdr margin-1'>

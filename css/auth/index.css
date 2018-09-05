@@ -1,11 +1,9 @@
 
 #auth{
     margin-top: 1rem;
-    border: 2px dashed #E65100;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-;
 }
 
 #auth *{
@@ -48,4 +46,3 @@
 .input-field input{
     width: 100%;
 }
-

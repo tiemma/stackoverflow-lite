@@ -15,6 +15,10 @@
 </head>
 
 <body>
+    <section id="create-answer-section">
+
+    </section>
+    <!-- Spinning loader design dubbed off Google's own -->
     <section id='loader'>
         <div class='showbox'>
             <div class='loader'>
@@ -25,12 +29,25 @@
         </div>
     </section>
 
+    <!-- Header for the site -->
+    <section id="header" class="padding-half shadow-depth-2 bg-white center-vertical red-dashed-bottom">
+        <div id="header-left">
+            <span>Stack Overflow Lite</span>
+        </div>
+        <div id="header-right">
+            <button class="green-dashed padding-half shadow-depth-1 pointer" id="create-question-button">Create Question</button>
+        </div>
+    </section>
+
+    <!-- Content on the site -->
     <section id='content'>
 
     </section>
 </body>
 
+<script src='js/helpers/index.js'></script>
 <script src='js/auth/index.js'></script>
+<script src='js/questions/template.js'></script>
 <script src='js/questions/index.js'></script>
 <script src='js/index.js'></script>
 </html>
