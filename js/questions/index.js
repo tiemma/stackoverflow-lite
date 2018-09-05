@@ -73,10 +73,10 @@ const questions_template = `   <div class='questions shadow-depth-2 bg-white mar
             <hr />
         </div>
         <div class='footer-details flex-end mg-bt-1'>
-            <div class='read-more' data-questionid='%question-id%'>Show Answers</div>
-            <div class='created-at'>%created%</div>
-            <div class='accepted' title='accepted'></div>
-            <div class='votes' title='votes'>%votes%</div>
+            <div class='read-more' title="Show all answers" data-questionid='%question-id%'>Show Answers</div>
+            <div class='created-at' title="Date and time the answer was created">%created%</div>
+            <div class='accepted' title='Answer has been accepted'></div>
+            <div class='votes' title='Number of votes the question has'>%votes%</div>
         </div>
     </div>`;
 
@@ -128,7 +128,7 @@ showOrHideOtherQuestions = (e) => {
 
 formatDate = (date) => {
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    return new Date(date.replaceAll('\'', '')).toLocaleDateString('en-US', options);
+    return new Date(date.replaceAll('\'', '').replaceAll('\"', '')).toLocaleDateString('en-US', options);
 };
 
 loadAnswersAndComments = (e) => {

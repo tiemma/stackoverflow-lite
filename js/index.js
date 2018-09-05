@@ -4,17 +4,27 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.split(search).join(replacement);
 };
 
+getHeaders = (url) => {
+    let requestHeaders = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-Access-Token': localStorage.getItem("token")
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    if(url.indexOf("auth") !== -1) {
+        delete requestHeaders['X-Access-Token'];
+    }
+    return requestHeaders;
+};
+
 getDataWithoutBody = (url = ``, method=``) => {
     // Default options are marked with *
+
     return fetch(url, {
         mmethod: method, // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, same-origin, *omit
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: getHeaders(url),
         redirect: 'follow', // manual, *follow, error
         referrer: 'no-referrer', // no-referrer, *client
     });
@@ -27,10 +37,7 @@ postData = (url = ``, data = {}, method=``) => {
         mode: 'cors', // no-cors, cors, *same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, same-origin, *omit
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: getHeaders(url),
         redirect: 'follow', // manual, *follow, error
         referrer: 'no-referrer', // no-referrer, *client
         body: JSON.stringify(data), // body data type must match 'Content-Type' header

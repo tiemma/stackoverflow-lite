@@ -190,6 +190,7 @@ section.answer-loader{
 
 .votes .up:hover, .votes .down:hover{
     transform: scale(1.1);
+    cursor: pointer;
 }
 
 .votes .up:not(:hover), .votes .down:not(:hover){
