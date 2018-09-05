@@ -26,11 +26,13 @@ export default class Model {
     return new Promise(((resolve, reject) => {
       this.pool.query(sql)
         .then((res) => {
-          this.debug(`execSQL - Client response after executing SQL: ${res.rows}`);
+          this.debug(`execSQL - Client response after executing SQL: ${JSON.stringify(res.rows[0])}`);
           this.debug(sql);
           resolve(res);
         })
-        .catch(err => setImmediate(() => { reject(new SQLExecError(`execSQL - An error occurred: ${err}`)); }));
+        .catch(err => setImmediate(() => {
+          reject(new SQLExecError(`execSQL - An error occurred: ${err}`));
+        }));
     }));
   }
 
@@ -50,11 +52,18 @@ export default class Model {
     // return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
   }
 
+  static filterBadCharacters(words) {
+    return words.split('\'').join('`');
+  }
+
   selectAll(fields) {
     this.debug(`selectAll - Selecting all fields in ${this.table}`);
     const sql = `SELECT ${fields.join(',')} from ${this.table}`;
-    return new Promise((resolve) => {
-      this.execSQL(sql).then(resp => resolve(resp));
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(resp => resolve(resp))
+        .catch(err => setImmediate(() => {
+          reject(new SQLExecError(`selectAll - An error occurred: ${err}`));
+        }));
     });
   }
 
@@ -65,31 +74,47 @@ export default class Model {
     }
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     this.debug(sql);
-    return new Promise(resolve => this.execSQL(sql).then(resp => resolve(resp)));
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(resp => resolve(resp)).catch(err => setImmediate(() => {
+        reject(new SQLExecError(`selectWithConstraints - An error occurred: ${err}`));
+      }));
+    });
   }
 
   selectOne(fields, constraints) {
     this.debug(`selectOne - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')} LIMIT 1`;
     this.debug(sql);
-    return new Promise(resolve => this.execSQL(sql).then(resp => resolve(resp)));
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(resp => resolve(resp)).catch(err => setImmediate(() => {
+        reject(new SQLExecError(`selectOne - An error occurred: ${err}`));
+      }));
+    });
   }
 
   delete(constraints) {
     this.debug(`delete - Deleting fields from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `DELETE FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     this.debug(sql);
-    return new Promise(resolve => this.execSQL(sql).then(resp => resolve(resp)));
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(resp => resolve(resp)).catch(err => setImmediate(() => {
+        reject(new SQLExecError(`delete - An error occurred: ${err}`));
+      }));
+    });
   }
 
   insert(constraints, fields) {
-    this.debug(`insert - Inserting into table ${this.table} with constraints ${constraints.toString()} and returning fields ${fields}`);
-    const sql = `INSERT INTO ${this.table} (${Object.keys(constraints).join(',')}) VALUES(${Object.values(constraints).map(x => `'${x}'`).join(',')})`;
+    this.debug(`insert - Inserting into table ${this.table} with constraints ${JSON.stringify(constraints)} and returning fields ${fields}`);
+    const sql = `INSERT INTO ${this.table} (${Object.keys(constraints).join(',')}) VALUES(${Object.values(constraints).map(x => `'${Model.filterBadCharacters(x)}'`).join(',')})`;
     this.debug(sql);
     const self = this;
-    return new Promise(resolve => this.execSQL(sql).then(() => {
-      self.selectOne(fields, constraints).then(resp => resolve(resp));
-    }));
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(() => {
+        self.selectOne(fields, constraints).then(resp => resolve(resp));
+      }).catch(err => setImmediate(() => {
+        reject(new SQLExecError(`insert - An error occurred: ${err}`));
+      }));
+    });
   }
 
   update(updateFields, constraints, fields) {
@@ -97,11 +122,13 @@ export default class Model {
     const sql = `UPDATE ${this.table} SET  ${Model.parseToSQLFormat(updateFields)} WHERE ${Model.parseToSQLFormat(constraints, ',')}`;
     this.debug(sql);
     const self = this;
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.execSQL(sql).then(() => {
         this.execSQL(sql).then(() => {
           self.selectOne(fields, updateFields).then(resp => resolve(resp));
-        });
+        }).catch(err => setImmediate(() => {
+          reject(new SQLExecError(`update - An error occurred: ${err}`));
+        }));
       });
     });
   }
@@ -111,7 +138,7 @@ export default class Model {
   }
 
   static parseToSQLFormat(object, delimiter) {
-    return Object.keys(object).map(key => `${key}='${object[key]}'`).join(delimiter);
+    return Object.keys(object).map(key => `${key}='${Model.filterBadCharacters(object[key])}'`).join(delimiter);
   }
 }
 

@@ -69,4 +69,4 @@ export default class Question extends Model {
   }
 }
 
-// new Question().fetchUserAndTheirQuestion(1).then(resp => console.log(resp));
+// new QuestionRoutes().fetchUserAndTheirQuestion(1).then(resp => console.log(resp));

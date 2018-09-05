@@ -7,9 +7,11 @@ import {
 import { serve, setup } from 'swagger-ui-express';
 import { config } from 'dotenv';
 import packageJson from './package.json';
-import Question from './routes/questions';
-import Auth from './routes/auth';
+import QuestionRoutes from './routes/questions';
+import AuthRoutes from './routes/auth';
+import AnswerRoutes from './routes/answers';
 
+const URL_PREFIX = '/api/v1';
 
 const app = express();
 const options = {
@@ -56,13 +58,13 @@ app.use((req, res, next) => {
   next();
 });
 
-const URL_PREFIX = '/api/v1';
+app.use(new RegExp(`${URL_PREFIX}/(?!auth).*`, 'i'), AuthRoutes.verifyToken);
 
-app.use(new RegExp(`${URL_PREFIX}/(?!auth).*`, 'i'), Auth.verifyToken);
+app.post(`${URL_PREFIX}/auth/login`, AuthRoutes.login);
 
-app.post(`${URL_PREFIX}/auth/register`, Auth.register)
+app.post(`${URL_PREFIX}/auth/register`, AuthRoutes.register)
   .describe({
-    tags: ['Auth'],
+    tags: ['AuthRoutes'],
     consumes: ['application/json'],
     produces: ['application/json'],
     common: {
@@ -80,7 +82,7 @@ app.post(`${URL_PREFIX}/auth/register`, Auth.register)
     },
   });
 
-app.get(`${URL_PREFIX}/questions/:id`, Question.getQuestionWithAnswersAndComments)
+app.get(`${URL_PREFIX}/questions/:id`, QuestionRoutes.getQuestionWithAnswersAndComments)
   .describe({
     tags: ['Questions'],
     responses: {
@@ -88,18 +90,42 @@ app.get(`${URL_PREFIX}/questions/:id`, Question.getQuestionWithAnswersAndComment
         description: 'Returns a valid json response',
       },
       404: {
-        description: 'Answers / Comments were not found',
+        description: 'AnswerRoutes / Comments were not found',
       },
     },
   });
 
-app.get(`${URL_PREFIX}/questions`, Question.getQuestions).describe({
+app.get(`${URL_PREFIX}/questions`, QuestionRoutes.getQuestions).describe({
   tags: ['Questions'],
   responses: {
     200: {
       description: 'Returns a valid json response',
     },
     404: {
+      description: 'No question was found',
+    },
+  },
+});
+
+app.post(`${URL_PREFIX}/questions`, QuestionRoutes.createQuestion).describe({
+  tags: ['Questions'],
+  responses: {
+    200: {
+      description: 'Returns a valid json response',
+    },
+    500: {
+      description: 'No question was found',
+    },
+  },
+});
+
+app.post(`${URL_PREFIX}/questions/:id/answers`, AnswerRoutes.createAnswer).describe({
+  tags: ['AnswerRoutes'],
+  responses: {
+    200: {
+      description: 'Returns a valid json response',
+    },
+    500: {
       description: 'No question was found',
     },
   },

@@ -20,5 +20,5 @@ export default function Config(environment) {
       KEY: SECRET_KEY,
     };
   }
-  throw new NotImplementedError('Environment Configuration does not exist');
+  throw new NotImplementedError(`Environment configuration '${environment}' does not exist`);
 }

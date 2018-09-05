@@ -5,30 +5,38 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../models/user';
 import Config from '../config';
 
-export default class Auth {
+export default class AuthRoutes {
   static getLogger() {
     return logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
   }
 
   static login(req, res) {
-    Auth.getLogger()(`Logging in user with username: ${req.body.username}`);
+    AuthRoutes.getLogger()(`Logging in user with username: ${req.body.username}`);
 
-    req.body.password = bcrypt.hashSync(req.body.password, 8);
-
-    new UserModel().selectOne(['id', 'username', 'name']).then((user) => {
+    new UserModel().selectOne(['id', 'username', 'name', 'password'], { username: req.body.username }).then((user) => {
       // create a token
-      const token = jwt.sign({ id: user.id }, Config('development').KEY, {
-        expiresIn: 86400, // expires in 24 hours
-      });
+      const data = user.rows;
+      if (!data) {
+        res.status(404).json({ error: 'Username does not exist' });
+      }
+      bcrypt.compare(req.body.password, data[0].password).then((auth) => {
+        if (auth === false) {
+          res.status(404).json({ error: 'Username or password combination is incorrect' });
+        }
+        const token = jwt.sign({ id: user.id }, Config('development').KEY, {
+          expiresIn: 86400, // expires in 24 hours
+        });
 
-      Auth.getLogger()(`Sending token back to user: ${token}`);
-      res.status(200).send({ auth: true, token, user: user.rows[0] });
+        AuthRoutes.getLogger()(`Sending token back to user: ${token}`);
+        delete data[0].password;
+        res.status(200).send({ auth: true, token, user: data[0] });
+      });
     })
-      .catch(() => setImmediate(() => res.status(500).send('There was a problem registering the user.')));
+      .catch(() => setImmediate(() => res.status(500).json({ error: 'There was a problem registering the user' })));
   }
 
   static register(req, res) {
-    Auth.getLogger()(`Registering user with the following id: ${req.body.username}`);
+    AuthRoutes.getLogger()(`Registering user with the following id: ${req.body.username}`);
 
     req.body.password = bcrypt.hashSync(req.body.password, 8);
 
@@ -38,20 +46,20 @@ export default class Auth {
         expiresIn: 86400, // expires in 24 hours
       });
 
-      Auth.getLogger()(`Sending token back to user: ${token}`);
+      AuthRoutes.getLogger()(`Sending token back to user: ${token}`);
       res.status(200).send({ auth: true, token, user: user.rows[0] });
     })
       .catch(() => setImmediate(() => res.status(500).json({ error: 'There was a problem registering the user.' })));
   }
 
   static verifyToken(req, res, next) {
-    Auth.getLogger()(`Fetching request for user with the following details: \n
-    Headers: ${JSON.stringify(req.headers)} \n
+    AuthRoutes.getLogger()(`Fetching request for user with the following details:
+    Headers: ${JSON.stringify(req.headers)}
     Method: ${req.method}`);
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (req.method === 'OPTIONS') {
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ auth: true });
     }
 
     // decode token
@@ -59,7 +67,7 @@ export default class Auth {
       // verifies secret and checks token
       jwt.verify(token, Config('development').KEY, (err, decoded) => {
         if (err) {
-          return res.json({ success: false, message: 'Failed to authenticate token.' });
+          return res.json({ auth: false, message: 'Failed to authenticate token.' });
         }
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
@@ -69,7 +77,7 @@ export default class Auth {
       // if there is no token
       // return an error
       res.status(403).json({
-        success: false,
+        auth: false,
         message: 'No token provided.',
       });
     }
