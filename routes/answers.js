@@ -15,7 +15,7 @@ export default class AnswerRoutes {
     new AnswerModel().insert(req.body, ['*']).then((resp) => {
       const data = resp.rows[0];
       res.status(201).json({ data, success: true });
-    }).catch((err) => {
+    }).catch(() => {
       res.status(409).json({ error: "You can't answer a question twice" });
     });
   }
