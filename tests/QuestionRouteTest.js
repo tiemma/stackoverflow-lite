@@ -3,6 +3,7 @@ import {
   use, request, expect,
 } from 'chai';
 import jwt from 'jsonwebtoken';
+import { title, description } from 'casual';
 import chaiHTTP from 'chai-http';
 import server from '../app';
 import Config from '../config';
@@ -14,8 +15,8 @@ const token = jwt.sign({
   id: 1,
 }, Config('development').KEY, { expiresIn: 60 * 60 });
 const payload = {
-  description: 'jbjv hfdvbjldkfv',
-  headline: 'hjjblb',
+  description,
+  headline: title,
   user_id: '1',
 };
 
