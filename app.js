@@ -119,6 +119,19 @@ app.post(`${URL_PREFIX}/questions`, QuestionRoutes.createQuestion).describe({
   },
 });
 
+app.post(`${URL_PREFIX}/questions/all/count`, QuestionRoutes.returnCount).describe({
+  tags: ['Questions'],
+  responses: {
+    200: {
+      description: 'Returns a valid json response',
+    },
+    500: {
+      description: 'No question was found',
+    },
+  },
+});
+
+
 app.post(`${URL_PREFIX}/questions/:id/answers`, AnswerRoutes.createAnswer).describe({
   tags: ['AnswerRoutes'],
   responses: {
@@ -146,6 +159,11 @@ app.get('/swagger.json', (err, res) => {
 // Swagger spec compilations and swagger UI inits
 compile();
 app.use('/', serve, setup(json()));
+
+// Route doesn't exist
+app.use((req, res) => {
+  res.sendStatus(404);
+});
 
 
 export default app;

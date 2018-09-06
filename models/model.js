@@ -68,15 +68,16 @@ export default class Model {
   }
 
   countAllWithConstraints(constraints) {
-    this.debug(`Returning the number of results for a query with constraints: ${constraints}`);
+    this.debug(`countAllWithConstraints - Returning the number of results for a query with constraints: ${JSON.stringify(constraints)}`);
     let sql = `SELECT COUNT(*) from ${this.table}`;
-    if (constraints) {
+    if (Object.keys(constraints).length) {
+      this.debug('countAllWithConstraints - There are constraints for this query');
       sql += ` WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     }
     return new Promise((resolve, reject) => {
       this.execSQL(sql).then(resp => resolve(resp))
         .catch(err => setImmediate(() => {
-          reject(new SQLExecError(`selectAll - An error occurred: ${err}`));
+          reject(new SQLExecError(`countAllWithConstraints - An error occurred: ${err}`));
         }));
     });
   }
