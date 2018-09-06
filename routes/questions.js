@@ -9,6 +9,16 @@ export default class QuestionRoutes {
     return logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
   }
 
+  static returnCount(req, res) {
+    return new QuestionModel().countAllWithConstraints(req.body).then((resp) => {
+      QuestionRoutes.getLogger()(`Fetching counts of posts with the following constraints: ${JSON.stringify(req.body)}`);
+      res.status(200).json({ resp, success: true });
+    }).catch(() => setImmediate(() => {
+      QuestionRoutes.getLogger()('Error occurred while fetching counts');
+      res.status(500).json({ error: 'Error occurred while fetching counts' });
+    }));
+  }
+
   static getQuestions(req, res) {
     return new QuestionModel().selectAll(['*']).then((resp) => {
       QuestionRoutes.getLogger()('Selecting all questions in the database');

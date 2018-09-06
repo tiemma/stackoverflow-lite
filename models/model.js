@@ -67,6 +67,20 @@ export default class Model {
     });
   }
 
+  countAllWithConstraints(constraints) {
+    this.debug(`Returning the number of results for a query with constraints: ${constraints}`);
+    let sql = `SELECT COUNT(*) from ${this.table}`;
+    if (constraints) {
+      sql += ` WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
+    }
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(resp => resolve(resp))
+        .catch(err => setImmediate(() => {
+          reject(new SQLExecError(`selectAll - An error occurred: ${err}`));
+        }));
+    });
+  }
+
   selectWithConstraints(fields, constraints) {
     this.debug(`selectWithConstraints - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     if (!constraints) {

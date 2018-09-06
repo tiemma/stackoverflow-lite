@@ -1,0 +1,29 @@
+language: python
+python:
+  - "3.5"
+env:
+  global:
+    - PIPENV_VENV_IN_PROJECT=1
+    - PIPENV_IGNORE_VIRTUALENVS=1
+    - FLASK_ENV=testing
+    - DATABASE=stackoverflow
+    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+#    - CODECLIMATE_REPO_TOKEN=
+    - CC_TEST_REPORTER_ID=e506c53cc942d7d76d88ee5b958fcd5fbd1eaed3540e751fbab41b6a8c85112e
+before_script:
+  - psql -c "CREATE DATABASE $DATABASE;" -U postgres
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+addons:
+  postgresql: "9.5"
+install: 
+  - pip install pipenv
+  - pipenv install --dev --three
+  - pipenv install python-coveralls
+script:
+  - pipenv run -- py.test --cov-config .coveragerc --cov=src src/tests -s -v 
+after_success:
+  - pipenv run -- coveralls 
+after_script:
+  - pipenv run -- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

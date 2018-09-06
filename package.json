@@ -5,7 +5,9 @@
   "scripts": {
     "start": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www --exec babel-node",
     "prod": "DEBUG=stackoverflow-api-node:* forever start -dvw ./bin/www",
-    "develop": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www"
+    "develop": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www",
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -22,11 +24,16 @@
     "swagger-ui-express": "^4.0.1"
   },
   "devDependencies": {
+    "babel-plugin-istanbul": "^5.0.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "coveralls": "^3.0.2",
     "eslint": "^5.5.0",
+    "nyc": "^13.0.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "istanbul": "^0.4.5",
     "nodemon": "^1.18.4"
   },
   "babel": {
