@@ -155,6 +155,10 @@
     cursor: pointer;
 }
 
+.width-20{
+    width: 20vw;
+}
+
 /*======ANIMATIONS, TRANSITIONS AND TRANSFORMS========*/
 @keyframes fadeIn {
     from { opacity: 0; margin: 0;}

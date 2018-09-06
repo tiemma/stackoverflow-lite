@@ -1,23 +1,27 @@
 
+createQuestions = (response) => {
+    let questionsNode = document.querySelector('div#questions');
+    response['questions'].forEach((question)=>{
+        let headline = question['headline'];
+        let votes = question['votes'];
+        let content = question['description'];
+        let created = question['created'];
+        let id = question['id'];
+        let temp_questions_template = questions_template()
+            .replace('%headline%', headline)
+            .replace('%votes%', votes)
+            .replace('%content%', content)
+            .replaceAll('%question-id%', id)
+            .replace('%created%', formatDate(created));
+        questionsNode.insertAdjacentHTML('afterbegin', temp_questions_template);
+    });
+};
+
 fetchQuestions = () => {
     getDataWithoutBody(`${API_URL}/questions/`, 'GET')
         .then(response => response.json())
         .then(response => {
-            let questionsNode = document.querySelector('div#questions');
-            response['questions'].forEach((question)=>{
-                let headline = question['headline'];
-                let votes = question['votes'];
-                let content = question['description'];
-                let created = question['created'];
-                let id = question['id'];
-                let temp_questions_template = questions_template()
-                    .replace('%headline%', headline)
-                    .replace('%votes%', votes)
-                    .replace('%content%', content)
-                    .replaceAll('%question-id%', id)
-                    .replace('%created%', formatDate(created));
-                questionsNode.insertAdjacentHTML('afterbegin', temp_questions_template);
-            });
+            createQuestions(response);
             document.querySelector("body").insertAdjacentHTML('afterbegin', create_question_template());
             setTimeout(() => {
                 initPage();
@@ -94,10 +98,8 @@ fetchAnswers = (e, reload) => {
 
                 });
             }
-            setTimeout(() => {
-                answersNode.classList.add('show');
-                createEventListeners();
-            }, 500);
+            answersNode.classList.add('show');
+            createEventListeners();
         })
         .catch(error => console.error(error));
 };
@@ -116,10 +118,8 @@ submitCreateQuestionData = (event) => {
                 document.querySelector("body").classList.remove('show-create-question');
                 document.querySelector("body").classList.remove('show-create-answer');
                 let showNode = document.querySelector(`div.read-more[data-questionid="${event.target.dataset.questionid}"]`);
-                setTimeout(() => {
-                    showNode.target = showNode;
-                    showOrHideOtherQuestions(showNode, true);
-                }, 500);
+                showNode.target = showNode;
+                showOrHideOtherQuestions(showNode, true);
                 // location.reload(true);
             } else {
                 formObject.querySelector(".error").innerHTML = resp.error;
