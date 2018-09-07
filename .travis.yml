@@ -19,8 +19,6 @@ before_script:
   - echo $CODECLIMATE_REPO_TOKEN
 addons:
   postgresql: "9.5"
-  code_climate:
-    repo_token:
-      secure:
+
 script:
   - npm run-script coverage
