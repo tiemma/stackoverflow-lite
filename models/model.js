@@ -14,9 +14,13 @@ export default class Model {
     }
 
     this.pool.on('error', (err) => {
-      this.debug('Unexpected error on idle client', err);
+      this.debug('Unexpected error on idle client', err.message);
       process.exit(-1);
     });
+  }
+
+  static returnInstance() {
+    return new Model();
   }
 
   execSQL(sql) {
@@ -31,7 +35,7 @@ export default class Model {
           resolve(res);
         })
         .catch(err => setImmediate(() => {
-          reject(new SQLExecError(`execSQL - An error occurred: ${err}`));
+          reject(new SQLExecError(`execSQL - An error occurred: ${err.message}`));
         }));
     }));
   }

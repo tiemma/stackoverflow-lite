@@ -75,7 +75,7 @@ describe('Auth', () => {
       });
   });
 
-  it('User should be able to access apis after login with token, should not return 403', (verify) => {
+  it('User should be able to access apis after registering with token, should not return 403', (verify) => {
     request(server)
       .get(`${API_PREFIX}/questions`)
       .set('x-access-token', token)
@@ -104,13 +104,13 @@ describe('Auth', () => {
       });
   });
 
-  it('User should be able to access apis after login with token, should not return 403', (verify) => {
+  it('User should be able to access apis after login with token, should not return 403', (done) => {
     request(server)
       .get(`${API_PREFIX}/questions`)
       .set('x-access-token', token)
       .end((error, resp) => {
         expect(resp).to.not.have.status(403);
-        verify();
+        done();
       });
   });
 
@@ -128,7 +128,7 @@ describe('Auth', () => {
   });
 
   it('User should not be able to login with an incorrect username, should return 404 and have an error message', (done) => {
-    payload.username = word;
+    payload.username = 'cannotExist';
     request(server)
       .post(`${API_PREFIX}/auth/login`)
       .send(payload)
