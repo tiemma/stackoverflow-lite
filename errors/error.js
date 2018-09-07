@@ -8,21 +8,21 @@ class NullError extends Error {
 class NotImplementedError extends Error {
   constructor(...args) {
     super(...args);
-    Error.captureStackTrace(this, NullError);
+    Error.captureStackTrace(this, NotImplementedError);
   }
 }
 
 class SQLExecError extends Error {
   constructor(...args) {
     super(...args);
-    Error.captureStackTrace(this, NullError);
+    Error.captureStackTrace(this, SQLExecError);
   }
 }
 
 class InternalServerError extends Error {
   constructor(...args) {
     super(...args);
-    Error.captureStackTrace(this, NullError);
+    Error.captureStackTrace(this, InternalServerError);
   }
 }
 

@@ -6,9 +6,9 @@
     "start": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www --exec babel-node",
     "prod": "DEBUG=stackoverflow-api-node:* forever start -dvw ./bin/www",
     "develop": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www",
-    "test": "mocha --require babel-core/register tests",
-    "coverage": "nyc --reporter=text-lcov mocha --require babel-core/register tests | `npm bin`/coveralls",
-    "tests": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+    "test": "mocha --require babel-core/register test",
+    "report-html": "nyc npm test && nyc report --reporter=html",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
