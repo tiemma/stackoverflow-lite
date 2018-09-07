@@ -7,12 +7,14 @@ cache:
 env:
   global:
     - NODE_ENV=development
+    - USER=postgres
     - DATABASE=stackoverflow
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 #    - CODECLIMATE_REPO_TOKEN=
     - CC_TEST_REPORTER_ID=e506c53cc942d7d76d88ee5b958fcd5fbd1eaed3540e751fbab41b6a8c85112e
 before_script:
-  - psql -c "CREATE DATABASE $DATABASE;" -U postgres
+  - psql -c "CREATE DATABASE $DATABASE;" -U $USER
+  - psql -U $USER -d $DATABASE -a -f ./models/sql/tables.sql
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
