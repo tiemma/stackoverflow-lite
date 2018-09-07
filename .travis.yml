@@ -20,7 +20,5 @@ addons:
   postgresql: "9.5"
 script:
   - npm run-script coverage
-after_success:
-  - pipenv run -- coveralls 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
