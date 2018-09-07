@@ -20,7 +20,7 @@ const payload = {
   user_id: '1',
 };
 
-describe('Answers', () => {
+describe('Test Answers', () => {
   it('Submit an answer to a non-existent question', (done) => {
     request(server)
       .post(`${API_PREFIX}/questions/1000/answers`)
