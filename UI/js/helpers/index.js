@@ -48,16 +48,7 @@ getHeaders = (url) => {
   return requestHeaders;
 };
 
-getDataWithoutBody = (url = '', method = '') => fetch(url, {
-  mmethod: method, // *GET, POST, PUT, DELETE, etc.
-  mode: 'cors', // no-cors, cors, *same-origin
-  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-  credentials: 'same-origin', // include, same-origin, *omit
-  headers: getHeaders(url),
-  redirect: 'follow', // manual, *follow, error
-  referrer: 'no-referrer', // no-referrer, *client
-});
-postData = (url = '', data = {}, method = '') => fetch(url, {
+getRequestBody = (url, method) => ({
   method, // *GET, POST, PUT, DELETE, etc.
   mode: 'cors', // no-cors, cors, *same-origin
   cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -65,8 +56,17 @@ postData = (url = '', data = {}, method = '') => fetch(url, {
   headers: getHeaders(url),
   redirect: 'follow', // manual, *follow, error
   referrer: 'no-referrer', // no-referrer, *client
-  body: JSON.stringify(data), // body data type must match 'Content-Type' header
 });
+
+getDataWithoutBody = (url = '', method = '') => {
+  return fetch(url, getRequestBody(url, method));
+};
+
+postData = (url = '', data = {}, method = '') => {
+  const requestBody = getRequestBody(url, method);
+  requestBody.body = JSON.stringify(data);
+  return fetch(url, requestBody);
+};
 
 formatDate = (date) => {
   const options = {
