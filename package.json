@@ -7,8 +7,11 @@
     "prod": "DEBUG=stackoverflow-api-node:* forever start -dvw ./bin/www",
     "develop": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www",
     "test": "mocha --require babel-core/register test",
-    "report-html": "nyc npm test && nyc report --reporter=html",
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+    "report-html": "nyc npm test && nyc report --reporter=html --reporter=lcov",
+    "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
+    "coveralls-coverage": "coveralls < lcov.info",
+    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
+    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -31,6 +34,7 @@
     "casual": "^1.5.19",
     "chai": "^4.1.2",
     "chai-http": "^4.2.0",
+    "codeclimate-test-reporter": "^0.5.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
