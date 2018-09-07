@@ -57,7 +57,7 @@ export default class Model {
   }
 
   static filterBadCharacters(words) {
-    return words.split('\'').join('`');
+    return String(words).split('\'').join('`');
   }
 
   selectAll(fields) {

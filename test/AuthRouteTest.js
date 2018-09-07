@@ -114,8 +114,8 @@ describe('Auth', () => {
       });
   });
 
-  it('User should not be able to login with an correct username but incorrect password, should return 404 and have an error message', (done) => {
-    payload.password = word;
+  it('User should not be able to login with a correct username but incorrect password, should return 404 and have an error message', (done) => {
+    payload.password = 'cannotBeACorrectPassword';
     request(server)
       .post(`${API_PREFIX}/auth/login`)
       .send(payload)

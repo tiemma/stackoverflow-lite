@@ -131,6 +131,18 @@ app.post(`${URL_PREFIX}/questions/all/count`, QuestionRoutes.returnCount).descri
   },
 });
 
+app.post(`${URL_PREFIX}/answers/all/count`, AnswerRoutes.returnCount).describe({
+  tags: ['Questions'],
+  responses: {
+    200: {
+      description: 'Returns a valid json response',
+    },
+    500: {
+      description: 'No question was found',
+    },
+  },
+});
+
 
 app.post(`${URL_PREFIX}/questions/:id/answers`, AnswerRoutes.createAnswer).describe({
   tags: ['AnswerRoutes'],

@@ -17,11 +17,11 @@ const token = jwt.sign({
 const payload = {
   description,
   headline: title,
-  user_id: '1',
+  user_id: 1,
 };
 
-describe('Questions', () => {
-  it('Creates a question, return 200 and the resulting id for the question', (done) => {
+describe('Begin Questions Tests', () => {
+  it('Creates a base question, return 200 and the resulting id for the question', (done) => {
     request(server)
       .post(`${API_PREFIX}/questions`)
       .set('x-access-token', token)
@@ -31,6 +31,7 @@ describe('Questions', () => {
         expect(Object.keys(res.body)).to.have.contains('success');
         expect(Object.keys(res.body)).to.have.contains('data');
         expect(Object.keys(res.body.data)).to.have.contains('id');
+        expect(res.body.data.id).equals(1);
         done();
       });
   });
@@ -55,7 +56,7 @@ describe('Questions', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(Object.keys(res.body)).to.have.contains('questions');
-        expect(res.body.questions.length).greaterThan(0);
+        expect(res.body.questions.length).equals(1);
         done();
       });
   });

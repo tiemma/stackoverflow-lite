@@ -33,11 +33,11 @@ export default class QuestionRoutes {
     return new QuestionModel().insert(req.body, ['id']).then((resp) => {
       const data = resp.rows[0];
       QuestionRoutes.getLogger(`Creating question with the following details: ${JSON.stringify(req.body)}`);
-      res.status(201).json({ data, success: true });
+      return res.status(201).json({ data, success: true });
     }).catch(err => setImmediate(() => {
       QuestionRoutes.getLogger(`Error occurred while creating question: ${err}`);
       if (err.message.indexOf('duplicate key value violates unique constraint') > 0) return res.status(409).json({ error: "You can't create a question with the same headline" });
-      res.status(500).json({ error: 'Error occurred while creating question' });
+      return res.status(500).json({ error: 'Error occurred while creating question' });
     }));
   }
 
