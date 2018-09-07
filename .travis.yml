@@ -1,11 +1,12 @@
-language: python
-python:
-  - "3.5"
+language: node_js
+node_js:
+  - "8.11.3"
+cache:
+  directories:
+  - "node_modules"
 env:
   global:
-    - PIPENV_VENV_IN_PROJECT=1
-    - PIPENV_IGNORE_VIRTUALENVS=1
-    - FLASK_ENV=testing
+    - NODE_ENV=development
     - DATABASE=stackoverflow
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 #    - CODECLIMATE_REPO_TOKEN=
@@ -17,13 +18,9 @@ before_script:
   - ./cc-test-reporter before-build
 addons:
   postgresql: "9.5"
-install: 
-  - pip install pipenv
-  - pipenv install --dev --three
-  - pipenv install python-coveralls
 script:
-  - pipenv run -- py.test --cov-config .coveragerc --cov=src src/tests -s -v 
+  - npm run-script coverage
 after_success:
   - pipenv run -- coveralls 
 after_script:
-  - pipenv run -- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

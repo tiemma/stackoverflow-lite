@@ -75,7 +75,7 @@ export default class QuestionRoutes {
       .then((question) => {
         QuestionRoutes.getLogger(`Response for question: '${typeof question}'`);
         if (JSON.stringify(question) === '[]') {
-          res.status(404).json({ error: 'Question does not exist' });
+          return res.status(404).json({ error: 'Question does not exist' });
         }
         new QuestionModel().fetchAnswersFromQuestion(req.params.id)
           .then((answers) => {
@@ -84,9 +84,10 @@ export default class QuestionRoutes {
                 const resp = {};
                 resp.question = question[0].question;
                 resp.answers = answerWithComments;
-                res.status(200).json(resp);
-              })
-              .catch(() => setImmediate(() => { res.status(404).json({ error: 'Question does not exist' }); }));
+                return res.status(200).json(resp);
+              });
+            // .catch(() => setImmediate(() => {
+            // return res.status(404).json({ error: 'Question does not exist' }); }));
           });
       });
   }
