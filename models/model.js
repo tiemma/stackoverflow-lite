@@ -40,6 +40,15 @@ export default class Model {
     }));
   }
 
+  runQueryInPromise(sql, funcName) {
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then(resp => resolve(resp))
+        .catch(err => setImmediate(() => {
+          reject(new SQLExecError(`${funcName} - An error occurred: ${err}`));
+        }));
+    });
+  }
+
   bootstrapTables() {
     /**
      * Sets up the tables up in the database
@@ -63,12 +72,7 @@ export default class Model {
   selectAll(fields) {
     this.debug(`selectAll - Selecting all fields in ${this.table}`);
     const sql = `SELECT ${fields.join(',')} from ${this.table}`;
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then(resp => resolve(resp))
-        .catch(err => setImmediate(() => {
-          reject(new SQLExecError(`selectAll - An error occurred: ${err}`));
-        }));
-    });
+    return this.runQueryInPromise(sql, 'selectAll');
   }
 
   countAllWithConstraints(constraints) {
@@ -78,12 +82,7 @@ export default class Model {
       this.debug('countAllWithConstraints - There are constraints for this query');
       sql += ` WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     }
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then(resp => resolve(resp))
-        .catch(err => setImmediate(() => {
-          reject(new SQLExecError(`countAllWithConstraints - An error occurred: ${err}`));
-        }));
-    });
+    return this.runQueryInPromise(sql, 'countAllWithConstraints');
   }
 
   selectWithConstraints(fields, constraints) {
@@ -93,33 +92,21 @@ export default class Model {
     }
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     this.debug(sql);
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then(resp => resolve(resp)).catch(err => setImmediate(() => {
-        reject(new SQLExecError(`selectWithConstraints - An error occurred: ${err}`));
-      }));
-    });
+    return this.runQueryInPromise(sql, 'selectWithConstraints');
   }
 
   selectOne(fields, constraints) {
     this.debug(`selectOne - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')} LIMIT 1`;
     this.debug(sql);
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then(resp => resolve(resp)).catch(err => setImmediate(() => {
-        reject(new SQLExecError(`selectOne - An error occurred: ${err}`));
-      }));
-    });
+    return this.runQueryInPromise(sql, 'selectOne');
   }
 
   delete(constraints) {
     this.debug(`delete - Deleting fields from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `DELETE FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     this.debug(sql);
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then(resp => resolve(resp)).catch(err => setImmediate(() => {
-        reject(new SQLExecError(`delete - An error occurred: ${err}`));
-      }));
-    });
+    return this.runQueryInPromise(sql, 'delete');
   }
 
   insert(constraints, fields) {

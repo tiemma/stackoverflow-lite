@@ -15,7 +15,11 @@ env:
 before_script:
   - psql -c "CREATE DATABASE $DATABASE;" -U $USER
   - psql -U $USER -d $DATABASE -a -f ./models/sql/tables.sql
+  - export CODECLIMATE_REPO_TOKEN=$(travis encrypt $CC_TEST_REPORTER)
 addons:
   postgresql: "9.5"
+  code_climate:
+    repo_token:
+      secure:
 script:
   - npm run-script coverage
