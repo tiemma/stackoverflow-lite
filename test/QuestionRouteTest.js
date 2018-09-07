@@ -21,6 +21,33 @@ const payload = {
 };
 
 describe('Questions', () => {
+  it('Creates a question, return 200 and the resulting id for the question', (done) => {
+    request(server)
+      .post(`${API_PREFIX}/questions`)
+      .set('x-access-token', token)
+      .send(payload)
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(Object.keys(res.body)).to.have.contains('success');
+        expect(Object.keys(res.body)).to.have.contains('data');
+        expect(Object.keys(res.body.data)).to.have.contains('id');
+        done();
+      });
+  });
+
+  it('Creates a duplicate question with the same content, return 409 and the resulting error message', (done) => {
+    request(server)
+      .post(`${API_PREFIX}/questions`)
+      .set('x-access-token', token)
+      .send(payload)
+      .end((err, res) => {
+        expect(res).to.have.status(409);
+        expect(Object.keys(res.body)).to.have.contains('error');
+        expect(res.body.error).to.have.equals('You can\'t create a question with the same headline');
+        done();
+      });
+  });
+
   it('Fetch all questions should return with a json object, status 200', (done) => {
     request(server)
       .get(`${API_PREFIX}/questions`)
@@ -53,34 +80,6 @@ describe('Questions', () => {
         expect(Object.keys(res.body)).to.have.contains('success');
         expect(Object.keys(res.body)).to.have.contains('data');
         expect(Object.keys(res.body.data)).to.have.contains('count');
-        done();
-      });
-  });
-
-  it('Creates a question, return 200 and the resulting id for the question', (done) => {
-    request(server)
-      .post(`${API_PREFIX}/questions`)
-      .set('x-access-token', token)
-      .send(payload)
-      .end((err, res) => {
-        expect(res).to.have.status(201);
-        expect(Object.keys(res.body)).to.have.contains('success');
-        expect(Object.keys(res.body)).to.have.contains('data');
-        expect(Object.keys(res.body.data)).to.have.contains('id');
-        done();
-      });
-  });
-
-
-  it('Creates a duplicate question with the same content, return 409 and the resulting error message', (done) => {
-    request(server)
-      .post(`${API_PREFIX}/questions`)
-      .set('x-access-token', token)
-      .send(payload)
-      .end((err, res) => {
-        expect(res).to.have.status(409);
-        expect(Object.keys(res.body)).to.have.contains('error');
-        expect(res.body.error).to.have.equals('You can\'t create a question with the same headline');
         done();
       });
   });
