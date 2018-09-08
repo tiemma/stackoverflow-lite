@@ -35,7 +35,7 @@ export default class AuthRoutes {
       });
     })
       .catch(() => setImmediate(() => {
-        res.status(500).json({ error: 'There was a problem registering the user' });
+        res.status(500).json({ error: 'Error occurred while logging in' });
       }));
   }
 
