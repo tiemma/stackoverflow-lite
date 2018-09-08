@@ -5,8 +5,8 @@ import {
 import jwt from 'jsonwebtoken';
 import { title, description } from 'casual';
 import chaiHTTP from 'chai-http';
-import server from '../app';
-import Config from '../config';
+import server from '../server/app';
+import Config from '../server/config';
 
 use(chaiHTTP);
 

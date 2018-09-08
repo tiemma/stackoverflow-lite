@@ -53,7 +53,7 @@ export default class Model {
     /**
      * Sets up the tables up in the database
      */
-    const tableSQL = readFileSync('models/sql/tables.sql', 'utf8');
+    const tableSQL = readFileSync('sql/tables.sql', 'utf8');
     return this.execSQL(tableSQL);
   }
 

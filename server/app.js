@@ -6,7 +6,7 @@ import {
 } from 'swagger-spec-express';
 import { serve, setup } from 'swagger-ui-express';
 import { config } from 'dotenv';
-import packageJson from './package.json';
+import packageJson from '../package.json';
 import QuestionRoutes from './routes/questions';
 import AuthRoutes from './routes/auth';
 import AnswerRoutes from './routes/answers';
@@ -174,11 +174,6 @@ app.get('/swagger.json', (err, res) => {
 // Swagger spec compilations and swagger UI inits
 compile();
 app.use('/', serve, setup(json()));
-
-// Route doesn't exist
-app.use((req, res) => {
-  res.sendStatus(404);
-});
 
 
 export default app;
