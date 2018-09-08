@@ -14,7 +14,7 @@ const loadLogin = () => getDataWithoutBody(`${API_URL}/verify/token`, 'GET')
   .then(response => response.json())
   .then((response) => {
     if (!response.auth) {
-      getDataWithoutBody('./templates/signup', 'GET')
+      getDataWithoutBody('/templates/signup', 'GET')
         .then(response => response.text())
         .then((response) => {
           document.querySelector('section#content').innerHTML = response;
@@ -28,7 +28,7 @@ const loadLogin = () => getDataWithoutBody(`${API_URL}/verify/token`, 'GET')
 
 const loadDashboard = () => {
   showSpinnerBeforeLoad();
-  getDataWithoutBody('./templates/questions', 'GET')
+  getDataWithoutBody('/templates/questions', 'GET')
     .then(response => response.text())
     .then((response) => {
       document.querySelector('section#content').innerHTML = response;
