@@ -95,7 +95,7 @@ const create_question_template = () => `
             </div>
             <input type="hidden" name="user_id" value="${localStorage.getItem('id')}" />
             <div class='input-field margin-1 flex-end'>
-                <input type='submit' value='Submit Answer' class="green-dashed padding-half" id="submit-question" data-target="create-question" />
+                <input type='submit' value='Submit Answer' class="green-dashed padding-half submit-question" id="submit-question" data-target="create-question" />
                 <button type='button' class="mg-l-1 red-dashed padding-half" value='Close' id="close-create-button" data-target="show-create-question">Close Dialog</button>
             </div>
         </div>
@@ -117,7 +117,7 @@ const create_answer_template = question_id => `
             </div>
             <input type="hidden" name="user_id" value="${localStorage.getItem('id')}" />
             <div class='input-field margin-1 flex-end'>
-                <input type='submit' value='Submit Answer' class="green-dashed padding-half" id="submit-question" data-target="create-answer" data-questionid="${question_id}"/>
+                <input type='submit' value='Submit Answer' class="green-dashed padding-half submit-question" id="submit-question" data-target="create-answer" data-questionid="${question_id}"/>
                 <button type='button' class="mg-l-1 red-dashed padding-half" value='Close' id="close-create-button" data-target="show-create-answer">Close Dialog</button>
             </div>
         </div>

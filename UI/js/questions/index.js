@@ -1,5 +1,5 @@
 
-createQuestions = (response) => {
+const createQuestions = (response) => {
   const questionsNode = document.querySelector('div#questions');
   response.questions.forEach((question) => {
     const headline = question.headline;
@@ -17,7 +17,7 @@ createQuestions = (response) => {
   });
 };
 
-fetchQuestions = () => {
+const fetchQuestions = () => {
   getDataWithoutBody(`${API_URL}/questions/`, 'GET')
     .then(response => response.json())
     .then((response) => {
@@ -30,14 +30,14 @@ fetchQuestions = () => {
     .catch(error => console.error(error));
 };
 
-createAnswers = (e) => {
+const createAnswers = (e) => {
   document.querySelector('section#create-answer-section').innerHTML = create_answer_template(e.target.dataset.questionid);
   document.querySelector('body').classList.add('show-create-answer');
   createEventListeners();
 };
 
 
-showOrHideOtherQuestions = (e, reload) => {
+const showOrHideOtherQuestions = (e, reload) => {
   const bodyNode = document.querySelector('body');
 
   if (bodyNode.classList.contains('show-question') && !reload) {
@@ -54,7 +54,7 @@ showOrHideOtherQuestions = (e, reload) => {
 };
 
 
-fetchAnswers = (e, reload) => {
+const fetchAnswers = (e, reload) => {
   const answersNode = e.target.closest('.questions').querySelector('.answers');
   getDataWithoutBody(`${API_URL}/questions/${e.target.dataset.questionid}`, 'GET')
     .then(response => response.json())
@@ -105,19 +105,23 @@ fetchAnswers = (e, reload) => {
     .catch(error => console.error(error));
 };
 
-submitCreateQuestionData = (event) => {
+const submitCreateQuestionData = (event) => {
   const formData = getFormData(event);
   const formObject = getFormObject(event);
   if (formData.headline === '' || formData.description === '') {
     formObject.querySelector('.error').innerHTML = 'Kindly fill all fields';
     return;
   }
-  postData(`${API_URL}${formObject.attributes.action.nodeValue}`, formData, 'POST')
+  const postEndPoint = formObject.attributes.action.nodeValue;
+  postData(`${API_URL}${postEndPoint}`, formData, 'POST')
     .then(resp => resp.json())
     .then((resp) => {
       if (resp.success === true) {
         document.querySelector('body').classList.remove('show-create-question');
         document.querySelector('body').classList.remove('show-create-answer');
+        if(postEndPoint.indexOf('answers') === -1){
+          return loadDashboard();
+        }
         const showNode = document.querySelector(`div.read-more[data-questionid="${event.target.dataset.questionid}"]`);
         showNode.target = showNode;
         showOrHideOtherQuestions(showNode, true);

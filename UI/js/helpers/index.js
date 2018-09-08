@@ -1,11 +1,9 @@
 
-const API_URL = 'http://localhost:3000/api/v1';
+const API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
 
-String.prototype.replaceAll = function (search, replacement) {
-  return this.split(search).join(replacement);
-};
+String.prototype.replaceAll = (search, replacement) => this.split(search).join(replacement);
 
-toJSONString = (form) => {
+const toJSONString = (form) => {
   const obj = {};
   const elements = form.querySelectorAll('input, select, textarea');
   for (let i = 0; i < elements.length; ++i) {
@@ -21,22 +19,22 @@ toJSONString = (form) => {
   return obj;
 };
 
-getFormObject = (event) => {
+const getFormObject = (event) => {
   event.preventDefault();
   const target = event.target.dataset.target; // login or register
   return document.forms[`${target}-form`];
 };
 
-getFormData = event => toJSONString(getFormObject(event));
+const getFormData = event => toJSONString(getFormObject(event));
 
-createEvents = (element, func) => {
+const createEvents = (element, func) => {
   Array.from(document.querySelectorAll(element)).forEach((elem) => {
     elem.addEventListener('click', func, false);
   });
 };
 
 
-getHeaders = (url) => {
+const getHeaders = (url) => {
   const requestHeaders = {
     'Content-Type': 'application/json; charset=utf-8',
     'X-Access-Token': localStorage.getItem('token'),
@@ -48,7 +46,7 @@ getHeaders = (url) => {
   return requestHeaders;
 };
 
-getRequestBody = (url, method) => ({
+const getRequestBody = (url, method) => ({
   method, // *GET, POST, PUT, DELETE, etc.
   mode: 'cors', // no-cors, cors, *same-origin
   cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -58,17 +56,15 @@ getRequestBody = (url, method) => ({
   referrer: 'no-referrer', // no-referrer, *client
 });
 
-getDataWithoutBody = (url = '', method = '') => {
-  return fetch(url, getRequestBody(url, method));
-};
+const getDataWithoutBody = (url = '', method = '') => fetch(url, getRequestBody(url, method));
 
-postData = (url = '', data = {}, method = '') => {
+const postData = (url = '', data = {}, method = '') => {
   const requestBody = getRequestBody(url, method);
   requestBody.body = JSON.stringify(data);
   return fetch(url, requestBody);
 };
 
-formatDate = (date) => {
+const formatDate = (date) => {
   const options = {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric',
   };
