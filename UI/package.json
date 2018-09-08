@@ -1,0 +1,38 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "User Interface which communicates with the stackoverflow-lite api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tiemma/stackoverflow-lite.git"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "nyc": "^13.0.1"
+  },
+  "keywords": [
+    "ui",
+    "user",
+    "interface",
+    "ux",
+    "css",
+    "html",
+    "javascript"
+  ],
+  "author": "Bakare Emmanuel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tiemma/stackoverflow-lite/issues"
+  },
+  "homepage": "https://github.com/Tiemma/stackoverflow-lite#readme"
+}

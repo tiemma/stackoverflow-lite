@@ -1,0 +1,275 @@
+/*.headline h1::before{*/
+/*content: '🏀';*/
+/*}*/
+
+/*========MISCELLANEOUS=========*/
+.headline{
+    position: relative;
+}
+
+.headline h1{
+    font-size: 3rem;
+}
+
+
+/*=========ANSWER INPUT=========*/
+#answer-input{
+    width: 100%;
+}
+
+
+/*===================DETAILS================*/
+.details code:before{
+    content: '➡️'
+}
+
+.details code{
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.footer-details{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.footer-details div{
+    padding-right: 1rem;
+    font-size: 0.8rem;
+}
+
+.footer-details .votes::before{
+    content: '👍🏼 '
+}
+
+.footer-details .accepted::before{
+    content: '✅'
+}
+
+
+/*===============QUESTIONS================*/
+#questions{
+    column-count: 1;
+    column-gap: 1rem;
+}
+
+.questions, .answers{
+    display: inline-block;
+    width: 99%;
+}
+
+.questions:hover{
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    position: relative;
+    transform:scale(1.05);
+    z-index: 1;
+    /*animation: fadeIn .5s;*/
+}
+
+.questions:not(:hover){
+    /*-webkit-animation: fadeOut .5s;*/
+    /*-o-animation: fadeOut .5s;*/
+    /*animation: fadeOut .5s;*/
+    transform:scale(1);
+}
+
+.questions div.read-more{
+    float: left;
+}
+
+.questions div.read-more::before{
+    content: '💬 ';
+}
+
+
+
+/*===============SHOW QUESTIONS================*/
+
+body.show-question{
+    overflow-y: hidden;
+}
+
+body.show-question #questions .answers {
+    display: inline-block;
+}
+
+
+body.show-question div.read-more::before{
+    content: '❌ '
+}
+
+body.show-question #questions{
+    column-count: 1 !important;
+}
+
+body.show-question .questions{
+    display: none;
+    height: 75vh;
+    overflow-y: scroll;
+}
+
+.questions.show{
+    display: inline-block !important;
+}
+
+
+/*==============ANSWERS=============*/
+.answer .description{
+    /*background-color: grey;*/
+    display: flex;
+    flex-direction: row;
+    font-size: 1.2rem;
+}
+
+.answers, .answers .answer{
+    display: none;
+}
+
+/*.answers.show{*/
+    /*width: 100%;*/
+    /*display: inline-block;*/
+/*}*/
+section.answer-loader{
+    position: relative;
+    z-index: 3;
+}
+
+.answers.show section.answer-loader{
+    display: none;
+}
+
+.answers.show .answer{
+    display: inline-block;
+}
+
+.answer .description .votes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.answer .description .up::before{
+    content: '🔺'
+}
+
+.answer .description .down::before{
+    content: '🔻'
+}
+
+
+.answer .description .text{
+    line-height: 1.5;
+}
+
+.answer .description .text::before{
+    content: '📣';
+}
+
+.answers .headline{
+    font-size: 1.5rem;
+}
+
+.answer-details{
+    flex-direction: column;
+}
+
+.answer:hover{
+    background-color: grey;
+    color: white;
+}
+
+.answer:not(hover){
+    animation: fadeOut .5s;
+}
+
+.answer-details code{
+    font-weight: bolder;
+}
+
+.votes .up:hover, .votes .down:hover{
+    transform: scale(1.1);
+}
+
+.votes .up:not(:hover), .votes .down:not(:hover){
+    transform: scale(1.1);
+}
+
+/*========CREATE QUESTION====================*/
+
+body.show-create-question #create-question{
+    display: flex;
+    animation: fadeIn .5s;
+}
+
+#create-question, #create-answer{
+    display: none;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(233, 233, 233, 0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+#create-question .error {
+    position: absolute;
+    z-index: 30;
+    font-size: 1rem;
+    animation: fadeIn .5s;
+}
+
+
+/*========CREATE ANSWER====================*/
+
+body.show-create-answer #create-answer{
+    display: flex;
+    animation: fadeIn .5s;
+}
+
+body.show-create-answer #create-answer .answers{
+    display: inline-block;
+    width: auto !important;
+    animation: fadeIn .5s;
+}
+
+#create-answer .error{
+    position: absolute;
+}
+
+#create-question input[type=submit], #create-question button, #create-answer input[type=submit], #create-answer button{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+#create-question input[type=submit]:hover, #create-question button:hover, #create-answer input[type=submit]:hover, #create-answer button:hover{
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+
+
+
+/*=================RESPONSIVE SIDE=====================*/
+@media only screen and (min-width: 800px){
+
+    :root{
+        --content-padding: 10%;
+    }
+
+    #questions{
+        column-count: 2;
+        column-gap: 1rem;
+    }
+
+    section#content {
+        padding-left: var(--content-padding);
+        padding-right: var(--content-padding);
+    }
+
+    .questions, .answers{
+        width: 99%;
+    }
+
+}
