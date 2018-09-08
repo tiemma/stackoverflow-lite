@@ -1,52 +1,31 @@
-<<<<<<< HEAD
-language: python
-python:
-  - "3.5"
-env:
-  global:
-    - PIPENV_VENV_IN_PROJECT=1
-    - PIPENV_IGNORE_VIRTUALENVS=1
-    - FLASK_ENV=testing
-    - DATABASE=stackoverflow
-    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
-#    - CODECLIMATE_REPO_TOKEN=
-    - CC_TEST_REPORTER_ID=e506c53cc942d7d76d88ee5b958fcd5fbd1eaed3540e751fbab41b6a8c85112e
-before_script:
-  - psql -c "CREATE DATABASE $DATABASE;" -U postgres
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
-addons:
-  postgresql: "9.5"
-install: 
-  - pip install pipenv
-  - pipenv install --dev --three
-script:
-  - pipenv run -- py.test src/tests -s -v 
-after_script:
-  - pipenv run -- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-=======
+
 language: node_js
 node_js:
-  - "8.11.3"
+- 8.11.3
 cache:
   directories:
-  - "node_modules"
+  - node_modules
 env:
   global:
-    - NODE_ENV=development
-    - USER=postgres
-    - DATABASE=stackoverflow
-    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
-#    - CODECLIMATE_REPO_TOKEN=
+  - NODE_ENV=development
+  - USER=postgres
+  - DATABASE=stackoverflow
+  - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct;
+    else git log -1 --skip 1 --pretty=format:%ct; fi)
 before_script:
-  - psql -c "CREATE DATABASE $DATABASE;" -U $USER
-  - psql -U $USER -d $DATABASE -a -f ./models/sql/tables.sql
+- psql -c "CREATE DATABASE $DATABASE;" -U $USER
+- psql -U $USER -d $DATABASE -a -f ./models/sql/tables.sql
 addons:
-  postgresql: "9.5"
+  postgresql: '9.5'
   code_climate:
     repo_token:
-      secure: "noK1g8a8TaDLBRTYKMf2y+l4AE8XyjyyFhtPfhcnrlHmfhWvFItCsa7RQrWxOnany3/Nh0g7Uj4TAMw4IV7pUFvBzpfKJ2qAW6wdg8sN1JM2EhWezh1/M0UU8+5DYjgn0rxFqMs8r2Ur5K83vg0yYzoPASTQ1QKgwYEfCWZVHNeSp5jRzjC68/ZFRXcbBvU/sPP3NbOw+W/R4UvbyMrOyqz74PKybrUaghMeY5k29Jyp//9lxLE2XsmdSscTKaVvMPt0CJa+sxVHRah7nsLQRiZzEVywySN23RaWQwosW06VbEx58wtvJ6G0Om9D+vc6o7uRvIapm2zYQy0TbXOFkEW1lFgYpOiNzuqRrEEFYalf6XPqW1iwbyGgEQdlInxSjzDjU+02fQNx/pSygEzB4UHCQ94gBuo+QQzlVPv9bw0iYbgpE56CE/Zgk3fdUqtKSn32on7cqVhxYnPxdoTHyt2K5Fyge142hIp0BP8hLu919vOuDSfvKSUDLoOMVzbpPIWhu8Ga7XQIW1yjLtJ7IvK6ASzvwLa8Dc+DAIOz1w2eGXCUTp//i8XsWWLgi4sOamFchyLeWThKKoGeP8DzwR73bjuptUAisrc33fn9r3h6un5/nnHl4HN+USepix2rwHT2DzjrNhv7/2WAfzHntKJrwb8+UkeNonTlsuwQ7g4="
+      secure: noK1g8a8TaDLBRTYKMf2y+l4AE8XyjyyFhtPfhcnrlHmfhWvFItCsa7RQrWxOnany3/Nh0g7Uj4TAMw4IV7pUFvBzpfKJ2qAW6wdg8sN1JM2EhWezh1/M0UU8+5DYjgn0rxFqMs8r2Ur5K83vg0yYzoPASTQ1QKgwYEfCWZVHNeSp5jRzjC68/ZFRXcbBvU/sPP3NbOw+W/R4UvbyMrOyqz74PKybrUaghMeY5k29Jyp//9lxLE2XsmdSscTKaVvMPt0CJa+sxVHRah7nsLQRiZzEVywySN23RaWQwosW06VbEx58wtvJ6G0Om9D+vc6o7uRvIapm2zYQy0TbXOFkEW1lFgYpOiNzuqRrEEFYalf6XPqW1iwbyGgEQdlInxSjzDjU+02fQNx/pSygEzB4UHCQ94gBuo+QQzlVPv9bw0iYbgpE56CE/Zgk3fdUqtKSn32on7cqVhxYnPxdoTHyt2K5Fyge142hIp0BP8hLu919vOuDSfvKSUDLoOMVzbpPIWhu8Ga7XQIW1yjLtJ7IvK6ASzvwLa8Dc+DAIOz1w2eGXCUTp//i8XsWWLgi4sOamFchyLeWThKKoGeP8DzwR73bjuptUAisrc33fn9r3h6un5/nnHl4HN+USepix2rwHT2DzjrNhv7/2WAfzHntKJrwb8+UkeNonTlsuwQ7g4=
 script:
-  - npm run-script coverage
->>>>>>> node-tests
+- npm run-script coverage
+deploy:
+  provider: heroku
+  api_key:
+    secure: Fyeo0SyxOxUjZpDOIfj9wRshjpN/QldO1hsv1rkq+cn1Q7N6XOmtnCqfoJhJIJL1GIMTUHZwUyOaOkamsK2M4dBlTXKjDdsicwofX27N+JQTeh+baGJF9LNgH0mPiwTdt8BGlB0twN9SuEAGpXoujLnRxsxFAsWr4lWYmw7h8nHFt9b6X4t/hGwaQU3euvzKcY1nflWcXfON/FJML1AUifA299ol1AnSAP/4CfLeplSKaXTbTDnbHhV76IfpmBfTuR6IvqD6PXvbTX68bD1gmEnaJ3jf+JjEtLB2ln7of1krhsuKqWzCyewTxNy/z7DotZoZ6Leu0usRf+WaOKoLDbrN9FdUNkFKxibMgURbQlDv614+l7uM5Me/YtdNzfZmIwRPb581w2pFgJGBJbIIAjJt+O0JNmafSzOa3BBcbcAmnMnvrJC3rsjIgioOP+r65cGDMEZBHzri/IgPCo5iMPtfzhVcJzIO5OIdm2ib7lwVcMk27TVQ7Dnt3olUxebSy9JnGembQuOwoYHfYzxjNbgdrQFSuJ41reTvcfFM3SQQpRRHfAl8XAi3X9Vv+1WdKdgfwFykbsHkPYF5oRq2sAw4yKl/4gfIgrpvCEG42IsHxye4I4hrK4XW6Ixc2XUJoe/QCy06C7iUM0GYQ2wAgYNzGyUAyHSEfi1ofz8Op+s=
+  app: stackoverflow-lite
+  on:
+    repo: Tiemma/stackoverflow-lite

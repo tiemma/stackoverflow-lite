@@ -1,0 +1,53 @@
+{
+  "name": "stackoverflow-api-node",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www --exec babel-node",
+    "prod": "DEBUG=stackoverflow-api-node:* forever start -dvw ./bin/www",
+    "develop": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www",
+    "test": "mocha --require babel-core/register test",
+    "report-html": "nyc npm test && nyc report --reporter=html --reporter=lcov",
+    "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
+    "coveralls-coverage": "coveralls < lcov.info",
+    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
+    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "dotenv": "^6.0.0",
+    "express": "~4.16.0",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.10",
+    "morgan": "~1.9.0",
+    "pg": "^7.4.3",
+    "swagger-spec-express": "^2.0.4",
+    "swagger-ui-express": "^4.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-istanbul": "^5.0.1",
+    "babel-preset-env": "^1.7.0",
+    "casual": "^1.5.19",
+    "chai": "^4.1.2",
+    "chai-http": "^4.2.0",
+    "codeclimate-test-reporter": "^0.5.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nodemon": "^1.18.4",
+    "nyc": "^13.0.1"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  }
+}
