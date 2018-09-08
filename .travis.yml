@@ -20,7 +20,7 @@ addons:
       secure: noK1g8a8TaDLBRTYKMf2y+l4AE8XyjyyFhtPfhcnrlHmfhWvFItCsa7RQrWxOnany3/Nh0g7Uj4TAMw4IV7pUFvBzpfKJ2qAW6wdg8sN1JM2EhWezh1/M0UU8+5DYjgn0rxFqMs8r2Ur5K83vg0yYzoPASTQ1QKgwYEfCWZVHNeSp5jRzjC68/ZFRXcbBvU/sPP3NbOw+W/R4UvbyMrOyqz74PKybrUaghMeY5k29Jyp//9lxLE2XsmdSscTKaVvMPt0CJa+sxVHRah7nsLQRiZzEVywySN23RaWQwosW06VbEx58wtvJ6G0Om9D+vc6o7uRvIapm2zYQy0TbXOFkEW1lFgYpOiNzuqRrEEFYalf6XPqW1iwbyGgEQdlInxSjzDjU+02fQNx/pSygEzB4UHCQ94gBuo+QQzlVPv9bw0iYbgpE56CE/Zgk3fdUqtKSn32on7cqVhxYnPxdoTHyt2K5Fyge142hIp0BP8hLu919vOuDSfvKSUDLoOMVzbpPIWhu8Ga7XQIW1yjLtJ7IvK6ASzvwLa8Dc+DAIOz1w2eGXCUTp//i8XsWWLgi4sOamFchyLeWThKKoGeP8DzwR73bjuptUAisrc33fn9r3h6un5/nnHl4HN+USepix2rwHT2DzjrNhv7/2WAfzHntKJrwb8+UkeNonTlsuwQ7g4=
 script:
 -  NODE_ENV=development npm run-script coverage
--  NODE_ENV=production npm run-script coverage
+#-  NODE_ENV=production npm run-script coverage
 deploy:
   provider: heroku
   api_key:
