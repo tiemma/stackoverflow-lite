@@ -98,6 +98,19 @@ app.get(`${URL_PREFIX}/questions/:id`, QuestionRoutes.getQuestionWithAnswersAndC
     },
   });
 
+app.delete(`${URL_PREFIX}/questions/:id`, QuestionRoutes.getQuestionWithAnswersAndComments)
+  .describe({
+    tags: ['Questions'],
+    responses: {
+      200: {
+        description: 'Returns a valid json response',
+      },
+      404: {
+        description: 'AnswerRoutes / Comments were not found',
+      },
+    },
+  });
+
 app.get(`${URL_PREFIX}/questions`, QuestionRoutes.getQuestions).describe({
   tags: ['Questions'],
   responses: {

@@ -3,7 +3,7 @@ import logger from 'debug';
 import QuestionModel from '../models/question';
 import AnswerModel from '../models/answer';
 import { NullError } from '../errors/error';
-import { isDuplicate } from './helpers';
+import { isDuplicate, referenceDoesNotExist } from './helpers';
 
 export default class QuestionRoutes {
   static getLogger(message) {
@@ -92,5 +92,16 @@ export default class QuestionRoutes {
             // return res.status(404).json({ error: 'Question does not exist' }); }));
           });
       });
+  }
+
+  static deleteQuestion(req, res) {
+    QuestionRoutes.getLogger(`Deleting a question with the id: ${req.body.id}`);
+    const id = req.body.id;
+    return new QuestionModel().delete({ id }).then(() => res.status(200).send({ success: true, data: 'Question deleted successfully' })).catch(err => setImmediate(() => {
+      if (referenceDoesNotExist(err.message)) {
+        return res.status(404).json({ error: 'You can\'t delete a question that doesn\'t exist' });
+      }
+      return res.status(500).json({ error: 'An error occurred while deleting a question' });
+    }));
   }
 }
