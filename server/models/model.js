@@ -8,15 +8,18 @@ export default class Model {
   constructor(table) {
     this.table = table;
     this.pool = Model.initConn();
-    this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
     if (!table) {
       throw new NullError('Table name must be defined');
     }
 
     this.pool.on('error', (err) => {
-      this.debug('Unexpected error on idle client', err.message);
+      Model.debug('Unexpected error on idle client', err.message);
       process.exit(-1);
     });
+  }
+
+  static debug(message) {
+    return logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`)(message);
   }
 
   static returnInstance() {
@@ -30,8 +33,8 @@ export default class Model {
     return new Promise(((resolve, reject) => {
       this.pool.query(sql)
         .then((res) => {
-          this.debug(`execSQL - Client response after executing SQL: ${JSON.stringify(res.rows[0])}`);
-          this.debug(sql);
+          Model.debug(`execSQL - Client response after executing SQL: ${JSON.stringify(res.rows[0])}`);
+          Model.debug(sql);
           resolve(res);
         })
         .catch(err => setImmediate(() => {
@@ -61,7 +64,12 @@ export default class Model {
     /**
      * This instantiates the database connection to the db
      */
-    return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
+    const poolSettings = {
+      connectionString: Config(process.env.NODE_ENV).DATABASE_URI,
+      ssl: JSON.parse(process.env.ENABLE_SSL),
+    };
+    Model.debug(`Initialised connetion to the POSTGRES pool using config: ${JSON.stringify(poolSettings)}`);
+    return new Pool(poolSettings);
     // return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
   }
 
@@ -70,49 +78,49 @@ export default class Model {
   }
 
   selectAll(fields) {
-    this.debug(`selectAll - Selecting all fields in ${this.table}`);
+    Model.debug(`selectAll - Selecting all fields in ${this.table}`);
     const sql = `SELECT ${fields.join(',')} from ${this.table}`;
     return this.runQueryInPromise(sql, 'selectAll');
   }
 
   countAllWithConstraints(constraints) {
-    this.debug(`countAllWithConstraints - Returning the number of results for a query with constraints: ${JSON.stringify(constraints)}`);
+    Model.debug(`countAllWithConstraints - Returning the number of results for a query with constraints: ${JSON.stringify(constraints)}`);
     let sql = `SELECT COUNT(*) from ${this.table}`;
     if (Object.keys(constraints).length) {
-      this.debug('countAllWithConstraints - There are constraints for this query');
+      Model.debug('countAllWithConstraints - There are constraints for this query');
       sql += ` WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
     }
     return this.runQueryInPromise(sql, 'countAllWithConstraints');
   }
 
   selectWithConstraints(fields, constraints) {
-    this.debug(`selectWithConstraints - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
+    Model.debug(`selectWithConstraints - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     if (!constraints) {
       return this.selectAll(fields);
     }
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
-    this.debug(sql);
+    Model.debug(sql);
     return this.runQueryInPromise(sql, 'selectWithConstraints');
   }
 
   selectOne(fields, constraints) {
-    this.debug(`selectOne - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
+    Model.debug(`selectOne - Selecting fields ${fields} from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `SELECT ${fields.join(',')} FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')} LIMIT 1`;
-    this.debug(sql);
+    Model.debug(sql);
     return this.runQueryInPromise(sql, 'selectOne');
   }
 
   delete(constraints) {
-    this.debug(`delete - Deleting fields from table ${this.table} with constraints: ${constraints.toString()}`);
+    Model.debug(`delete - Deleting fields from table ${this.table} with constraints: ${constraints.toString()}`);
     const sql = `DELETE FROM ${this.table} WHERE ${Model.parseToSQLFormat(constraints, ' AND ')}`;
-    this.debug(sql);
+    Model.debug(sql);
     return this.runQueryInPromise(sql, 'delete');
   }
 
   insert(constraints, fields) {
-    this.debug(`insert - Inserting into table ${this.table} with constraints ${JSON.stringify(constraints)} and returning fields ${fields}`);
+    Model.debug(`insert - Inserting into table ${this.table} with constraints ${JSON.stringify(constraints)} and returning fields ${fields}`);
     const sql = `INSERT INTO ${this.table} (${Object.keys(constraints).join(',')}) VALUES(${Object.values(constraints).map(x => `'${Model.filterBadCharacters(x)}'`).join(',')})`;
-    this.debug(sql);
+    Model.debug(sql);
     const self = this;
     return new Promise((resolve, reject) => {
       this.execSQL(sql).then(() => {
@@ -124,9 +132,9 @@ export default class Model {
   }
 
   update(updateFields, constraints, fields) {
-    this.debug(`update - Inserting into table ${this.table} with constraints ${constraints.toString()} and returning fields ${fields}`);
+    Model.debug(`update - Inserting into table ${this.table} with constraints ${constraints.toString()} and returning fields ${fields}`);
     const sql = `UPDATE ${this.table} SET  ${Model.parseToSQLFormat(updateFields)} WHERE ${Model.parseToSQLFormat(constraints, ',')}`;
-    this.debug(sql);
+    Model.debug(sql);
     const self = this;
     return new Promise((resolve, reject) => {
       this.execSQL(sql).then(() => {

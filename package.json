@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "DEBUG=stackoverflow-api-node:* NODE_ENV=development nodemon ./server/bin/index.js --exec babel-node",
+    "dev": "DEBUG=stackoverflow-api-node:* nodemon ./server/bin/index.js --exec babel-node",
     "start": "npm run clean && npm run build-server && npm run start-server",
     "start-server": "DEBUG=stackoverflow-api-node:* forever start -dvw ./build/bin/index.js",
     "clean": "rm -rf build/*",
