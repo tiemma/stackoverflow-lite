@@ -1,21 +1,25 @@
 
 
 loadLogin = () => {
-  if (localStorage.getItem('token') === null) {
-    getDataWithoutBody('./templates/signup', 'GET')
-      .then(response => response.text())
-      .then((response) => {
-        document.querySelector('section#content').innerHTML = response;
-        console.log('Login page loaded completely');
-        initPage();
-      });
-  } else {
-    loadDashboard();
-  }
+  return getDataWithoutBody(`${API_URL}/verify/token`, 'GET')
+    .then(response => response.json())
+    .then((response) => {
+      if (!response.auth) {
+        getDataWithoutBody('./templates/signup', 'GET')
+          .then(response => response.text())
+          .then((response) => {
+            document.querySelector('section#content').innerHTML = response;
+            console.log('Login page loaded completely');
+            initPage();
+          });
+      } else {
+        loadDashboard();
+      }
+    });
 };
 
 loadDashboard = () => {
-  getDataWithoutBody('./templates/questions', 'GET')
+  return getDataWithoutBody('./templates/questions', 'GET')
     .then(response => response.text())
     .then((response) => {
       document.querySelector('section#content').innerHTML = response;

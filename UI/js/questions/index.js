@@ -97,7 +97,9 @@ fetchAnswers = (e, reload) => {
           });
         });
       }
-      answersNode.classList.add('show');
+      setTimeout(() => {
+        answersNode.classList.add('show');
+      }, 500);
       createEventListeners();
     })
     .catch(error => console.error(error));
