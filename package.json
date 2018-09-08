@@ -7,7 +7,6 @@
     "start": "npm run clean && npm run build-server && npm run start-server",
     "start-server": "DEBUG=stackoverflow-api-node:* forever start -dvw ./build/bin/index.js",
     "clean": "rm -rf build/*",
-    "postinstall": "node build/create-tables.js",
     "build-server": "babel -d ./build ./server -s",
     "test": "mocha --require babel-core/register test",
     "report-html": "nyc npm test && nyc report --reporter=html --reporter=lcov",
