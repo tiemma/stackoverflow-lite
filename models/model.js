@@ -8,7 +8,7 @@ export default class Model {
   constructor(table) {
     this.table = table;
     this.pool = Model.initConn();
-    this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
+    this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
     if (!table) {
       throw new NullError('Table name must be defined');
     }

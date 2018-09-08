@@ -5,7 +5,7 @@ import Model from './model';
 export default class User extends Model {
   constructor() {
     super('users');
-    this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
+    this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
   }
 }
 

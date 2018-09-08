@@ -6,7 +6,7 @@ import { SQLExecError } from '../errors/error';
 export default class Answer extends Model {
   constructor() {
     super('answers');
-    this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
+    this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
   }
 
   fetchCommentsWithAnswers(answerId) {

@@ -4,10 +4,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user';
 import Config from '../config';
+import { isDuplicate } from './helpers';
 
 export default class AuthRoutes {
   static getLogger() {
-    return logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
+    return logger(`stackoverflow-api-node:routes/${__filename.split(/[\\/]/).pop()}`);
   }
 
   static login(req, res) {
@@ -53,7 +54,7 @@ export default class AuthRoutes {
       res.status(201).send({ auth: true, token, user: user.rows[0] });
     })
       .catch((err) => {
-        if (err.message.indexOf('violates unique constraint') > 0) return res.status(409).json({ error: "You've already registered, kindly login" });
+        if (isDuplicate(err)) return res.status(409).json({ error: "You've already registered, kindly login" });
         return res.status(500).json({ error: 'There was a problem registering the user.' });
       });
   }

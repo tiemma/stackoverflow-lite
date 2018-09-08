@@ -3,21 +3,23 @@ import logger from 'debug';
 import QuestionModel from '../models/question';
 import AnswerModel from '../models/answer';
 import { NullError } from '../errors/error';
+import { isDuplicate } from './helpers';
 
 export default class QuestionRoutes {
   static getLogger(message) {
-    return logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`)(message);
+    return logger(`stackoverflow-api-node:routes/${__filename.split(/[\\/]/).pop()}`)(message);
   }
 
   static returnCount(req, res) {
+    QuestionRoutes.getLogger(`returnCount- Fetching counts of posts with the following constraints: ${JSON.stringify(req.body)}`);
     return new QuestionModel().countAllWithConstraints(req.body).then((resp) => {
-      QuestionRoutes.getLogger(`Fetching counts of posts with the following constraints: ${JSON.stringify(req.body)}`);
       const data = resp.rows[0];
       res.status(200).json({ data, success: true });
-    }).catch(() => setImmediate(() => {
-      QuestionRoutes.getLogger('Error occurred while fetching counts');
-      res.status(500).json({ error: 'Error occurred while fetching counts' });
-    }));
+    })
+      .catch(() => setImmediate(() => {
+        QuestionRoutes.getLogger('returnCount - Error occurred while fetching counts');
+        res.status(500).json({ error: 'Error occurred while fetching counts' });
+      }));
   }
 
   static getQuestions(req, res) {
@@ -36,7 +38,7 @@ export default class QuestionRoutes {
       return res.status(201).json({ data, success: true });
     }).catch(err => setImmediate(() => {
       QuestionRoutes.getLogger(`Error occurred while creating question: ${err}`);
-      if (err.message.indexOf('duplicate key value violates unique constraint') > 0) return res.status(409).json({ error: "You can't create a question with the same headline" });
+      if (isDuplicate(err)) return res.status(409).json({ error: "You can't create a question with the same headline" });
       return res.status(500).json({ error: 'Error occurred while creating question' });
     }));
   }

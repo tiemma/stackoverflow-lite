@@ -9,7 +9,20 @@ import { SQLExecError } from '../errors/error';
 export default class Question extends Model {
   constructor() {
     super('questions');
-    this.debug = logger(`stackoverflow-api-node:${__filename.split(/[\\/]/).pop()}`);
+    this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
+  }
+
+  resolveQuestionQueryInPromise(sql) {
+    return new Promise((resolve, reject) => {
+      this.execSQL(sql).then((resp) => {
+        const response = resp.rows.map((questions) => {
+          questions.question = zip(parseStringArray(questions.question), questionSchema);
+          return questions;
+        });
+        resolve(response);
+      })
+        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchAllUserQuestions - An error occurred: ${err}`)); }));
+    });
   }
 
   fetchAnswersFromQuestion(questionId) {
@@ -39,16 +52,7 @@ export default class Question extends Model {
         users.username AS user_username FROM questions
         INNER JOIN users ON questions.user_id = users.id
         WHERE questions.id = ${questionId}`;
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then((resp) => {
-        const response = resp.rows.map((questions) => {
-          questions.question = zip(parseStringArray(questions.question), questionSchema);
-          return questions;
-        });
-        resolve(response);
-      })
-        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchUserAndTheirQuestion - An error occurred: ${err}`)); }));
-    });
+    return this.resolveQuestionQueryInPromise(sql);
   }
 
   fetchAllUserQuestions(userId) {
@@ -56,16 +60,7 @@ export default class Question extends Model {
          users.name AS user_name,
          users.username AS user_username FROM questions
          INNER JOIN users ON questions.user_id = ${userId}`;
-    return new Promise((resolve, reject) => {
-      this.execSQL(sql).then((resp) => {
-        const response = resp.rows.map((questions) => {
-          questions.question = zip(parseStringArray(questions.question), questionSchema);
-          return questions;
-        });
-        resolve(response);
-      })
-        .catch(err => setImmediate(() => { reject(new SQLExecError(`fetchAllUserQuestions - An error occurred: ${err}`)); }));
-    });
+    return this.resolveQuestionQueryInPromise(sql);
   }
 }
 
