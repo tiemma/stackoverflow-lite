@@ -3,7 +3,7 @@ import {
 } from 'chai';
 import chaiHTTP from 'chai-http';
 import { word, title } from 'casual';
-import server from '../app';
+import server from '../server/app';
 
 use(chaiHTTP);
 

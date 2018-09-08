@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www --exec babel-node",
-    "prod": "DEBUG=stackoverflow-api-node:* forever start -dvw ./bin/www",
-    "develop": "DEBUG=stackoverflow-api-node:* nodemon ./bin/www",
+    "dev": "DEBUG=stackoverflow-api-node:* nodemon ./server/bin/index.js --exec babel-node",
+    "prod": "npm run clean && npm run build-server && npm run start-server",
+    "start-server": "DEBUG=stackoverflow-api-node:* forever start -dvw ./build/bin/index.js",
+    "clean": "rm -rf build/*",
+    "build-server": "babel -d ./build ./server -s",
     "test": "mocha --require babel-core/register test",
     "report-html": "nyc npm test && nyc report --reporter=html --reporter=lcov",
     "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
@@ -28,6 +30,8 @@
     "swagger-ui-express": "^4.0.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-istanbul": "^5.0.1",
     "babel-preset-env": "^1.7.0",

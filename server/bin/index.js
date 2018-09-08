@@ -9,7 +9,7 @@ import { createServer } from 'http';
 import app from '../app';
 
 
-const debug = logger('stackoverflow-api-node:www');
+const debug = logger('stackoverflow-api-node:bin/index.js');
 
 /**
  * Normalize a port into a number, string, or false.

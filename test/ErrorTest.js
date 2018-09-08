@@ -1,7 +1,7 @@
 import { expect, assert } from 'chai';
 import {
   InternalServerError, NotImplementedError, NullError, SQLExecError,
-} from '../errors/error';
+} from '../server/errors/error';
 
 const returnMessage = 'This should be the return message';
 

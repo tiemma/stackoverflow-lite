@@ -13,7 +13,7 @@ env:
     else git log -1 --skip 1 --pretty=format:%ct; fi)
 before_script:
 - psql -c "CREATE DATABASE $DATABASE;" -U $USER
-- psql -U $USER -d $DATABASE -a -f ./models/sql/tables.sql
+- psql -U $USER -d $DATABASE -a -f ./sql/tables.sql
 addons:
   postgresql: '9.5'
   code_climate:
