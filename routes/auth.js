@@ -25,7 +25,7 @@ export default class AuthRoutes {
         if (auth === false) {
           return res.status(404).json({ error: 'Username or password combination is incorrect' });
         }
-        const token = jwt.sign({ id: user.id }, Config('development').KEY, {
+        const token = jwt.sign({ id: user.id }, Config(process.env.NODE_ENV).KEY, {
           expiresIn: 86400, // expires in 24 hours
         });
 
@@ -46,7 +46,7 @@ export default class AuthRoutes {
 
     new UserModel().insert(req.body, ['id', 'username', 'name']).then((user) => {
       // create a token
-      const token = jwt.sign({ id: user.id }, Config('development').KEY, {
+      const token = jwt.sign({ id: user.id }, Config(process.env.NODE_ENV).KEY, {
         expiresIn: 86400, // expires in 24 hours
       });
 
@@ -72,7 +72,7 @@ export default class AuthRoutes {
     // decode token
     if (token) {
       // verifies secret and checks token
-      jwt.verify(token, Config('development').KEY, (err, decoded) => {
+      jwt.verify(token, Config(process.env.NODE_ENV).KEY, (err, decoded) => {
         if (err) {
           return res.json({ auth: false, message: 'Failed to authenticate token.' });
         }

@@ -61,7 +61,7 @@ app.use((req, res, next) => {
 app.use(new RegExp(`${URL_PREFIX}/(?!auth).*`, 'i'), AuthRoutes.verifyToken);
 
 // Stub route for validating JWT tokens
-app.get(`${URL_PREFIX}/verify/token`, AuthRoutes.verifyToken);
+app.get(`${URL_PREFIX}/verify/token`, (req, res) => res.status(200).json({ auth: true }));
 
 app.post(`${URL_PREFIX}/auth/login`, AuthRoutes.login);
 

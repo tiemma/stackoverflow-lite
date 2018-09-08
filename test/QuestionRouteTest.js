@@ -13,7 +13,7 @@ use(chaiHTTP);
 const API_PREFIX = '/api/v1';
 const token = jwt.sign({
   id: 1,
-}, Config('development').KEY, { expiresIn: 60 * 60 });
+}, Config(process.env.NODE_ENV).KEY, { expiresIn: 60 * 60 });
 const payload = {
   description,
   headline: title,

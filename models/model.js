@@ -61,7 +61,7 @@ export default class Model {
     /**
      * This instantiates the database connection to the db
      */
-    return new Pool({ connectionString: Config('development').DATABASE_URI });
+    return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
     // return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
   }
 
