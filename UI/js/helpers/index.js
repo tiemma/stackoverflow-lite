@@ -1,6 +1,4 @@
 
-const API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
-
 // Defined as a normal function since arrow function's
 // don't support this explicitly
 String.prototype.replaceAll = function (search, replacement) {

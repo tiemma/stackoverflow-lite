@@ -1,0 +1,19 @@
+.headline h1{
+    font-size: 2rem;
+}
+
+/*==========QUESTIONS LIST WITH THE MOST ANSWERS===============*/
+#questions-list{
+    column-count: 1;
+    /*max-height: 110vh;*/
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+    /*max-width: 100%;*/
+    position: relative;
+}
+
+@media only screen and (min-width: 800px){
+    #questions-list{
+        column-count: 3;
+    }
+}

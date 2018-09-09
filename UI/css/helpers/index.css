@@ -96,6 +96,14 @@
     border: 2px dashed #008744;
 }
 
+.yellow-dashed{
+    border: 2px dashed #ffa700;
+}
+
+.yellow-dashed:hover{
+    background-color: #fff;
+    color: black;
+}
 
 .red-dashed-bottom{
     border-bottom: 2px dashed #E65100;

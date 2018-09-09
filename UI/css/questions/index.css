@@ -9,6 +9,10 @@
 
 .headline h1{
     font-size: 3rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 3.7rem;
 }
 
 

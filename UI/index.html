@@ -16,24 +16,12 @@
 </head>
 
 <body>
-    <section id="create-answer-section">
-
-    </section>
-    <!-- Spinning loader design dubbed off Google's own -->
-    <section id='loader'>
-        <div class='showbox'>
-            <div class='loader'>
-                <svg class='circular' viewBox='25 25 50 50'>
-                    <circle class='path' cx='50' cy='50' r='20' fill='none' stroke-width='2' stroke-miterlimit='10'></circle>
-                </svg>
-            </div>
-        </div>
-    </section>
 
     <!-- Header for the site -->
     <section id="header" class="padding-half shadow-depth-2 bg-white center-vertical red-dashed-bottom" style="justify-content: space-between">
         <div id="header-left">
             <span>Stack Overflow Lite</span>
+            <button class="green-dashed padding-half shadow-depth-1 pointer" id="view-profile-button">View Profile</button>
         </div>
         <div id="header-center" >
             <input type="search" class="width-20"  autocomplete="" name="search" title="Search all questions headlines or descriptions" placeholder="Search Questions / Answers / Comments"/>
@@ -48,6 +36,25 @@
     <section id='content'>
 
     </section>
+
+
+
+    <!-- Static section where the create answers HTML gets dropped after creation -->
+    <section id="create-answer-section">
+
+    </section>
+
+    <!-- Spinning loader design dubbed off Google's own -->
+    <section id='loader'>
+        <div class='showbox'>
+            <div class='loader'>
+                <svg class='circular' viewBox='25 25 50 50'>
+                    <circle class='path' cx='50' cy='50' r='20' fill='none' stroke-width='2' stroke-miterlimit='10'></circle>
+                </svg>
+            </div>
+        </div>
+    </section>
+
 </body>
 
 <script src='js/helpers/index.js'></script>

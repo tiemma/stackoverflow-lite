@@ -70,7 +70,7 @@ const fetchAnswers = (e, reload) => {
           const user_name = answer.user_name;
           const id = answer.answer.id;
 
-          const temp_questions_template = answers_template()
+          const temp_answers_template = answers_template()
             .replace('%headline%', headline)
             .replace('%votes%', votes)
             .replaceAll('%answerid%', id)
@@ -79,7 +79,7 @@ const fetchAnswers = (e, reload) => {
             .replace('%username%', user_username)
             .replace('%name%', user_name);
 
-          answersNode.querySelector('hr').insertAdjacentHTML('afterend', temp_questions_template);
+          answersNode.querySelector('hr').insertAdjacentHTML('afterend', temp_answers_template);
 
           answer.comments.forEach((comment) => {
             const votes = comment.comment.votes;
@@ -121,7 +121,9 @@ const submitCreateQuestionData = (event) => {
       if (resp.success === true) {
         document.querySelector('body').classList.remove('show-create-question');
         document.querySelector('body').classList.remove('show-create-answer');
-        if(postEndPoint.indexOf('answers') === -1){
+        // We're reloading the dashboard if we add a new question
+        // This was the easiest idea I could think of without writing new stuff
+        if (postEndPoint.indexOf('answers') === -1) {
           return loadDashboard();
         }
         const showNode = document.querySelector(`div.read-more[data-questionid="${event.target.dataset.questionid}"]`);

@@ -1,3 +1,6 @@
+// const API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
+const API_URL = 'http://localhost:3000/api/v1';
+
 const initPage = () => {
   document.querySelector('section#loader').style.display = 'none';
   document.querySelector('section#content').style.display = 'block';
@@ -23,6 +26,18 @@ const loadDashboard = () => {
     });
 };
 
+const loadProfile = () => {
+  showSpinnerBeforeLoad();
+  getDataWithoutBody('./templates/profile', 'GET')
+    .then(response => response.text())
+    .then((response) => {
+      document.querySelector('section#content').innerHTML = response;
+      // fetchProfileDetails();
+      createEventListeners();
+      initPage();
+    });
+};
+
 const loadLogin = () => getDataWithoutBody('./templates/signup', 'GET')
   .then(response => response.text())
   .then((response) => {
@@ -31,11 +46,15 @@ const loadLogin = () => getDataWithoutBody('./templates/signup', 'GET')
     return initPage();
   });
 
-
+const val = null;
 const createEventListeners = () => {
   createEvents('div.read-more', showOrHideOtherQuestions);
+  createEvents('.questions', (e) => {
+    e.target.closest('.questions').querySelector('div.read-more').click();
+  });
   createEvents('#register-button', () => { toggleAuth('register'); });
   createEvents('#logout-button', logout);
+  createEvents('#view-profile-button', loadProfile);
   createEvents('#login-button', toggleAuth);
   createEvents('#auth input[type=submit]', submitAuthFormData);
   createEvents('.submit-question', submitCreateQuestionData);

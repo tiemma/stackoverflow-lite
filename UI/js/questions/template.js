@@ -1,5 +1,5 @@
 const answers_template = () => `
-<div class='answer padding-half full-width red-dashed' data-answerid='%answerid%' id='answer%answerid%'>
+<div class='answer padding-half full-width red-dashed mg-bt-1' data-answerid='%answerid%' id='answer%answerid%'>
     <div class='headline pd-l-1' title='Summary of the answer provided'>%headline%</div>
     <div class='description padding-1'>
         <div class='votes'>
@@ -11,6 +11,7 @@ const answers_template = () => `
     </div>
 
     <div class='answer-details flex-end right'>
+        <input type='submit' value='Add Comment' class="yellow-dashed padding-half pointer" id="create-comment-button" data-questionid='%question-id%' data-answer='%answerid%'/>
         <span class='created' title='Username of answer provider'>
             answered by <code title='%name%'>%username%</code>
         </span>
@@ -44,7 +45,7 @@ const comments_template = () => `
 </div>`;
 
 const questions_template = () => `
-<div class='questions shadow-depth-2 bg-white margin-1 padding-1 red-dashed'>
+<div class='questions shadow-depth-2 bg-white margin-1 padding-1 red-dashed pointer'>
     <div class='headline' title='Title the user gave the question'>
         <h1>%headline%</h1>
     </div>
@@ -68,7 +69,7 @@ const questions_template = () => `
         </section>
 
         <div class='input-field margin-1 flex-end'>
-            <input type='submit' value='Create Answer' class="green-dashed padding-half" id="create-answer-button" data-questionid='%question-id%'/>
+            <input type='submit' value='Create Answer' class="green-dashed padding-half pointer" id="create-answer-button" data-questionid='%question-id%'/>
         </div>
         <hr />
     </div>
@@ -95,8 +96,8 @@ const create_question_template = () => `
             </div>
             <input type="hidden" name="user_id" value="${localStorage.getItem('id')}" />
             <div class='input-field margin-1 flex-end'>
-                <input type='submit' value='Submit Answer' class="green-dashed padding-half submit-question" id="submit-question" data-target="create-question" />
-                <button type='button' class="mg-l-1 red-dashed padding-half" value='Close' id="close-create-button" data-target="show-create-question">Close Dialog</button>
+                <input type='submit' value='Submit Answer' class="green-dashed padding-half submit-question pointer" id="submit-question" data-target="create-question" />
+                <button type='button' class="mg-l-1 red-dashed padding-half pointer" value='Close' id="close-create-button" data-target="show-create-question">Close Dialog</button>
             </div>
         </div>
     </form>

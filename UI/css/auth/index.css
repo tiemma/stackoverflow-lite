@@ -49,4 +49,8 @@
     #auth *{
         font-size: 1rem;
     }
+
+    section#content{
+        padding-left: 10%;
+    }
 }
