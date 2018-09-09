@@ -1,4 +1,4 @@
-const answers_template = () => `
+const answersTemplate = () => `
 <div class='answer padding-half full-width red-dashed mg-bt-1' data-answerid='%answerid%' id='answer%answerid%'>
     <div class='headline pd-l-1' title='Summary of the answer provided'>%headline%</div>
     <div class='description padding-1'>
@@ -22,7 +22,7 @@ const answers_template = () => `
     <div class='comments margin-1'></div>
 </div>`;
 
-const comments_template = () => `
+const commentTemplate = () => `
 <div class='comment pd-t-1 mg-l-4'>
     <div class='description padding-1'>
         <div class='votes'>
@@ -44,7 +44,7 @@ const comments_template = () => `
     <hr />
 </div>`;
 
-const questions_template = () => `
+const questionTemplate = () => `
 <div class='questions shadow-depth-2 bg-white margin-1 padding-1 red-dashed pointer'>
     <div class='headline' title='Title the user gave the question'>
         <h1>%headline%</h1>
@@ -81,7 +81,7 @@ const questions_template = () => `
     </div>
 </div>`;
 
-const create_question_template = () => `
+const createQuestionTemplate = () => `
 <div id="create-question">
     <form method='post' action='/questions' id="create-question-form" class='tr-y-1'>
         <code title='Error' class='error shadow-depth-2 padding-1'></code>
@@ -103,7 +103,7 @@ const create_question_template = () => `
     </form>
 </div>`;
 
-const create_answer_template = question_id => `
+const createAnswerTemplate = question_id => `
 <div id="create-answer">
     <form method='post' action='/questions/${question_id}/answers' id="create-answer-form" class='tr-y-1'>
         <code title='Error' class='error shadow-depth-2 padding-1'></code>

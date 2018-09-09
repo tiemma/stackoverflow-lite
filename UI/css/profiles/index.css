@@ -2,18 +2,23 @@
     font-size: 2rem;
 }
 
+
 /*==========QUESTIONS LIST WITH THE MOST ANSWERS===============*/
-#questions-list{
+#questions-list, #questions-with-most-answers-list, #profile-hits{
     column-count: 1;
-    /*max-height: 110vh;*/
-    /*overflow-y: scroll;*/
-    /*overflow-x: hidden;*/
-    /*max-width: 100%;*/
     position: relative;
 }
 
 @media only screen and (min-width: 800px){
-    #questions-list{
+    #profile-hits{
         column-count: 3;
+    }
+
+    #questions-list, #questions-with-most-answers-list{
+        column-count: 4;
+    }
+
+    .details code{
+        font-size: 4rem;
     }
 }

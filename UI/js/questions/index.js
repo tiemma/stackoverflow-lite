@@ -7,7 +7,7 @@ const createQuestions = (response) => {
     const content = question.description;
     const created = question.created;
     const id = question.id;
-    const temp_questions_template = questions_template()
+    const temp_questions_template = questionTemplate()
       .replace('%headline%', headline)
       .replace('%votes%', votes)
       .replace('%content%', content)
@@ -22,7 +22,7 @@ const fetchQuestions = () => {
     .then(response => response.json())
     .then((response) => {
       createQuestions(response);
-      document.querySelector('body').insertAdjacentHTML('afterbegin', create_question_template());
+      document.querySelector('body').insertAdjacentHTML('afterbegin', createQuestionTemplate());
       setTimeout(() => {
         initPage();
       }, 500);
@@ -31,7 +31,7 @@ const fetchQuestions = () => {
 };
 
 const createAnswers = (e) => {
-  document.querySelector('section#create-answer-section').innerHTML = create_answer_template(e.target.dataset.questionid);
+  document.querySelector('section#create-answer-section').innerHTML = createAnswerTemplate(e.target.dataset.questionid);
   document.querySelector('body').classList.add('show-create-answer');
   createEventListeners();
 };
@@ -70,7 +70,7 @@ const fetchAnswers = (e, reload) => {
           const user_name = answer.user_name;
           const id = answer.answer.id;
 
-          const temp_answers_template = answers_template()
+          const temp_answers_template = answersTemplate()
             .replace('%headline%', headline)
             .replace('%votes%', votes)
             .replaceAll('%answerid%', id)
@@ -87,7 +87,7 @@ const fetchAnswers = (e, reload) => {
             const created = comment.comment.created;
             const user_username = comment.user_username;
             const user_name = comment.user_name;
-            const temp_comment_template = comments_template()
+            const temp_comment_template = commentTemplate()
               .replace('%votes%', votes)
               .replace('%content%', content)
               .replace('%created%', formatDate(created))

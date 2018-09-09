@@ -2,9 +2,14 @@
 const API_URL = 'http://localhost:3000/api/v1';
 
 const initPage = () => {
-  document.querySelector('section#loader').style.display = 'none';
-  document.querySelector('section#content').style.display = 'block';
-  createEventListeners();
+  setTimeout(
+    () => {
+      document.querySelector('section#loader').style.display = 'none';
+      document.querySelector('section#content').style.display = 'block';
+      createEventListeners();
+    }, 1000,
+  );
+
   return true;
 };
 
@@ -26,13 +31,14 @@ const loadDashboard = () => {
     });
 };
 
+
 const loadProfile = () => {
   showSpinnerBeforeLoad();
   getDataWithoutBody('./templates/profile', 'GET')
     .then(response => response.text())
     .then((response) => {
       document.querySelector('section#content').innerHTML = response;
-      // fetchProfileDetails();
+      fetchCountsForProfile();
       createEventListeners();
       initPage();
     });
