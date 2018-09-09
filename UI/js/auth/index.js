@@ -22,7 +22,7 @@ toggleAuth = (id) => {
 
 const logout = () => {
   localStorage.clear();
-  window.location='';
+  window.location = '';
 };
 
 

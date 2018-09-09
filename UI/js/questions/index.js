@@ -55,6 +55,7 @@ const showOrHideOtherQuestions = (e, reload) => {
 
 
 const fetchAnswers = (e, reload) => {
+  verifyToken();
   const answersNode = e.target.closest('.questions').querySelector('.answers');
   getDataWithoutBody(`${API_URL}/questions/${e.target.dataset.questionid}`, 'GET')
     .then(response => response.json())
@@ -106,6 +107,7 @@ const fetchAnswers = (e, reload) => {
 };
 
 const submitCreateQuestionData = (event) => {
+  verifyToken();
   const formData = getFormData(event);
   const formObject = getFormObject(event);
   if (formData.headline === '' || formData.description === '') {

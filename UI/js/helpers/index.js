@@ -1,7 +1,11 @@
 
 const API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
 
-String.prototype.replaceAll = (search, replacement) => this.split(search).join(replacement);
+// Defined as a normal function since arrow function's
+// don't support this explicitly
+String.prototype.replaceAll = function (search, replacement) {
+  return this.split(search).join(replacement);
+};
 
 const toJSONString = (form) => {
   const obj = {};
@@ -33,8 +37,21 @@ const createEvents = (element, func) => {
   });
 };
 
+const verifyToken = (loadDashboardAfterTokenValidation = false) => getDataWithoutBody(`${API_URL}/verify/token`, 'GET')
+  .then(resp => resp.json())
+  .then((response) => {
+    if (!response.auth) {
+      if (localStorage.length === 0) {
+        return loadLogin();
+      }
+      logout();
+    } else if (loadDashboardAfterTokenValidation) {
+      loadDashboard();
+    }
+  });
 
 const getHeaders = (url) => {
+  // verifyToken();
   const requestHeaders = {
     'Content-Type': 'application/json; charset=utf-8',
     'X-Access-Token': localStorage.getItem('token'),

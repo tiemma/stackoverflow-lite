@@ -6,9 +6,7 @@
     justify-content: space-around;
 }
 
-#auth *{
-    font-size: 2rem;
-}
+
 
 #auth-header{
     display: flex;
@@ -45,4 +43,10 @@
 
 .input-field input{
     width: 100%;
+}
+
+@media only screen and (min-width: 800px){
+    #auth *{
+        font-size: 1rem;
+    }
 }

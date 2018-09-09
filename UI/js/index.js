@@ -2,6 +2,7 @@ const initPage = () => {
   document.querySelector('section#loader').style.display = 'none';
   document.querySelector('section#content').style.display = 'block';
   createEventListeners();
+  return true;
 };
 
 const showSpinnerBeforeLoad = () => {
@@ -10,25 +11,9 @@ const showSpinnerBeforeLoad = () => {
   createEventListeners();
 };
 
-const loadLogin = () => getDataWithoutBody(`${API_URL}/verify/token`, 'GET')
-  .then(response => response.json())
-  .then((response) => {
-    if (!response.auth) {
-      getDataWithoutBody('/templates/signup', 'GET')
-        .then(response => response.text())
-        .then((response) => {
-          document.querySelector('section#content').innerHTML = response;
-          console.log('Login page loaded completely');
-          initPage();
-        });
-    } else {
-      loadDashboard();
-    }
-  });
-
 const loadDashboard = () => {
   showSpinnerBeforeLoad();
-  getDataWithoutBody('/templates/questions', 'GET')
+  getDataWithoutBody('./templates/questions', 'GET')
     .then(response => response.text())
     .then((response) => {
       document.querySelector('section#content').innerHTML = response;
@@ -38,10 +23,19 @@ const loadDashboard = () => {
     });
 };
 
+const loadLogin = () => getDataWithoutBody('./templates/signup', 'GET')
+  .then(response => response.text())
+  .then((response) => {
+    document.querySelector('section#content').innerHTML = response;
+    console.log('Login page loaded completely');
+    return initPage();
+  });
+
+
 const createEventListeners = () => {
   createEvents('div.read-more', showOrHideOtherQuestions);
   createEvents('#register-button', () => { toggleAuth('register'); });
-  createEvents('#logout-button',  logout );
+  createEvents('#logout-button', logout);
   createEvents('#login-button', toggleAuth);
   createEvents('#auth input[type=submit]', submitAuthFormData);
   createEvents('.submit-question', submitCreateQuestionData);
@@ -62,6 +56,6 @@ const createEventListeners = () => {
 // Close loader once page loads
 window.onload = () => {
   setTimeout(() => {
-    loadLogin();
+    verifyToken(true);
   }, 2000);
 };
