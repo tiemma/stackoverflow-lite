@@ -6,6 +6,8 @@ Stack Overflow Lite repo API implementing CRUD features
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a82b88aa5147515ce0af/test_coverage)](https://codeclimate.com/github/Tiemma/stackoverflow-lite/test_coverage)
 [![Coverage Status](https://coveralls.io/repos/github/Tiemma/stackoverflow-lite/badge.svg?branch=master)](https://coveralls.io/github/Tiemma/stackoverflow-lite?branch=master)
 
+Code climate badges are currently only on the master branch.
+
  ## Features
   The following features have been implemented for this project
 ```
