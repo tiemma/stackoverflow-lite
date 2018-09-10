@@ -6,7 +6,7 @@
     "dev": "DEBUG=stackoverflow-api-node:* nodemon ./server/bin/index.js --exec babel-node",
     "start": "npm run clean && npm run build-server && npm run start-server",
     "start-debug": "npm run clean && npm run build-server && npm run start-debug-server",
-    "start-server": "DEBUG=stackoverflow-api-node:* NODE_ENV=production ENABLE_SSL=true forever start -dvw ./build/bin/index.js",
+    "start-server": "DEBUG=stackoverflow-api-node:* `npm bin` forever start -dvw ./build/bin/index.js",
     "start-debug-server": "DEBUG=stackoverflow-api-node:* nodemon ./build/bin/index.js",
     "clean": "rm -rf build/*",
     "build-server": "babel -d ./build ./server -s",
