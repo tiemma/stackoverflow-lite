@@ -1,5 +1,5 @@
 let API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
-if (localStorage.getItem('dev') === 'true') API_URL = 'http://localhost:3000/api/v1';
+if (sessionStorage.getItem('dev') === 'true') API_URL = 'http://localhost:3000/api/v1';
 
 const initPage = () => {
   setTimeout(
@@ -63,6 +63,7 @@ const createEventListeners = () => {
   createEvents('#register-button', () => { toggleAuth('register'); });
   createEvents('#logout-button', logout);
   createEvents('#view-profile-button', loadProfile);
+  createEvents('#view-dashboard-button', loadDashboard);
   createEvents('#login-button', toggleAuth);
   createEvents('#auth input[type=submit]', submitAuthFormData);
   createEvents('.submit-question', submitCreateQuestionData);

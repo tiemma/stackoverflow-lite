@@ -94,7 +94,7 @@ body.show-question{
     overflow-y: hidden;
 }
 
-body.show-question #questions .answers {
+body.show-question #questions .answers, body.show-question #questions-with-most-answers-list .answers{
     display: inline-block;
 }
 
@@ -103,7 +103,7 @@ body.show-question div.read-more::before{
     content: '❌ '
 }
 
-body.show-question #questions{
+body.show-question #questions, body.show-question #questions-with-most-answers-list{
     column-count: 1 !important;
 }
 
@@ -222,6 +222,11 @@ body.show-create-question #create-question{
     font-size: 1rem;
     animation: fadeIn .5s;
 }
+
+body.show-create-question #create-question .questions{
+    width: auto !important;
+}
+
 
 
 /*========CREATE ANSWER====================*/

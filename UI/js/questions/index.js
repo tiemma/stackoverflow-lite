@@ -62,8 +62,11 @@ const fetchAnswers = (e, reload) => {
       if (!answersNode.classList.contains('show') || reload) {
         response.answers.forEach((answer) => {
           const {
-            headline, votes, description, created, user_username, user_name, id,
+            headline, votes, description, created, id,
           } = answer.answer;
+
+          const { user_username, user_name } = answer;
+
           const temp_answers_template = answersTemplate()
             .replace('%headline%', headline)
             .replace('%votes%', votes)
