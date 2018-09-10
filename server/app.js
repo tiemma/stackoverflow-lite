@@ -63,7 +63,26 @@ app.use(new RegExp(`${URL_PREFIX}/(?!auth).*`, 'i'), AuthRoutes.verifyToken);
 // Stub route for validating JWT tokens
 app.get(`${URL_PREFIX}/verify/token`, (req, res) => res.status(200).json({ auth: true }));
 
-app.post(`${URL_PREFIX}/auth/login`, AuthRoutes.login);
+app.post(`${URL_PREFIX}/auth/login`, AuthRoutes.login)
+  .describe({
+    tags: ['AuthRoutes'],
+    consumes: ['application/json'],
+    produces: ['application/json'],
+    common: {
+      parameters: {
+        body: ['registration'],
+      },
+    },
+    responses: {
+      201: {
+        description: 'Created user and returned a valid json response with the user token and registration details',
+      },
+      500: {
+        description: 'Internal server error occurred',
+      },
+    },
+  });
+
 
 app.post(`${URL_PREFIX}/auth/register`, AuthRoutes.register)
   .describe({
