@@ -80,7 +80,8 @@ describe('Begin Questions Tests', () => {
         expect(res).to.have.status(200);
         expect(Object.keys(res.body)).to.have.contains('success');
         expect(Object.keys(res.body)).to.have.contains('data');
-        expect(Object.keys(res.body.data)).to.have.contains('count');
+        expect(Object.keys(res.body.data)).to.have.contains('question');
+        expect(parseInt(res.body.data.question.count)).equals(1);
         done();
       });
   });
