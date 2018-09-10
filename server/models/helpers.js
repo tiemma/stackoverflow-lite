@@ -9,7 +9,9 @@ const zip = (values, schema) => {
 
 const parseStringArray = (obj) => {
   if (!obj) return [];
-  return obj.replace('(', '').replace(')', '').split(',').map(String);
+  return obj.replace('(', '').replace(')', '').split('"').join('')
+    .split(',')
+    .map(String);
 };
 
 const answerSchema = ['id', 'user_id', 'question_id',

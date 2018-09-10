@@ -9,6 +9,16 @@ export default class Answer extends Model {
     this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
   }
 
+  fetchMostCommonAnswers(count, userId) {
+    const sql = `SELECT questions, COUNT(answers.question_id) AS questionCount FROM questions 
+    LEFT OUTER JOIN answers ON questions.id = answers.question_id
+    LEFT OUTER JOIN users ON answers.user_id = ${userId} 
+    WHERE questions.user_id = ${userId}
+    GROUP BY (questions)
+    ORDER BY questionCount DESC LIMIT ${count}`;
+    return this.runQueryInPromise(sql, 'fetchMostCommonAnswers');
+  }
+
   fetchCommentsWithAnswers(answerId) {
     const sql = `SELECT  comments as comment,
         users.name AS user_name,

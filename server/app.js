@@ -13,6 +13,9 @@ import AnswerRoutes from './routes/answers';
 
 const URL_PREFIX = '/api/v1';
 
+// Load .env file into current process scope
+config();
+
 const app = express();
 const options = {
   title: packageJson.name,
@@ -38,9 +41,6 @@ common.parameters.addBody({
     },
   },
 });
-
-// Load .env file into current process scope
-config();
 
 // Swagger initialisation
 initialise(app, options);
@@ -111,6 +111,30 @@ app.delete(`${URL_PREFIX}/questions/:id`, QuestionRoutes.getQuestionWithAnswersA
     },
   });
 
+app.get(`${URL_PREFIX}/questions/recent/:count`, QuestionRoutes.getRecentQuestions).describe({
+  tags: ['Questions'],
+  responses: {
+    200: {
+      description: 'Returns a valid json response',
+    },
+    404: {
+      description: 'No question was found',
+    },
+  },
+});
+
+app.post(`${URL_PREFIX}/questions/popular/:count`, AnswerRoutes.getMostAnsweredQuestionPerUser).describe({
+  tags: ['Questions'],
+  responses: {
+    200: {
+      description: 'Returns a valid json response',
+    },
+    404: {
+      description: 'No question was found',
+    },
+  },
+});
+
 app.get(`${URL_PREFIX}/questions`, QuestionRoutes.getQuestions).describe({
   tags: ['Questions'],
   responses: {
@@ -146,19 +170,6 @@ app.post(`${URL_PREFIX}/questions/all/count`, QuestionRoutes.returnCount).descri
     },
   },
 });
-
-app.post(`${URL_PREFIX}/answers/all/count`, AnswerRoutes.returnCount).describe({
-  tags: ['Questions'],
-  responses: {
-    200: {
-      description: 'Returns a valid json response',
-    },
-    500: {
-      description: 'No question was found',
-    },
-  },
-});
-
 
 app.post(`${URL_PREFIX}/questions/:id/answers`, AnswerRoutes.createAnswer).describe({
   tags: ['AnswerRoutes'],

@@ -68,7 +68,7 @@ export default class Model {
       connectionString: Config(process.env.NODE_ENV).DATABASE_URI,
       ssl: JSON.parse(process.env.ENABLE_SSL),
     };
-    Model.debug(`Initialised connetion to the POSTGRES pool using config: ${JSON.stringify(poolSettings)}`);
+    Model.debug(`Initialised connection to the POSTGRES pool using config: ${JSON.stringify(poolSettings)}`);
     return new Pool(poolSettings);
     // return new Pool({ connectionString: Config(process.env.NODE_ENV).DATABASE_URI });
   }

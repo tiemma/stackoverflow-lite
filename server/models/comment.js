@@ -8,5 +8,3 @@ export default class Comment extends Model {
     this.debug = logger(`stackoverflow-api-node:models/${__filename.split(/[\\/]/).pop()}`);
   }
 }
-
-new Comment().selectAll(['*'], Comment.handleResponse);
