@@ -10,7 +10,7 @@
     "start-debug-server": "DEBUG=stackoverflow-api-node:* nodemon ./build/bin/index.js",
     "clean": "rm -rf build/*",
     "build-server": "babel -d ./build ./server -s",
-    "test": "mocha --require babel-core/register test",
+    "test": "NODE_ENV=development ENABLE_SSL=false mocha --require babel-core/register test",
     "report-html": "nyc npm test && nyc report --reporter=html --reporter=lcov",
     "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
     "coveralls-coverage": "coveralls < lcov.info",

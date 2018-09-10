@@ -54,13 +54,14 @@ describe('Test Answers', () => {
 
   it('Then fetch all answer counts, return 200 and should have count and success objects', (done) => {
     request(server)
-      .post(`${API_PREFIX}/answers/all/count`)
+      .post(`${API_PREFIX}/questions/all/count`)
       .set('x-access-token', token)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(Object.keys(res.body)).to.have.contains('success');
         expect(Object.keys(res.body)).to.have.contains('data');
-        expect(parseInt(res.body.data.count)).equals(1);
+        expect(Object.keys(res.body.data)).to.have.contains('answer');
+        expect(parseInt(res.body.data.answer.count)).equals(1);
         done();
       });
   });
