@@ -6,9 +6,7 @@
     justify-content: space-around;
 }
 
-#auth *{
-    font-size: 2rem;
-}
+
 
 #auth-header{
     display: flex;
@@ -36,7 +34,6 @@
 .login-body, .register-body{
     position: relative;
     transition: all .2s cubic-bezier(.25,.8,.25,1);
-    animation: fadeIn .2s;
 }
 
 .register-body{
@@ -45,4 +42,14 @@
 
 .input-field input{
     width: 100%;
+}
+
+@media only screen and (min-width: 800px){
+    #auth *{
+        font-size: 1rem;
+    }
+
+    section#content{
+        padding-left: 10%;
+    }
 }

@@ -1,28 +1,27 @@
 
-createQuestions = (response) => {
-  const questionsNode = document.querySelector('div#questions');
+const createQuestions = (response, selector = 'div#questions') => {
+  const questionsNode = document.querySelector(selector);
+  console.log(`Selector for the following: ${selector}`);
   response.questions.forEach((question) => {
-    const headline = question.headline;
-    const votes = question.votes;
-    const content = question.description;
-    const created = question.created;
-    const id = question.id;
-    const temp_questions_template = questions_template()
-      .replace('%headline%', headline)
+    const {
+      headline, votes, description, created, id,
+    } = question;
+    const temp_questions_template = questionTemplate()
+      .replace('%headline%', headline.replaceAll('"', ''))
       .replace('%votes%', votes)
-      .replace('%content%', content)
+      .replace('%content%', description.replaceAll('"', ''))
       .replaceAll('%question-id%', id)
       .replace('%created%', formatDate(created));
     questionsNode.insertAdjacentHTML('afterbegin', temp_questions_template);
   });
 };
 
-fetchQuestions = () => {
+const fetchQuestions = () => {
   getDataWithoutBody(`${API_URL}/questions/`, 'GET')
     .then(response => response.json())
     .then((response) => {
       createQuestions(response);
-      document.querySelector('body').insertAdjacentHTML('afterbegin', create_question_template());
+      document.querySelector('body').insertAdjacentHTML('afterbegin', createQuestionTemplate());
       setTimeout(() => {
         initPage();
       }, 500);
@@ -30,14 +29,14 @@ fetchQuestions = () => {
     .catch(error => console.error(error));
 };
 
-createAnswers = (e) => {
-  document.querySelector('section#create-answer-section').innerHTML = create_answer_template(e.target.dataset.questionid);
+const createAnswers = (e) => {
+  document.querySelector('section#create-answer-section').innerHTML = createAnswerTemplate(e.target.dataset.questionid);
   document.querySelector('body').classList.add('show-create-answer');
   createEventListeners();
 };
 
 
-showOrHideOtherQuestions = (e, reload) => {
+const showOrHideOtherQuestions = (e, reload) => {
   const bodyNode = document.querySelector('body');
 
   if (bodyNode.classList.contains('show-question') && !reload) {
@@ -54,41 +53,38 @@ showOrHideOtherQuestions = (e, reload) => {
 };
 
 
-fetchAnswers = (e, reload) => {
+const fetchAnswers = (e, reload) => {
+  verifyToken();
   const answersNode = e.target.closest('.questions').querySelector('.answers');
   getDataWithoutBody(`${API_URL}/questions/${e.target.dataset.questionid}`, 'GET')
     .then(response => response.json())
     .then((response) => {
       if (!answersNode.classList.contains('show') || reload) {
         response.answers.forEach((answer) => {
-          const headline = answer.answer.headline;
-          const votes = answer.answer.votes;
-          const content = answer.answer.description;
-          const created = answer.answer.created;
-          const user_username = answer.user_username;
-          const user_name = answer.user_name;
-          const id = answer.answer.id;
+          const {
+            headline, votes, description, created, id,
+          } = answer.answer;
 
-          const temp_questions_template = answers_template()
+          const { user_username, user_name } = answer;
+
+          const temp_answers_template = answersTemplate()
             .replace('%headline%', headline)
             .replace('%votes%', votes)
             .replaceAll('%answerid%', id)
-            .replace('%content%', content)
+            .replace('%content%', description)
             .replace('%created%', formatDate(created))
             .replace('%username%', user_username)
             .replace('%name%', user_name);
 
-          answersNode.querySelector('hr').insertAdjacentHTML('afterend', temp_questions_template);
+          answersNode.querySelector('hr').insertAdjacentHTML('afterend', temp_answers_template);
 
-          answer.comments.forEach((comment) => {
-            const votes = comment.comment.votes;
-            const content = comment.comment.comment;
-            const created = comment.comment.created;
-            const user_username = comment.user_username;
-            const user_name = comment.user_name;
-            const temp_comment_template = comments_template()
+          answer.comments.forEach((commentObj) => {
+            const {
+              votes, comment, created, user_username, user_name,
+            } = commentObj.comment;
+            const temp_comment_template = commentTemplate()
               .replace('%votes%', votes)
-              .replace('%content%', content)
+              .replace('%content%', comment)
               .replace('%created%', formatDate(created))
               .replace('%username%', user_username)
               .replace('%name%', user_name);
@@ -105,19 +101,26 @@ fetchAnswers = (e, reload) => {
     .catch(error => console.error(error));
 };
 
-submitCreateQuestionData = (event) => {
+const submitCreateQuestionData = (event) => {
+  verifyToken();
   const formData = getFormData(event);
   const formObject = getFormObject(event);
   if (formData.headline === '' || formData.description === '') {
     formObject.querySelector('.error').innerHTML = 'Kindly fill all fields';
     return;
   }
-  postData(`${API_URL}${formObject.attributes.action.nodeValue}`, formData, 'POST')
+  const postEndPoint = formObject.attributes.action.nodeValue;
+  postData(`${API_URL}${postEndPoint}`, formData, 'POST')
     .then(resp => resp.json())
     .then((resp) => {
       if (resp.success === true) {
         document.querySelector('body').classList.remove('show-create-question');
         document.querySelector('body').classList.remove('show-create-answer');
+        // We're reloading the dashboard if we add a new question
+        // This was the easiest idea I could think of without writing new stuff
+        if (postEndPoint.indexOf('answers') === -1) {
+          return loadDashboard();
+        }
         const showNode = document.querySelector(`div.read-more[data-questionid="${event.target.dataset.questionid}"]`);
         showNode.target = showNode;
         showOrHideOtherQuestions(showNode, true);

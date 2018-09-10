@@ -20,6 +20,11 @@ toggleAuth = (id) => {
   document.querySelector('.login').id = idToggle[1];
 };
 
+const logout = () => {
+  localStorage.clear();
+  window.location = '';
+};
+
 
 submitAuthFormData = (event) => {
   const formData = getFormData(event);

@@ -3,6 +3,7 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>StackOverflow - Lite</title>
 
     <link href='https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c' rel='stylesheet'>
@@ -15,9 +16,38 @@
 </head>
 
 <body>
+
+
+    <!-- Static section where the create answers HTML gets dropped after creation -->
+    <!-- Kept at the top purposely -->
     <section id="create-answer-section">
 
     </section>
+
+
+    <!-- Header for the site -->
+    <section id="header" class="padding-half shadow-depth-2 bg-white center-vertical red-dashed-bottom" style="justify-content: space-between">
+        <div id="header-left">
+            <span>Stack Overflow Lite</span>
+            <button class="green-dashed padding-half shadow-depth-1 pointer" id="view-profile-button">View Profile</button>
+            <button class="yellow-dashed padding-half shadow-depth-1 pointer" id="view-dashboard-button">View Dashboard</button>
+        </div>
+        <div id="header-center" >
+            <input type="search" class="width-20"  autocomplete="" name="search" title="Search all questions headlines or descriptions" placeholder="Search Questions / Answers / Comments"/>
+        </div>
+        <div id="header-right">
+            <button class="green-dashed padding-half shadow-depth-1 pointer" id="create-question-button">Create Question</button>
+            <button class="red-dashed padding-half shadow-depth-1 pointer" id="logout-button" >Logout</button>
+        </div>
+    </section>
+
+    <!-- Content on the site -->
+    <section id='content'>
+
+    </section>
+
+
+
     <!-- Spinning loader design dubbed off Google's own -->
     <section id='loader'>
         <div class='showbox'>
@@ -29,28 +59,13 @@
         </div>
     </section>
 
-    <!-- Header for the site -->
-    <section id="header" class="padding-half shadow-depth-2 bg-white center-vertical red-dashed-bottom" style="justify-content: space-between">
-        <div id="header-left">
-            <span>Stack Overflow Lite</span>
-        </div>
-        <div id="header-center" >
-            <input type="search" class="width-20"  autocomplete="" name="search" title="Search all questions headlines or descriptions" placeholder="Search Questions / Answers / Comments"/>
-        </div>
-        <div id="header-right">
-            <button class="green-dashed padding-half shadow-depth-1 pointer" id="create-question-button">Create Question</button>
-        </div>
-    </section>
-
-    <!-- Content on the site -->
-    <section id='content'>
-
-    </section>
 </body>
 
 <script src='js/helpers/index.js'></script>
 <script src='js/auth/index.js'></script>
 <script src='js/questions/template.js'></script>
+<script src='js/profiles/template.js'></script>
 <script src='js/questions/index.js'></script>
+<script src='js/profiles/index.js'></script>
 <script src='js/index.js'></script>
 </html>
