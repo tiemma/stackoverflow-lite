@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "DEBUG=stackoverflow-api-node:* nodemon ./server/bin/index.js --exec babel-node",
-    "start": "npm run clean && npm run build-server && npm run start-server",
+    "start": "npm run clean && npm run build-server && npm run start-debug-server",
     "start-debug": "npm run clean && npm run build-server && npm run start-debug-server",
     "start-server": "DEBUG=stackoverflow-api-node:* node_modules/.bin/pm2 start ./build/bin/index.js",
     "start-debug-server": "DEBUG=stackoverflow-api-node:* nodemon ./build/bin/index.js",
