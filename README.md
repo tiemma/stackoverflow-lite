@@ -47,6 +47,7 @@ npm run dev
   - Answers
   - Comments
   - User Registration
+  
 Table rules for managing data were defined and are accessible from there.
 
 # Dev Tools and Configuration
@@ -73,7 +74,7 @@ Table rules for managing data were defined and are accessible from there.
  a [.env](.env) file for example. 
  All environment variables used have been documented above.
  
-#API documentation
+# API documentation
 Documentation for the APIs has been included for both the node and python variants
 although the node API is currently not properly documented due to the timeline for which
 development and replication of current features ran for.
