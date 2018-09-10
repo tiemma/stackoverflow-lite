@@ -2,88 +2,20 @@
 <link href='css/questions/index.css' rel='stylesheet' />
 <link href='css/profiles/index.css' rel='stylesheet' />
 
-<div id='user'>
-    <h3>Your profile stats</h3>
+<div id='user' class="mg-t-1">
+    <h3 class="mg-t-1">Your profile stats</h3>
     <div id="profile-hits">
 
     </div>
 
 
-    <h3>Your questions with the most answers</h3>
+    <h3 class="mg-t-1">Your questions with the most answers</h3>
     <div id='questions-with-most-answers-list'>
-        <div class='questions shadow-depth-2 bg-white margin-1 padding-1 red-dashed pointer'>
-            <div class='headline' title='Title the user gave the question'>
-                <h1>%headline%</h1>
-            </div>
-            <div class='details margin-1' title='Details about the question asked'>
-                <code>
-                    %content%
-                </code>
-            </div>
-            <div class='answers full-width'>
-                <div class='flex-end left'>Answers</div>
-                <hr />
 
-                <section class='answer-loader'>
-                    <div class='showbox'>
-                        <div class='loader'>
-                            <svg class='circular' viewBox='25 25 50 50'>
-                                <circle class='path' cx='50' cy='50' r='20' fill='none' stroke-width='2' stroke-miterlimit='10'></circle>
-                            </svg>
-                        </div>
-                    </div>
-                </section>
-
-                <div class='input-field margin-1 flex-end'>
-                    <input type='submit' value='Create Answer' class="green-dashed padding-half pointer" id="create-answer-button" data-questionid='%question-id%'/>
-                </div>
-                <hr />
-            </div>
-            <div class='footer-details flex-end mg-bt-1'>
-                <div class='read-more pointer' title="Show all answers" data-questionid='%question-id%'>Show Answers</div>
-                <div class='created-at' title="Date and time the answer was created">%created%</div>
-                <div class='accepted' title='Answer has been accepted'></div>
-                <div class='votes' title='Number of votes the question has'>%votes%</div>
-            </div>
-        </div>
     </div>
 
-    <h3>Questions you've asked in the past</h3>
-    <div id='questions-list'>
-        <div class='questions shadow-depth-2 bg-white margin-1 padding-1 red-dashed pointer'>
-            <div class='headline' title='Title the user gave the question'>
-                <h1>%headline%</h1>
-            </div>
-            <div class='details margin-1' title='Details about the question asked'>
-                <code>
-                    %content%
-                </code>
-            </div>
-            <div class='answers full-width'>
-                <div class='flex-end left'>Answers</div>
-                <hr />
+    <h3 class="mg-t-1">Recent Questions you've asked</h3>
+    <div id='questions'>
 
-                <section class='answer-loader'>
-                    <div class='showbox'>
-                        <div class='loader'>
-                            <svg class='circular' viewBox='25 25 50 50'>
-                                <circle class='path' cx='50' cy='50' r='20' fill='none' stroke-width='2' stroke-miterlimit='10'></circle>
-                            </svg>
-                        </div>
-                    </div>
-                </section>
-
-                <div class='input-field margin-1 flex-end'>
-                    <input type='submit' value='Create Answer' class="green-dashed padding-half pointer" id="create-answer-button" data-questionid='%question-id%'/>
-                </div>
-                <hr />
-            </div>
-            <div class='footer-details flex-end mg-bt-1'>
-                <div class='read-more pointer' title="Show all answers" data-questionid='%question-id%'>Show Answers</div>
-                <div class='created-at' title="Date and time the answer was created">%created%</div>
-                <div class='accepted' title='Answer has been accepted'></div>
-                <div class='votes' title='Number of votes the question has'>%votes%</div>
-            </div>
-        </div>
     </div>
 </div>

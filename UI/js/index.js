@@ -1,5 +1,5 @@
-// const API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
-const API_URL = 'http://localhost:3000/api/v1';
+let API_URL = 'https://stackoverflow-lite-api-node.herokuapp.com/api/v1';
+if (localStorage.getItem('dev') === 'true') API_URL = 'http://localhost:3000/api/v1';
 
 const initPage = () => {
   setTimeout(
@@ -39,6 +39,8 @@ const loadProfile = () => {
     .then((response) => {
       document.querySelector('section#content').innerHTML = response;
       fetchCountsForProfile();
+      fetchRecentQuestions();
+      fetchPopularQuestions();
       createEventListeners();
       initPage();
     });

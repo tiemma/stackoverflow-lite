@@ -4,7 +4,7 @@
 
 
 /*==========QUESTIONS LIST WITH THE MOST ANSWERS===============*/
-#questions-list, #questions-with-most-answers-list, #profile-hits{
+#questions, #questions-with-most-answers-list, #profile-hits{
     column-count: 1;
     position: relative;
 }
@@ -14,11 +14,16 @@
         column-count: 3;
     }
 
-    #questions-list, #questions-with-most-answers-list{
-        column-count: 4;
+    #questions, #questions-with-most-answers-list{
+        column-count: 2;
     }
 
-    .details code{
+    #profile-hits .details code{
         font-size: 4rem;
     }
+
+    h3{
+        font-size: 2rem;
+    }
+
 }
