@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "DEBUG=stackoverflow-api-node:* nodemon ./server/bin/index.js --exec babel-node",
-    "start": "npm run clean && npm run build-server && npm run start-debug-server",
+    "start": "npm run clean && npm run build-server && npm run start-server",
     "start-debug": "npm run clean && npm run build-server && npm run start-debug-server",
-    "start-server": "DEBUG=stackoverflow-api-node:* forever start -dvw ./build/bin/index.js",
+    "start-server": "DEBUG=stackoverflow-api-node:* pm2 start ./build/bin/index.js",
     "start-debug-server": "DEBUG=stackoverflow-api-node:* nodemon ./build/bin/index.js",
     "clean": "rm -rf build/*",
     "build-server": "babel -d ./build ./server -s",
@@ -29,6 +29,7 @@
     "lodash": "^4.17.10",
     "morgan": "~1.9.0",
     "pg": "^7.4.3",
+    "pm2": "3.1.0",
     "swagger-spec-express": "^2.0.4",
     "swagger-ui-express": "^4.0.1"
   },
