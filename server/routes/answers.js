@@ -1,6 +1,7 @@
 import logger from 'debug';
 import AnswerModel from '../models/answer';
 import { referenceDoesNotExist } from './helpers';
+import { zip, questionSchema, parseStringArray } from '../models/helpers';
 
 
 export default class AnswerRoutes {
@@ -8,15 +9,23 @@ export default class AnswerRoutes {
     return logger(`stackoverflow-api-node:routes/${__filename.split(/[\\/]/).pop()}`)(message);
   }
 
-  static returnCount(req, res) {
-    AnswerRoutes.getLogger(`returnCount- Fetching counts of posts with the following constraints: ${JSON.stringify(req.body)}`);
-    return new AnswerModel().countAllWithConstraints(req.body).then((resp) => {
-      const data = resp.rows[0];
-      res.status(200).json({ data, success: true });
-    }).catch(() => setImmediate(() => {
-      AnswerRoutes.getLogger('returnCount - Error occurred while fetching counts');
-      res.status(500).json({ error: 'Error occurred while fetching counts' });
-    }));
+  static getMostAnsweredQuestionPerUser(req, res) {
+    AnswerRoutes.getLogger(`getMostAnsweredQuestionPerUser - Getting the most answered questions for a user with the following details: 
+    Body: ${JSON.stringify(req.body)}
+    Params: ${JSON.stringify(req.params)}`);
+    return new AnswerModel().fetchMostCommonAnswers(req.params.count, req.body.user_id)
+      .then((resp) => {
+        const data = {};
+        data.questions = resp.rows.map(
+          (question) => {
+            const data = zip(parseStringArray(question.questions), questionSchema);
+            data.count = question.questioncount;
+            return data;
+          },
+        );
+        AnswerRoutes.getLogger(`getMostAnsweredQuestionPerUser - Final response after zipping: ${JSON.stringify(data)}`);
+        res.status(200).json({ data, success: true });
+      });
   }
 
   static createAnswer(req, res) {

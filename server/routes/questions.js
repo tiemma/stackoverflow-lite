@@ -2,6 +2,7 @@
 import logger from 'debug';
 import QuestionModel from '../models/question';
 import AnswerModel from '../models/answer';
+import CommentModel from '../models/comment';
 import { NullError } from '../errors/error';
 import { isDuplicate, referenceDoesNotExist } from './helpers';
 
@@ -12,10 +13,17 @@ export default class QuestionRoutes {
 
   static returnCount(req, res) {
     QuestionRoutes.getLogger(`returnCount- Fetching counts of posts with the following constraints: ${JSON.stringify(req.body)}`);
-    return new QuestionModel().countAllWithConstraints(req.body).then((resp) => {
-      const data = resp.rows[0];
-      res.status(200).json({ data, success: true });
-    })
+    return new QuestionModel().countAllWithConstraints(req.body).then(
+      questionCount => new AnswerModel().countAllWithConstraints(req.body).then(
+        answerCount => new CommentModel().countAllWithConstraints(req.body).then((commentCount) => {
+          const data = {};
+          data.question = questionCount.rows[0];
+          data.answer = answerCount.rows[0];
+          data.comment = commentCount.rows[0];
+          res.status(200).json({ data, success: true });
+        }),
+      ),
+    )
       .catch(() => setImmediate(() => {
         QuestionRoutes.getLogger('returnCount - Error occurred while fetching counts');
         res.status(500).json({ error: 'Error occurred while fetching counts' });
@@ -29,6 +37,20 @@ export default class QuestionRoutes {
       data.questions = resp.rows;
       res.status(200).json(data);
     });
+  }
+
+  static getRecentQuestions(req, res) {
+    const { count } = req.params;
+    const sql = `SELECT * FROM questions ORDER BY created DESC LIMIT ${count}`;
+    QuestionRoutes.getLogger(`getRecentQuestions - Fetching the ${count} most recent questions`);
+    return new QuestionModel().execSQL(sql).then((response) => {
+      const data = {};
+      data.questions = response.rows;
+      res.status(200).json({ data, success: true });
+    }).catch(() => setImmediate(() => {
+      QuestionRoutes.getLogger('getRecentQuestions - Error occurred while fetching counts');
+      res.status(500).json({ error: 'Error occurred while getting recent questions' });
+    }));
   }
 
   static createQuestion(req, res) {
