@@ -1,0 +1,29 @@
+.headline h1{
+    font-size: 2rem;
+}
+
+
+/*==========QUESTIONS LIST WITH THE MOST ANSWERS===============*/
+#questions, #questions-with-most-answers-list, #profile-hits{
+    column-count: 1;
+    position: relative;
+}
+
+@media only screen and (min-width: 800px){
+    #profile-hits{
+        column-count: 3;
+    }
+
+    #questions, #questions-with-most-answers-list{
+        column-count: 2;
+    }
+
+    #profile-hits .details code{
+        font-size: 4rem;
+    }
+
+    h3{
+        font-size: 2rem;
+    }
+
+}

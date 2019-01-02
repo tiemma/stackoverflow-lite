@@ -1,61 +1,38 @@
 {
-  "name": "stackoverflow-api-node",
-  "version": "0.0.0",
-  "private": true,
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "User Interface which communicates with the stackoverflow-lite api",
+  "main": "index.js",
   "scripts": {
-    "dev": "DEBUG=stackoverflow-api-node:* nodemon ./server/bin/index.js --exec babel-node",
-    "start": "npm run clean && npm run build-server && npm run start-debug-server",
-    "start-debug": "npm run clean && npm run build-server && npm run start-debug-server",
-    "start-server": "DEBUG=stackoverflow-api-node:* node_modules/.bin/pm2 start ./build/bin/index.js",
-    "start-debug-server": "DEBUG=stackoverflow-api-node:* nodemon ./build/bin/index.js",
-    "clean": "rm -rf build/*",
-    "build-server": "babel -d ./build ./server -s",
-    "test": "NODE_ENV=development ENABLE_SSL=false mocha --require babel-core/register test",
-    "report-html": "nyc npm test && nyc report --reporter=html --reporter=lcov",
-    "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
-    "coveralls-coverage": "coveralls < lcov.info",
-    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
-    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "dotenv": "^6.0.0",
-    "express": "~4.16.0",
-    "express-jwt": "^5.3.1",
-    "forever": "^0.15.3",
-    "jsonwebtoken": "^8.3.0",
-    "lodash": "^4.17.10",
-    "morgan": "~1.9.0",
-    "pg": "^7.4.3",
-    "pm2": "3.1.0",
-    "swagger-spec-express": "^2.0.4",
-    "swagger-ui-express": "^4.0.1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tiemma/stackoverflow-lite.git"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "babel-cli": "^6.26.0",
-    "babel-plugin-istanbul": "^5.0.1",
-    "babel-preset-env": "^1.7.0",
-    "casual": "^1.5.19",
-    "chai": "^4.1.2",
-    "chai-http": "^4.2.0",
-    "codeclimate-test-reporter": "^0.5.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
-    "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^1.18.4",
     "nyc": "^13.0.1"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ]
-  }
+  "keywords": [
+    "ui",
+    "user",
+    "interface",
+    "ux",
+    "css",
+    "html",
+    "javascript"
+  ],
+  "author": "Bakare Emmanuel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tiemma/stackoverflow-lite/issues"
+  },
+  "homepage": "https://github.com/Tiemma/stackoverflow-lite#readme"
 }
